@@ -220,3 +220,69 @@ FR5 tạo khách hàng mới khi chưa tồn tại, liên quan User Story US7, U
 
 FR6 nhập thiết bị thủ công khi không có lịch sử mua, liên quan User Story US8, Use Case UC5, mức SHOULD.
 
+
+
+
+
+
+
+
+
+7\. ĐẶC TẢ USE CASE: UC2 - TẠO PHIẾU BẢO HÀNH MỚI
+
+
+
+Actor chính: Nhân viên tiếp nhận
+
+Mục tiêu: Ghi nhận một yêu cầu bảo hành vào hệ thống để theo dõi đến khi đóng.
+
+Điều kiện trước: Nhân viên đã đăng nhập và có quyền tiếp nhận.
+
+Điều kiện sau: Một phiếu bảo hành ở trạng thái MỚI đã được lưu, có mã phiếu duy nhất.
+
+Liên quan: US1, US2, US3, US6. Mức ưu tiên: MUST.
+
+
+
+Luồng chính.
+
+1\. Nhân viên chọn chức năng Tạo phiếu bảo hành mới.
+
+2\. Nhân viên nhập số điện thoại khách hàng.
+
+3\. Hệ thống tra cứu và hiển thị thông tin khách (dùng UC1).
+
+4\. Nhân viên chọn thiết bị từ danh sách thiết bị khách đã mua.
+
+5\. Nhân viên nhập mô tả lỗi.
+
+6\. Hệ thống đề xuất nhóm sự cố và mức ưu tiên (dùng UC4).
+
+7\. Hệ thống tự tính hạn cam kết theo mức ưu tiên.
+
+8\. Nhân viên xác nhận, bấm Lưu.
+
+9\. Hệ thống sinh mã phiếu, lưu phiếu ở trạng thái MỚI.
+
+
+
+Luồng ngoại lệ.
+
+3a. Khách hàng chưa tồn tại trong hệ thống.
+
+Hệ thống mở form tạo khách mới với số điện thoại đã điền sẵn (dùng UC3).
+
+Sau khi lưu khách mới, quay lại bước 4.
+
+
+
+4a. Thiết bị không nằm trong lịch sử mua hàng của khách.
+
+Cho phép nhập thiết bị ngoài, bắt buộc nhập số serial (dùng UC5).
+
+
+
+5a. Mô tả lỗi để trống.
+
+Hệ thống từ chối lưu, hiện thông báo nêu rõ trường còn thiếu.
+
