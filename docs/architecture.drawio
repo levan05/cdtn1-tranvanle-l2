@@ -1,0 +1,75 @@
+<mxfile host="app.diagrams.net" modified="2026-10-08T00:00:00.000Z" agent="Mozilla/5.0" version="24.7.17" type="device">
+  <diagram id="arch-l2" name="Architecture L2">
+    <mxGraphModel dx="1400" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="THIẾT KẾ KIẾN TRÚC — LUỒNG L2 TIẾP NHẬN VÀ PHÂN LOẠI YÊU CẦU BẢO HÀNH" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;fontColor=#000000" vertex="1" parent="1">
+          <mxGeometry x="180" y="20" width="960" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="actor" value="Actor" style="shape=umlActor;html=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#ffffff;strokeColor=#000000;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="70" y="105" width="70" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="actorLabel" value="Nhân viên tiếp nhận / Quản lý trung tâm" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=12;fontColor=#000000" vertex="1" parent="1">
+          <mxGeometry x="20" y="210" width="180" height="45" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="p" value="LỚP 1 — PRESENTATION&#xa;&#xa;• Màn hình tạo phiếu&#xa;• Màn hình danh sách phiếu&#xa;• Màn hình chi tiết / cập nhật trạng thái&#xa;&#xa;Trách nhiệm: nhận thao tác người dùng, kiểm tra dữ liệu nhập cơ bản và hiển thị kết quả." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;align=left;verticalAlign=top;spacingTop=10;spacingLeft=14;fontSize=13;fontColor=#000000" vertex="1" parent="1">
+          <mxGeometry x="250" y="95" width="850" height="145" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="a" value="LỚP 2 — APPLICATION&#xa;&#xa;• CustomerService&#xa;• TicketService&#xa;• TicketStatusService&#xa;&#xa;Trách nhiệm: điều phối use case, kiểm tra quyền và gọi nghiệp vụ / repository." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;align=left;verticalAlign=top;spacingTop=10;spacingLeft=14;fontSize=13;fontColor=#000000" vertex="1" parent="1">
+          <mxGeometry x="250" y="285" width="850" height="145" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="d" value="LỚP 3 — DOMAIN / BUSINESS&#xa;&#xa;• Khách hàng&#xa;• Thiết bị&#xa;• Phiếu bảo hành&#xa;• Nhóm sự cố, mức ưu tiên, hạn cam kết&#xa;• Vòng đời trạng thái&#xa;&#xa;Trách nhiệm: chứa các quy tắc nghiệp vụ cốt lõi của luồng L2." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;align=left;verticalAlign=top;spacingTop=10;spacingLeft=14;fontSize=13;fontColor=#000000" vertex="1" parent="1">
+          <mxGeometry x="250" y="475" width="850" height="165" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="i" value="LỚP 4 — DATA / INFRASTRUCTURE&#xa;&#xa;• CustomerRepository&#xa;• DeviceRepository&#xa;• TicketRepository&#xa;• TicketStatusLogRepository&#xa;• PostgreSQL&#xa;&#xa;Trách nhiệm: lưu trữ, truy xuất và bảo đảm ràng buộc dữ liệu." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;align=left;verticalAlign=top;spacingTop=10;spacingLeft=14;fontSize=13;fontColor=#000000" vertex="1" parent="1">
+          <mxGeometry x="250" y="685" width="850" height="165" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="arrow1" value="HTTPS / JSON" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=1;fontSize=11;fontColor=#000000;strokeColor=#000000" edge="1" parent="1" source="actor" target="p">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arrow2" value="gọi service" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=1;fontSize=11;fontColor=#000000;strokeColor=#000000" edge="1" parent="1" source="p" target="a">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arrow3" value="áp dụng quy tắc nghiệp vụ" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=1;fontSize=11;fontColor=#000000;strokeColor=#000000" edge="1" parent="1" source="a" target="d">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arrow4" value="Repository / SQL" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=1;fontSize=11;fontColor=#000000;strokeColor=#000000" edge="1" parent="1" source="d" target="i">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="scope" value="NGOÀI PHẠM VI L2&#xa;&#xa;• Phân công kỹ thuật viên cụ thể → L4&#xa;• Quản lý tồn kho linh kiện → L5" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;dashed=1;align=left;verticalAlign=top;spacingTop=8;spacingLeft=10;fontSize=12;fontColor=#000000" vertex="1" parent="1">
+          <mxGeometry x="20" y="475" width="205" height="165" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="legend" value="CHÚ THÍCH&#xa;→ Luồng trao đổi giữa các lớp&#xa;HTTPS / JSON → giao tiếp người dùng và API&#xa;Repository / SQL → truy xuất dữ liệu&#xa;Phụ thuộc một chiều: Presentation → Application → Domain → Data" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;align=left;verticalAlign=top;spacingTop=8;spacingLeft=10;fontSize=11;fontColor=#000000" vertex="1" parent="1">
+          <mxGeometry x="1140" y="95" width="300" height="145" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="reasonHeader" value="3. LẬP LUẬN LỰA CHỌN KIẾN TRÚC" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#000000" vertex="1" parent="1">
+          <mxGeometry x="250" y="875" width="850" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="reason1" value="1. Vì NFR1 yêu cầu danh sách phiếu hiển thị dưới 2 giây với 1000 bản ghi, tôi chọn index cho status và due_date và phân trang; đánh đổi là thao tác ghi phải duy trì thêm index." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;align=left;verticalAlign=top;spacingTop=6;spacingLeft=8;fontSize=11;fontColor=#000000" vertex="1" parent="1">
+          <mxGeometry x="250" y="905" width="850" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="reason2" value="2. Vì NFR2 yêu cầu nhân viên chỉ thấy số điện thoại dạng che và Quản lý mới xem được số đầy đủ, tôi chọn kiểm tra quyền ở Application / Business; đánh đổi là mỗi request liên quan khách hàng phải kiểm tra vai trò." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;align=left;verticalAlign=top;spacingTop=6;spacingLeft=8;fontSize=11;fontColor=#000000" vertex="1" parent="1">
+          <mxGeometry x="250" y="985" width="850" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="reason3" value="3. Vì NFR3 yêu cầu nhân viên mới tạo đúng một phiếu trong dưới 3 phút, tôi chọn gom luồng tạo phiếu vào TicketService và tự động hóa tra cứu, phân loại, ưu tiên và hạn cam kết; đánh đổi là TicketService có trách nhiệm lớn hơn." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;align=left;verticalAlign=top;spacingTop=6;spacingLeft=8;fontSize=11;fontColor=#000000" vertex="1" parent="1">
+          <mxGeometry x="250" y="1065" width="850" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="note" value="Ghi chú: tên bảng trong lớp Data / Infrastructure sẽ khớp với ERD khi hoàn thiện mô hình dữ liệu." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontColor=#000000" vertex="1" parent="1">
+          <mxGeometry x="250" y="1145" width="850" height="25" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
