@@ -2,7 +2,11 @@ API contract luồng L2 - Tiếp nhận và phân loại yêu cầu bảo hành
 
 
 
-Sinh viên : Trần Văn Lễ, MSSV : 2374802010270  , track SE
+
+
+Sinh viên : Trần Văn Lễ, MSSV : 2374802010270, Track SE
+
+
 
 
 
@@ -12,19 +16,185 @@ Sinh viên : Trần Văn Lễ, MSSV : 2374802010270  , track SE
 
 
 
-1\. GET /api/customers
+1\. DANH SÁCH ENDPOINT
 
 
 
-Để tra cứu khách theo số điện thoại
+
+
+GET /api/customers?phone={phone}
 
 
 
-Ví dụ gọi: GET /api/customers?phone=0901234567
+Tra cứu khách hàng theo số điện thoại.
 
 
 
-Nếu có thì trả về:
+Liên quan FR1, US1, UC1.
+
+
+
+
+
+POST /api/customers
+
+
+
+Tạo khách hàng mới khi số điện thoại chưa tồn tại.
+
+
+
+Liên quan FR5, US7, UC3.
+
+
+
+
+
+GET /api/customers/{id}/devices
+
+
+
+Lấy danh sách thiết bị đã có của khách hàng để chọn khi tạo phiếu.
+
+
+
+Liên quan FR2, US2, UC2.
+
+
+
+
+
+POST /api/devices
+
+
+
+Nhập thông tin thiết bị thủ công khi thiết bị không có trong lịch sử mua hàng.
+
+
+
+Liên quan FR6, US2, UC5.
+
+
+
+
+
+POST /api/tickets
+
+
+
+Tạo phiếu bảo hành mới, hệ thống tự phân loại nhóm sự cố, xác định mức ưu tiên và sinh hạn cam kết.
+
+
+
+Liên quan FR2, FR3, FR4, US2, US3, UC2, UC4.
+
+
+
+
+
+PATCH /api/tickets/{id}/status
+
+
+
+Cập nhật trạng thái phiếu theo đúng vòng đời.
+
+
+
+Liên quan FR7, US6, UC6.
+
+
+
+
+
+GET /api/tickets?status={status}\&sort={sort}
+
+
+
+Xem danh sách phiếu theo trạng thái và hạn cam kết.
+
+
+
+Liên quan FR8, US5, UC7.
+
+
+
+
+
+2\. QUY ƯỚC CHUNG
+
+
+
+
+
+Định dạng trao đổi: JSON, mã hóa UTF-8.
+
+
+
+Tên trường dùng snake\_case và khớp với tên cột trong mô hình dữ liệu.
+
+
+
+Thời gian dùng chuẩn ISO 8601 kèm múi giờ, ví dụ 2026-10-07T14:30:00+07:00.
+
+
+
+Phân trang: tham số page bắt đầu từ 1 và size, mặc định 20, tối đa 100.
+
+
+
+Mọi lỗi trả về cùng một cấu trúc:
+
+
+
+{
+
+&#x20; "error": {
+
+&#x20;   "code": "...",
+
+&#x20;   "message": "...",
+
+&#x20;   "fields": {}
+
+&#x20; }
+
+}
+
+
+
+
+
+3\. CHI TIẾT ENDPOINT
+
+
+
+
+
+3.1. GET /api/customers?phone={phone}
+
+
+
+
+
+Mục đích: Tra cứu khách hàng theo số điện thoại.
+
+
+
+
+
+Ví dụ gọi:
+
+
+
+GET /api/customers?phone=0901234567
+
+
+
+
+
+Nếu tìm thấy:
+
+
 
 {
 
@@ -40,25 +210,55 @@ Nếu có thì trả về:
 
 
 
-Nếu không tìm thấy thì trả về lỗi 404.
+
+
+Nếu không tìm thấy:
 
 
 
-Liên quan tới FR1, US1, UC1.
+404 Not Found
+
+
+
+{
+
+&#x20; "error": {
+
+&#x20;   "code": "CUSTOMER\_NOT\_FOUND",
+
+&#x20;   "message": "Khong tim thay khach hang",
+
+&#x20;   "fields": {}
+
+&#x20; }
+
+}
 
 
 
 
 
-2\. POST /api/customers
+Liên quan FR1, US1, UC1.
 
 
 
-Dùng khi số điện thoại chưa có trong hệ thống, tạo khách mới
+
+
+3.2. POST /api/customers
 
 
 
-Gửi lên:
+
+
+Mục đích: Tạo khách hàng mới khi số điện thoại chưa tồn tại.
+
+
+
+
+
+REQUEST BODY
+
+
 
 {
 
@@ -70,7 +270,11 @@ Gửi lên:
 
 
 
-Trả về 201 nếu tạo thành công:
+
+
+RESPONSE 201 Created
+
+
 
 {
 
@@ -84,9 +288,25 @@ Trả về 201 nếu tạo thành công:
 
 
 
-Nếu số điện thoại đã tồn tại rồi thì trả lỗi 409.
 
-Nếu thiếu tên hoặc số điện thoại thì trả lỗi 400.
+
+Nếu dữ liệu không hợp lệ:
+
+
+
+400 Bad Request
+
+
+
+
+
+Nếu số điện thoại đã tồn tại:
+
+
+
+409 Conflict
+
+
 
 
 
@@ -96,67 +316,87 @@ Liên quan FR5, US7, UC3.
 
 
 
-3\. POST /api/tickets
+3.3. GET /api/customers/{id}/devices
 
 
 
-Đây là cái chính, dùng để tạo phiếu bảo hành mới
+
+
+Mục đích: Lấy danh sách thiết bị đã có của khách hàng.
 
 
 
-Gửi lên:
+
+
+Ví dụ gọi:
+
+
+
+GET /api/customers/5/devices
+
+
+
+
+
+RESPONSE 200 OK
+
+
 
 {
 
 &#x20; "customer\_id": 5,
 
-&#x20; "device\_id": 12,
+&#x20; "devices": \[
 
-&#x20; "issue\_desc": "May bi den man hinh, khong len nguon"
+&#x20;   {
 
-}
+&#x20;     "device\_id": 12,
 
+&#x20;     "serial\_no": "IMEI123456789",
 
+&#x20;     "product\_name": "iPhone 13"
 
-Hệ thống sẽ tự động gán nhóm sự cố, mức ưu tiên và tính hạn cam kết, trả về kiểu như:
+&#x20;   }
 
-{
-
-&#x20; "ticket\_id": 101,
-
-&#x20; "ticket\_code": "BH000101/2026",
-
-&#x20; "status": "MOI",
-
-&#x20; "category": "MAN\_HINH",
-
-&#x20; "priority": "TRUNG\_BINH",
-
-&#x20; "due\_date": "2026-10-04T09:00:00Z"
+&#x20; ]
 
 }
 
 
 
-Nếu issue\_desc rỗng thì lỗi 400, nếu customer\_id hoặc device\_id không tồn tại thì lỗi 404.
+
+
+Nếu customer\_id không tồn tại:
 
 
 
-Liên quan FR2, FR3, FR4, US2, US3, UC2.
+404 Not Found
 
 
 
 
 
-4\. POST /api/devices
+Liên quan FR2, US2, UC2.
 
 
 
-Cho trường hợp thiết bị không có trong lịch sử mua hàng, phải nhập tay
+
+
+3.4. POST /api/devices
 
 
 
-Gửi lên:
+
+
+Mục đích: Nhập thiết bị thủ công khi thiết bị không có trong lịch sử mua hàng.
+
+
+
+
+
+REQUEST BODY
+
+
 
 {
 
@@ -170,37 +410,159 @@ Gửi lên:
 
 
 
-Trả về 201:
+
+
+RESPONSE 201 Created
+
+
 
 {
 
 &#x20; "device\_id": 20,
 
-&#x20; "serial\_no": "IMEI123456789"
+&#x20; "serial\_no": "IMEI123456789",
+
+&#x20; "product\_name": "iPhone 13"
 
 }
 
 
 
-Thiếu số serial thì báo lỗi 400.
+
+
+Nếu thiếu số serial:
 
 
 
-Liên quan FR6, US8, UC5.
+400 Bad Request
 
 
 
 
 
-5\. PATCH /api/tickets/{id}/status
+Nếu serial đã tồn tại:
 
 
 
-Để cập nhật trạng thái phiếu
+409 Conflict
 
 
 
-Ví dụ: PATCH /api/tickets/101/status
+
+
+Liên quan FR6, US2, UC5.
+
+
+
+
+
+3.5. POST /api/tickets
+
+
+
+
+
+Mục đích: Tạo phiếu bảo hành mới.
+
+
+
+
+
+REQUEST BODY
+
+
+
+{
+
+&#x20; "customer\_id": 5,
+
+&#x20; "device\_id": 12,
+
+&#x20; "issue\_desc": "May bi den man hinh, khong len nguon"
+
+}
+
+
+
+
+
+RESPONSE 201 Created
+
+
+
+{
+
+&#x20; "ticket\_id": 101,
+
+&#x20; "ticket\_code": "BH000101/2026",
+
+&#x20; "status": "MOI",
+
+&#x20; "category": "MAN\_HINH",
+
+&#x20; "priority": "TRUNG\_BINH",
+
+&#x20; "received\_at": "2026-10-07T09:00:00+07:00",
+
+&#x20; "due\_date": "2026-10-10T09:00:00+07:00"
+
+}
+
+
+
+
+
+Nếu issue\_desc rỗng:
+
+
+
+400 Bad Request
+
+
+
+
+
+Nếu customer\_id hoặc device\_id không tồn tại:
+
+
+
+404 Not Found
+
+
+
+
+
+Liên quan FR2, FR3, FR4, US2, US3, UC2, UC4.
+
+
+
+
+
+3.6. PATCH /api/tickets/{id}/status
+
+
+
+
+
+Mục đích: Cập nhật trạng thái phiếu theo đúng vòng đời.
+
+
+
+
+
+Ví dụ:
+
+
+
+PATCH /api/tickets/101/status
+
+
+
+
+
+REQUEST BODY
+
+
 
 {
 
@@ -210,7 +572,11 @@ Ví dụ: PATCH /api/tickets/101/status
 
 
 
-Trả về:
+
+
+RESPONSE 200 OK
+
+
 
 {
 
@@ -222,29 +588,59 @@ Trả về:
 
 
 
-Nếu chuyển trạng thái sai thứ tự (ví dụ đang đóng mà đổi về mới) thì trả lỗi 409.
+
+
+Nếu phiếu không tồn tại:
 
 
 
-Liên quan FR2, US6, UC6.
+404 Not Found
 
 
 
 
 
-6\. GET /api/tickets
+Nếu chuyển sai thứ tự hoặc chuyển ngược trạng thái:
 
 
 
-Để xem danh sách phiếu, lọc theo trạng thái
+409 Conflict
 
 
 
-Ví dụ: GET /api/tickets?status=MOI\&sort=due\_date
+
+
+Liên quan FR7, US6, UC6.
 
 
 
-Trả về:
+
+
+3.7. GET /api/tickets?status={status}\&sort={sort}
+
+
+
+
+
+Mục đích: Xem danh sách phiếu theo trạng thái và hạn cam kết.
+
+
+
+
+
+Ví dụ:
+
+
+
+GET /api/tickets?status=MOI\&sort=due\_date
+
+
+
+
+
+RESPONSE 200 OK
+
+
 
 {
 
@@ -260,7 +656,7 @@ Trả về:
 
 &#x20;     "status": "MOI",
 
-&#x20;     "due\_date": "2026-10-04T09:00:00Z"
+&#x20;     "due\_date": "2026-10-10T09:00:00+07:00"
 
 &#x20;   }
 
@@ -270,23 +666,121 @@ Trả về:
 
 
 
-Liên quan FR2, US5, UC7.
+
+
+Liên quan FR8, US5, UC7.
 
 
 
 
 
-Một số quy tắc chung em nghĩ cần áp dụng:
-
-\- số điện thoại phải đúng 10 số, bắt đầu bằng 0 (theo QT-02)
-
-\- mô tả lỗi không được để trống
-
-\- số serial phải nhập khi tạo thiết bị thủ công, và phải là duy nhất
-
-\- chuyển trạng thái phải đúng thứ tự vòng đời, không cho chuyển ngược (QT-06)
+4\. BẢNG VALIDATION
 
 
 
-Phần này em chưa chắc sẽ giữ nguyên hết khi code thật, có thể sẽ phải sửa lại một vài chỗ cho hợp lí hơn
+
+
+POST /api/customers
+
+
+
+full\_name: bắt buộc, chuỗi, không để trống.
+
+
+
+phone: bắt buộc, chuỗi 10 chữ số bắt đầu bằng 0 theo QT-02, không trùng theo QT-01.
+
+
+
+
+
+POST /api/devices
+
+
+
+customer\_id: bắt buộc, số nguyên dương, phải tồn tại.
+
+
+
+serial\_no: bắt buộc, chuỗi, không để trống, phải duy nhất.
+
+
+
+product\_name: bắt buộc, chuỗi, không để trống.
+
+
+
+
+
+POST /api/tickets
+
+
+
+customer\_id: bắt buộc, số nguyên dương, phải tồn tại.
+
+
+
+device\_id: bắt buộc, số nguyên dương, phải tồn tại.
+
+
+
+issue\_desc: bắt buộc, chuỗi, không để trống.
+
+
+
+priority: hệ thống tự xác định, thuộc CAO / TRUNG\_BINH / THAP.
+
+
+
+status: khi tạo mới mặc định là MOI.
+
+
+
+
+
+PATCH /api/tickets/{id}/status
+
+
+
+to\_status: bắt buộc, thuộc các trạng thái MOI / DA\_PHAN\_CONG / DANG\_XU\_LY / HOAN\_TAT / DA\_DONG.
+
+
+
+Chỉ được chuyển theo đúng thứ tự vòng đời theo QT-04.
+
+
+
+
+
+5\. QUY TẮC LIÊN QUAN
+
+
+
+
+
+Số điện thoại khách hàng là duy nhất trong hệ thống theo QT-01.
+
+
+
+Số điện thoại được chuẩn hóa về dạng 10 chữ số bắt đầu bằng 0 theo QT-02.
+
+
+
+Hạn cam kết được sinh tự động theo mức ưu tiên theo QT-03.
+
+
+
+Phiếu chỉ được chuyển trạng thái theo đúng vòng đời và phải ghi log theo QT-04.
+
+
+
+Nhân viên tiếp nhận chỉ thấy số điện thoại dạng che theo QT-05.
+
+
+
+Quản lý trung tâm chỉ xem được phiếu của trung tâm mình phụ trách theo QT-06.
+
+
+
+Thiết bị nhập thủ công bắt buộc có số serial theo QT-07.
 
