@@ -9,6 +9,9 @@ const STATUS_BY_CODE = {
   CUSTOMER_NOT_FOUND: 404,
   PHONE_EXISTS: 409,
   CUSTOMER_IN_USE: 409,
+  DEVICE_NOT_FOUND: 404,
+  SERIAL_EXISTS: 409,
+  DEVICE_IN_USE: 409,
 };
 
 function errorBody(code, message, fields = {}) {

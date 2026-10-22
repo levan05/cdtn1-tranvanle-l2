@@ -1,7 +1,7 @@
 const express = require('express');
 const { requireRole } = require('../middleware/auth');
 
-function createCustomerRoutes({ customerService }) {
+function createCustomerRoutes({ customerService, deviceService }) {
   const router = express.Router();
 
   // Co ?phone= thi tra cuu mot khach (FR1), khong co thi tra danh sach co phan trang
@@ -14,6 +14,10 @@ function createCustomerRoutes({ customerService }) {
 
   router.get('/:id', async (req, res) => {
     res.json(await customerService.getById(req.params.id, req.user));
+  });
+
+  router.get('/:id/devices', async (req, res) => {
+    res.json(await deviceService.listByCustomer(req.params.id));
   });
 
   router.post('/', async (req, res) => {
