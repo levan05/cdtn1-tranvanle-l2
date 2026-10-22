@@ -1,0 +1,15 @@
+{
+  "name": "cdtn1-tranvanle-l2",
+  "version": "0.2.0",
+  "description": "Tiep nhan va phan loai yeu cau bao hanh - luong L2, Mekong Mobile",
+  "private": true,
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "license": "UNLICENSED"
+}
