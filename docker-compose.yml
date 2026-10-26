@@ -1,0 +1,34 @@
+# Chay: docker compose up --build   (sau do mo http://localhost:8000)
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: baohanh_l2
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-matkhau_demo_docker}
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d baohanh_l2"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: baohanh_l2
+      DB_USER: postgres
+      DB_PASSWORD: ${DB_PASSWORD:-matkhau_demo_docker}
+      JWT_SECRET: ${JWT_SECRET:-chuoi_bi_mat_demo_docker_toi_thieu_32_ky_tu}
+      PORT: 8000
+    ports:
+      - "8000:8000"
+
+volumes:
+  dbdata:
