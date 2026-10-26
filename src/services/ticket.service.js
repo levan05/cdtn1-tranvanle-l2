@@ -1,9 +1,14 @@
-const AppError = require('../errors/AppError');
-const { validateTicketInput } = require('../validators/ticket.validator');
+﻿const AppError = require('../errors/AppError');
+const { parseId } = require('../validators/common.validator');
+const { validateTicketInput, validateStatusInput, STATUSES } = require('../validators/ticket.validator');
 const { phanLoaiSuCo } = require('./classifier');
 const { tinhHanCamKet } = require('./deadline');
 
 const LOCAL_OFFSET_MS = 7 * 60 * 60 * 1000;
+
+function notFound() {
+  return new AppError('TICKET_NOT_FOUND', 'Khong tim thay phieu bao hanh');
+}
 
 // Ma phieu dang BH + 6 chu so cua ticket_id + / + nam tiep nhan theo gio Viet Nam, vd BH000101/2026
 function sinhMaPhieu(ticketId, receivedAt) {
@@ -60,6 +65,31 @@ function createTicketService({ ticketRepo, customerRepo, deviceRepo, now = () =>
         received_at: receivedAt.toISOString(),
         due_date: dueDate.toISOString(),
       };
+    },
+
+    // QT-04: chi duoc chuyen sang trang thai ke tiep, khong nhay coc, khong quay lai; moi lan chuyen ghi log
+    async changeStatus(rawId, body, user) {
+      const id = parseId(rawId);
+      const { to_status: toStatus } = validateStatusInput(body);
+
+      return ticketRepo.runInTransaction(async (tx) => {
+        const ticket = await tx.findForUpdate(id);
+        // Phieu cua trung tam khac coi nhu khong ton tai (QT-06)
+        if (!ticket || ticket.center_id !== user.center_id) throw notFound();
+
+        const expected = STATUSES[STATUSES.indexOf(ticket.status) + 1];
+        if (toStatus !== expected) {
+          throw new AppError(
+            'INVALID_TRANSITION',
+            `Khong the chuyen tu ${ticket.status} sang ${toStatus}`,
+            { to_status: expected ? `Trang thai ke tiep hop le la ${expected}` : 'Phieu da dong, khong the chuyen tiep' }
+          );
+        }
+
+        await tx.updateStatus(id, toStatus);
+        await tx.insertLog({ ticket_id: id, from_status: ticket.status, to_status: toStatus, changed_by: user.username });
+        return { ticket_id: id, status: toStatus };
+      });
     },
   };
 }
