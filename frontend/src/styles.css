@@ -827,3 +827,18 @@ h3 {
     grid-template-columns: 1fr;
   }
 }
+
+.alert-success {
+  background: var(--success-soft);
+  color: var(--success);
+  border: 1px solid #c3ebcd;
+}
+
+.table.plain tbody tr {
+  cursor: default;
+}
+
+.small {
+  font-size: 13px;
+  margin: 0;
+}
