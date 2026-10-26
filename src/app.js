@@ -6,8 +6,9 @@ const createCustomerRoutes = require('./routes/customer.routes');
 const createDeviceRoutes = require('./routes/device.routes');
 const createTicketRoutes = require('./routes/ticket.routes');
 const createUserRoutes = require('./routes/user.routes');
+const createCategoryRoutes = require('./routes/category.routes');
 
-function createApp({ db, authService, customerService, deviceService, ticketService, userService }) {
+function createApp({ db, authService, customerService, deviceService, ticketService, userService, categoryService }) {
   const app = express();
   app.use(express.json());
 
@@ -27,6 +28,7 @@ function createApp({ db, authService, customerService, deviceService, ticketServ
 
   app.use('/api/tickets', authenticate(authService), createTicketRoutes({ ticketService }));
   app.use('/api/users', authenticate(authService), createUserRoutes({ userService }));
+  app.use('/api/categories', authenticate(authService), createCategoryRoutes({ categoryService }));
 
   app.use(notFoundHandler);
   app.use(errorHandler);
