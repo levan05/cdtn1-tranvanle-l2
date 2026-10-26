@@ -1,3 +1,5 @@
+const fs = require('node:fs');
+const path = require('node:path');
 const express = require('express');
 const { authenticate } = require('./middleware/auth');
 const { errorHandler, notFoundHandler } = require('./routes/http-errors');
@@ -29,6 +31,10 @@ function createApp({ db, authService, customerService, deviceService, ticketServ
   app.use('/api/tickets', authenticate(authService), createTicketRoutes({ ticketService }));
   app.use('/api/users', authenticate(authService), createUserRoutes({ userService }));
   app.use('/api/categories', authenticate(authService), createCategoryRoutes({ categoryService }));
+
+  // Neu da build giao dien (frontend/dist) thi phuc vu luon, de chay mot lenh la co ca web lan API
+  const webDir = path.join(__dirname, '..', 'frontend', 'dist');
+  if (fs.existsSync(webDir)) app.use(express.static(webDir));
 
   app.use(notFoundHandler);
   app.use(errorHandler);
