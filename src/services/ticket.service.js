@@ -99,6 +99,16 @@ function createTicketService({ ticketRepo, customerRepo, deviceRepo, now = () =>
       });
       return { total, page: filter.page, size: filter.size, tickets };
     },
+
+    // Chi tiet phieu kem lich su trang thai; phieu cua trung tam khac coi nhu khong ton tai (QT-06)
+    async getById(rawId, user) {
+      const id = parseId(rawId);
+      const ticket = await ticketRepo.findById(id);
+      if (!ticket || ticket.center_id !== user.center_id) throw notFound();
+      const logs = await ticketRepo.listLogs(id);
+      return { ...ticket, customer_phone: presentPhone(ticket.customer_phone, user), logs };
+    },
+
     // QT-04: chi duoc chuyen sang trang thai ke tiep, khong nhay coc, khong quay lai; moi lan chuyen ghi log
     async changeStatus(rawId, body, user) {
       const id = parseId(rawId);

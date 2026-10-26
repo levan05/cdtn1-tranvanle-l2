@@ -1,10 +1,14 @@
-﻿const express = require('express');
+const express = require('express');
 
 function createTicketRoutes({ ticketService }) {
   const router = express.Router();
 
   router.get('/', async (req, res) => {
     res.json(await ticketService.list(req.query, req.user));
+  });
+
+  router.get('/:id', async (req, res) => {
+    res.json(await ticketService.getById(req.params.id, req.user));
   });
 
   router.post('/', async (req, res) => {
