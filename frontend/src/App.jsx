@@ -5,6 +5,7 @@ import { EmptyState } from './components/StateViews.jsx';
 import { useHashRoute } from './hooks/useHashRoute.js';
 import Login from './pages/Login.jsx';
 import TicketCreate from './pages/TicketCreate.jsx';
+import TicketDetail from './pages/TicketDetail.jsx';
 import TicketList from './pages/TicketList.jsx';
 
 export default function App() {
@@ -34,6 +35,8 @@ export default function App() {
         <TicketList user={user} />
       ) : path === '/tickets/new' && user.role === 'NHAN_VIEN_TIEP_NHAN' ? (
         <TicketCreate />
+      ) : /^\/tickets\/\d+$/.test(path) ? (
+        <TicketDetail ticketId={path.split('/')[2]} key={path} />
       ) : (
         <EmptyState title="Màn hình đang được xây dựng" hint={`Đường dẫn hiện tại: ${path}`} />
       )}

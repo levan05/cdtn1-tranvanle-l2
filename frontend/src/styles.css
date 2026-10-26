@@ -691,3 +691,139 @@ h3 {
     grid-template-columns: 1fr;
   }
 }
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: var(--primary);
+}
+
+.head-badges {
+  display: flex;
+  gap: 8px;
+}
+
+.head-badges .badge {
+  font-size: 13px;
+  padding: 5px 14px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.info-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+}
+
+.info-item dt {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.info-item dd {
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.issue-desc {
+  margin: 4px 0 0;
+  padding: 12px 14px;
+  background: #f8f9fd;
+  border-radius: 10px;
+  white-space: pre-wrap;
+}
+
+.stepper {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.stepper li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+}
+
+.stepper .dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  background: #eceff4;
+}
+
+.stepper .done .dot {
+  background: var(--success);
+  color: #fff;
+}
+
+.stepper .current {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.stepper .current .dot {
+  background: var(--primary);
+  color: #fff;
+}
+
+.status-action {
+  display: grid;
+  gap: 8px;
+}
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 14px;
+  border-left: 2px solid var(--border);
+  display: grid;
+  gap: 16px;
+}
+
+.timeline li {
+  display: grid;
+  position: relative;
+}
+
+.timeline li::before {
+  content: '';
+  position: absolute;
+  left: -21px;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+@media (max-width: 900px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+  .info-list {
+    grid-template-columns: 1fr;
+  }
+}
