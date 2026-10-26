@@ -1,6 +1,6 @@
 const AppError = require('../errors/AppError');
 const { parseId } = require('../validators/common.validator');
-const { validateTicketInput, validateStatusInput, validateTicketListQuery, STATUSES } = require('../validators/ticket.validator');
+const { validateTicketInput, validatePreviewInput, validateStatusInput, validateTicketListQuery, STATUSES } = require('../validators/ticket.validator');
 const { phanLoaiSuCo } = require('./classifier');
 const { tinhHanCamKet } = require('./deadline');
 
@@ -27,6 +27,18 @@ function sinhMaPhieu(ticketId, receivedAt) {
 
 function createTicketService({ ticketRepo, customerRepo, deviceRepo, now = () => new Date() }) {
   return {
+    // Cho giao dien hien nhom su co, uu tien, han cam ket truoc khi luu; dung chung luat voi create
+    preview(body) {
+      const { issue_desc: issueDesc } = validatePreviewInput(body);
+      const category = phanLoaiSuCo(issueDesc);
+      return {
+        category_id: category.category_id,
+        category_name: category.category_name,
+        priority: category.priority,
+        due_date: tinhHanCamKet(now(), category.priority).toISOString(),
+      };
+    },
+
     async create(body, user) {
       const data = validateTicketInput(body);
 

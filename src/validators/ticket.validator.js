@@ -12,6 +12,12 @@ function toPositiveInt(value) {
   return Number.isInteger(n) && n >= 1 ? n : null;
 }
 
+function validateIssueDesc(value) {
+  if (typeof value !== 'string' || value.trim() === '') return 'Mo ta loi la bat buoc';
+  if (value.trim().length > MAX_ISSUE_DESC) return `Mo ta loi toi da ${MAX_ISSUE_DESC} ky tu`;
+  return null;
+}
+
 function validateTicketInput(body = {}) {
   const fields = {};
 
@@ -21,16 +27,19 @@ function validateTicketInput(body = {}) {
   const deviceId = toPositiveInt(body.device_id);
   if (deviceId === null) fields.device_id = 'device_id phai la so nguyen duong';
 
-  if (typeof body.issue_desc !== 'string' || body.issue_desc.trim() === '') {
-    fields.issue_desc = 'Mo ta loi la bat buoc';
-  } else if (body.issue_desc.trim().length > MAX_ISSUE_DESC) {
-    fields.issue_desc = `Mo ta loi toi da ${MAX_ISSUE_DESC} ky tu`;
-  }
+  const descError = validateIssueDesc(body.issue_desc);
+  if (descError) fields.issue_desc = descError;
 
   if (Object.keys(fields).length > 0) {
     throw new AppError('VALIDATION_ERROR', 'Du lieu phieu bao hanh khong hop le', fields);
   }
   return { customer_id: customerId, device_id: deviceId, issue_desc: body.issue_desc.trim() };
+}
+
+function validatePreviewInput(body = {}) {
+  const descError = validateIssueDesc(body.issue_desc);
+  if (descError) throw new AppError('VALIDATION_ERROR', 'Mo ta loi khong hop le', { issue_desc: descError });
+  return { issue_desc: body.issue_desc.trim() };
 }
 
 function validateStatusInput(body = {}) {
@@ -74,4 +83,4 @@ function validateTicketListQuery(query = {}) {
   };
 }
 
-module.exports = { STATUSES, PRIORITIES, validateTicketInput, validateStatusInput, validateTicketListQuery };
+module.exports = { STATUSES, PRIORITIES, validateTicketInput, validatePreviewInput, validateStatusInput, validateTicketListQuery };

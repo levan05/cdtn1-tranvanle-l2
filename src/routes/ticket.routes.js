@@ -11,6 +11,10 @@ function createTicketRoutes({ ticketService }) {
     res.json(await ticketService.getById(req.params.id, req.user));
   });
 
+  router.post('/preview', (req, res) => {
+    res.json(ticketService.preview(req.body));
+  });
+
   router.post('/', async (req, res) => {
     res.status(201).json(await ticketService.create(req.body, req.user));
   });
