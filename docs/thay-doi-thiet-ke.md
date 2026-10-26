@@ -19,3 +19,21 @@ Mỗi thay đổi gồm ba dòng: thay đổi gì, vì sao, ảnh hưởng tới
 - Thay đổi gì: thêm `seeds/001_demo.sql` (2 trung tâm, 6 nhóm sự cố, 2 tài khoản, 3 khách, 3 thiết bị, 3 phiếu) dùng `ON CONFLICT DO NOTHING`.
 - Vì sao: hệ thống không được lên trống trơn, và nạp lại dữ liệu mẫu không được nhân đôi bản ghi.
 - Ảnh hưởng tới: các bảng `service_center`, `issue_category`, `app_user`, `customer`, `device`, `ticket`, `ticket_status_log`.
+
+## TĐ4. Thêm chức năng quản lý tài khoản (`/api/users`)
+
+- Thay đổi gì: thêm `GET /api/users` và `POST /api/users`. Chỉ `QUAN_LY` dùng được; tài khoản mới luôn có vai trò `NHAN_VIEN_TIEP_NHAN` và thuộc trung tâm của quản lý đang tạo. Trùng tên đăng nhập trả 409 `USERNAME_EXISTS`. Mật khẩu được băm bằng bcrypt (`crypt()` của pgcrypto) ngay trong SQL.
+- Vì sao: SRS và API contract chỉ có tài khoản mẫu từ seed, chưa có cách tạo thêm người dùng. Việc cho người dùng tự chọn vai trò hoặc trung tâm sẽ phá QT-05, QT-06, nên hai trường này không nhận từ client.
+- Ảnh hưởng tới: `docs/api-contract.md` (thêm 2 endpoint và mã lỗi `USERNAME_EXISTS`), `src/routes/user.routes.js`, `src/services/user.service.js`, `src/repositories/user.repository.js`, `src/validators/user.validator.js`, màn hình quản lý tài khoản ở giao diện.
+
+## TĐ5. Thời điểm hạn cam kết tính theo múi giờ UTC+7
+
+- Thay đổi gì: `src/services/deadline.js` xác định ngày làm việc theo UTC+7 (chỉ Chủ Nhật nghỉ). Phiếu nhận vào Chủ Nhật được đếm từ 00:00 Thứ Hai. API trả thời điểm dạng UTC (hậu tố `Z`) thay vì `+07:00` như ví dụ trong API contract.
+- Vì sao: máy chủ có thể chạy ở múi giờ khác, nếu dùng giờ máy thì hạn sẽ sai lệch. Hai dạng biểu diễn cùng chỉ một thời điểm.
+- Ảnh hưởng tới: `docs/api-contract.md` (ví dụ thời gian), `tests/deadline.test.js`, hiển thị giờ ở giao diện (đổi sang giờ Việt Nam khi hiển thị).
+
+## TĐ6. Ví dụ phân loại trong API contract được chỉnh theo quy tắc từ khóa
+
+- Thay đổi gì: câu mô tả "den man hinh, khong len nguon" được phân loại ưu tiên `CAO` theo bảng từ khóa trong `src/services/classifier.js`, không còn là `TRUNG_BINH` như ví dụ ở API contract.
+- Vì sao: ví dụ trong contract chỉ là minh họa, quy tắc từ khóa mới là nguồn chuẩn; hạn cam kết của phiếu này vì vậy là 24 giờ.
+- Ảnh hưởng tới: `docs/api-contract.md` (ví dụ phản hồi tạo phiếu), `tests/ticket.valid.test.js`.
