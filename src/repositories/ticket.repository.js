@@ -81,7 +81,7 @@ function createTicketRepository(db) {
     },
 
     // Luon loc theo trung tam (QT-06); phieu sap den han dung truoc
-    async list({ centerId, status, priority, limit, offset }) {
+    async list({ centerId, status, priority, phone, category, limit, offset }) {
       const where = ['t.center_id = $1'];
       const params = [centerId];
       if (status) {
@@ -92,9 +92,22 @@ function createTicketRepository(db) {
         params.push(priority);
         where.push(`t.priority = $${params.length}`);
       }
+      if (phone) {
+        params.push(phone);
+        where.push(`c.phone = $${params.length}`);
+      }
+      if (category) {
+        params.push(category);
+        where.push(`t.category_id = $${params.length}`);
+      }
       const clause = where.join(' AND ');
 
-      const total = await db.query(`SELECT count(*)::int AS n FROM ticket t WHERE ${clause}`, params);
+      const total = await db.query(
+        `SELECT count(*)::int AS n FROM ticket t
+         JOIN customer c ON c.customer_id = t.customer_id
+         WHERE ${clause}`,
+        params
+      );
       params.push(limit, offset);
       const rows = await db.query(
         `${SELECT_TICKET} WHERE ${clause}

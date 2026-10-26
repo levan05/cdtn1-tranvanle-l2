@@ -1,6 +1,8 @@
 const AppError = require('../errors/AppError');
 const { parsePaging } = require('./common.validator');
 
+const { normalizePhone } = require('./customer.validator');
+
 const STATUSES = ['MOI', 'DA_PHAN_CONG', 'DANG_XU_LY', 'HOAN_TAT', 'DA_DONG'];
 const PRIORITIES = ['CAO', 'TRUNG_BINH', 'THAP'];
 const MAX_ISSUE_DESC = 2000;
@@ -49,13 +51,27 @@ function validateTicketListQuery(query = {}) {
   if (query.priority !== undefined && !PRIORITIES.includes(query.priority)) {
     fields.priority = `priority phai thuoc: ${PRIORITIES.join(', ')}`;
   }
+  let phone = null;
+  if (query.phone !== undefined && query.phone !== '') {
+    phone = normalizePhone(query.phone);
+    if (phone === null) fields.phone = 'So dien thoai phai gom 10 chu so bat dau bang 0';
+  }
+  if (query.category !== undefined && query.category !== '' && !/^[1-9]\d{0,8}$/.test(String(query.category))) {
+    fields.category = 'category phai la ma nhom su co (so nguyen duong)';
+  }
   if (query.sort !== undefined && query.sort !== 'due_date') {
     fields.sort = 'sort chi ho tro due_date';
   }
   if (Object.keys(fields).length > 0) {
     throw new AppError('VALIDATION_ERROR', 'Bo loc danh sach phieu khong hop le', fields);
   }
-  return { status: query.status || null, priority: query.priority || null, ...parsePaging(query) };
+  return {
+    status: query.status || null,
+    priority: query.priority || null,
+    phone,
+    category: query.category ? Number(query.category) : null,
+    ...parsePaging(query),
+  };
 }
 
 module.exports = { STATUSES, PRIORITIES, validateTicketInput, validateStatusInput, validateTicketListQuery };

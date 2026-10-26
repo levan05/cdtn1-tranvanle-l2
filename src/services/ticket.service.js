@@ -83,6 +83,8 @@ function createTicketService({ ticketRepo, customerRepo, deviceRepo, now = () =>
         centerId: user.center_id,
         status: filter.status,
         priority: filter.priority,
+        phone: filter.phone,
+        category: filter.category,
         limit: filter.limit,
         offset: filter.offset,
       });
