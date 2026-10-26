@@ -1,4 +1,4 @@
-﻿const TOKEN_KEY = 'mekong.token';
+const TOKEN_KEY = 'mekong.token';
 const USER_KEY = 'mekong.user';
 const BASE = import.meta.env?.VITE_API_BASE ?? '';
 
@@ -56,6 +56,11 @@ async function request(method, path, { query, body } = {}) {
     throw new ApiError('NETWORK_ERROR', 'Không kết nối được máy chủ. Vui lòng kiểm tra mạng rồi thử lại.');
   }
 
+  // Backend tat thi proxy cua Vite hoac may chu trung gian tra 502/503/504, coi nhu mat ket noi
+  if ([502, 503, 504].includes(response.status)) {
+    throw new ApiError('NETWORK_ERROR', 'Không kết nối được máy chủ. Vui lòng kiểm tra mạng rồi thử lại.', response.status);
+  }
+
   if (response.status === 204) return null;
   const data = await response.json().catch(() => null);
 
@@ -87,4 +92,7 @@ export const api = {
   createCustomer: (body) => request('POST', '/api/customers', { body }),
   listCustomerDevices: (customerId) => request('GET', `/api/customers/${customerId}/devices`),
   createDevice: (body) => request('POST', '/api/devices', { body }),
+
+  listUsers: () => request('GET', '/api/users'),
+  createUser: (body) => request('POST', '/api/users', { body }),
 };
