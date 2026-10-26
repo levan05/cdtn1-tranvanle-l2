@@ -9,6 +9,8 @@
   },
   "scripts": {
     "start": "node src/server.js",
+    "migrate": "node scripts/run-sql.js migrations",
+    "seed": "node scripts/run-sql.js seeds",
     "test": "node --test"
   },
   "license": "UNLICENSED",
