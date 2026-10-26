@@ -86,6 +86,7 @@ export const api = {
   listTickets: (query) => request('GET', '/api/tickets', { query }),
   getTicket: (id) => request('GET', `/api/tickets/${id}`),
   createTicket: (body) => request('POST', '/api/tickets', { body }),
+  previewTicket: (issueDesc) => request('POST', '/api/tickets/preview', { body: { issue_desc: issueDesc } }),
   changeTicketStatus: (id, toStatus) => request('PATCH', `/api/tickets/${id}/status`, { body: { to_status: toStatus } }),
 
   findCustomerByPhone: (phone) => request('GET', '/api/customers', { query: { phone } }),
