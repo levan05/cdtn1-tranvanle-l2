@@ -1,10 +1,19 @@
-﻿const AppError = require('../errors/AppError');
+const AppError = require('../errors/AppError');
 const { parseId } = require('../validators/common.validator');
-const { validateTicketInput, validateStatusInput, STATUSES } = require('../validators/ticket.validator');
+const { validateTicketInput, validateStatusInput, validateTicketListQuery, STATUSES } = require('../validators/ticket.validator');
 const { phanLoaiSuCo } = require('./classifier');
 const { tinhHanCamKet } = require('./deadline');
 
 const LOCAL_OFFSET_MS = 7 * 60 * 60 * 1000;
+
+const ROLE_MANAGER = 'QUAN_LY';
+const NEAR_DUE_MS = 24 * 60 * 60 * 1000;
+const FINISHED = ['HOAN_TAT', 'DA_DONG'];
+
+// QT-05: chi quan ly xem so day du, vai tro khac chi thay 4 so cuoi
+function presentPhone(phone, user) {
+  return user.role === ROLE_MANAGER ? phone : '******' + phone.slice(-4);
+}
 
 function notFound() {
   return new AppError('TICKET_NOT_FOUND', 'Khong tim thay phieu bao hanh');
@@ -67,6 +76,29 @@ function createTicketService({ ticketRepo, customerRepo, deviceRepo, now = () =>
       };
     },
 
+    // QT-06: luon loc theo trung tam cua nguoi dang nhap, khong nhan center tu client
+    async list(query, user) {
+      const filter = validateTicketListQuery(query);
+      const { total, rows } = await ticketRepo.list({
+        centerId: user.center_id,
+        status: filter.status,
+        priority: filter.priority,
+        limit: filter.limit,
+        offset: filter.offset,
+      });
+      const nowMs = now().getTime();
+      const tickets = rows.map((t) => {
+        const remaining = new Date(t.due_date).getTime() - nowMs;
+        const open = !FINISHED.includes(t.status);
+        return {
+          ...t,
+          customer_phone: presentPhone(t.customer_phone, user),
+          is_overdue: open && remaining < 0,
+          is_near_due: open && remaining >= 0 && remaining <= NEAR_DUE_MS,
+        };
+      });
+      return { total, page: filter.page, size: filter.size, tickets };
+    },
     // QT-04: chi duoc chuyen sang trang thai ke tiep, khong nhay coc, khong quay lai; moi lan chuyen ghi log
     async changeStatus(rawId, body, user) {
       const id = parseId(rawId);
