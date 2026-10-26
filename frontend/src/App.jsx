@@ -1,9 +1,13 @@
-﻿import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { session, setUnauthorizedHandler } from './api/client.js';
+import Layout from './components/Layout.jsx';
+import { EmptyState } from './components/StateViews.jsx';
+import { useHashRoute } from './hooks/useHashRoute.js';
 import Login from './pages/Login.jsx';
 
 export default function App() {
   const [user, setUser] = useState(() => (session.getToken() ? session.getUser() : null));
+  const path = useHashRoute();
 
   const logout = useCallback(() => {
     session.clear();
@@ -23,13 +27,8 @@ export default function App() {
   if (!user) return <Login onLoggedIn={handleLoggedIn} />;
 
   return (
-    <main className="splash">
-      <div className="splash-logo">M</div>
-      <h1>Xin chào, {user.full_name}</h1>
-      <p>Các màn hình nghiệp vụ sẽ được thêm ở bước tiếp theo</p>
-      <button className="btn btn-ghost" onClick={logout}>
-        Đăng xuất
-      </button>
-    </main>
+    <Layout user={user} path={path} onLogout={logout}>
+      <EmptyState title="Màn hình đang được xây dựng" hint={`Đường dẫn hiện tại: ${path}`} />
+    </Layout>
   );
 }
