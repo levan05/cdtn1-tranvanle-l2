@@ -10,7 +10,7 @@ Sinh viên : Trần Văn Lễ, MSSV : 2374802010270, Track SE
 
 
 
-Đây là bản nháp đầu tiên, có thể sẽ chỉnh sửa lại khi code thực tế ở BT2.
+Bản nháp BT1, đã cập nhật theo code thực tế ở BT2 (xem docs/thay-doi-thiet-ke.md, TĐ4 đến TĐ6).
 
 
 
@@ -134,7 +134,7 @@ Tên trường dùng snake\_case và khớp với tên cột trong mô hình d�
 
 
 
-Thời gian dùng chuẩn ISO 8601 kèm múi giờ, ví dụ 2026-10-07T14:30:00+07:00.
+Thời gian dùng chuẩn ISO 8601, API trả dạng UTC (hậu tố Z), ví dụ 2026-10-07T07:30:00.000Z, tương đương 14:30 giờ Việt Nam (TĐ5).
 
 
 
@@ -500,11 +500,11 @@ RESPONSE 201 Created
 
 &#x20; "category": "MAN\_HINH",
 
-&#x20; "priority": "TRUNG\_BINH",
+&#x20; "priority": "CAO",
 
-&#x20; "received\_at": "2026-10-07T09:00:00+07:00",
+&#x20; "received\_at": "2026-10-07T02:00:00.000Z",
 
-&#x20; "due\_date": "2026-10-10T09:00:00+07:00"
+&#x20; "due\_date": "2026-10-08T02:00:00.000Z"
 
 }
 
@@ -656,7 +656,7 @@ RESPONSE 200 OK
 
 &#x20;     "status": "MOI",
 
-&#x20;     "due\_date": "2026-10-10T09:00:00+07:00"
+&#x20;     "due\_date": "2026-10-08T02:00:00.000Z"
 
 &#x20;   }
 
@@ -783,4 +783,37 @@ Quản lý trung tâm chỉ xem được phiếu của trung tâm mình phụ tr
 
 
 Thiết bị nhập thủ công bắt buộc có số serial theo QT-07.
+
+
+6\. BỔ SUNG Ở BT2 (đăng nhập và quản lý tài khoản)
+
+
+POST /api/auth/login
+
+REQUEST BODY: { "username": "ql.ninhkieu", "password": "..." }
+
+RESPONSE 200 OK: { "token": "...", "user": { "user_id", "username", "full_name", "role", "center_id" } }
+
+Sai tên đăng nhập hoặc mật khẩu: 401 INVALID_CREDENTIALS. Thiếu trường: 400 VALIDATION_ERROR.
+
+Các endpoint khác gửi kèm header Authorization: Bearer {token}. Thiếu hoặc hết hạn: 401 UNAUTHENTICATED.
+
+
+GET /api/users
+
+Chỉ vai trò QUAN_LY. Trả { "data": [ { "user_id", "username", "full_name", "role", "center_id" } ] } của trung tâm mình. Vai trò khác: 403 FORBIDDEN.
+
+
+POST /api/users
+
+Chỉ vai trò QUAN_LY. REQUEST BODY: { "username": "nv.moi", "password": "toi thieu 8 ky tu", "full_name": "Nguyen Van C" }
+
+RESPONSE 201 Created: { "user_id": 6, "username": "nv.moi", "full_name": "Nguyen Van C", "role": "NHAN_VIEN_TIEP_NHAN", "center_id": 1 }
+
+role và center_id do hệ thống gán, không nhận từ client. Dữ liệu sai: 400 VALIDATION_ERROR. Trùng tên đăng nhập: 409 USERNAME_EXISTS. Không phải quản lý: 403 FORBIDDEN.
+
+
+GET /api/tickets/{id}
+
+Trả chi tiết phiếu kèm mảng logs (lịch sử chuyển trạng thái). Phiếu của trung tâm khác: 404 TICKET_NOT_FOUND theo QT-06.
 
