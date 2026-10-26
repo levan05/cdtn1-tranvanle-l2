@@ -4,6 +4,7 @@ import Layout from './components/Layout.jsx';
 import { EmptyState } from './components/StateViews.jsx';
 import { useHashRoute } from './hooks/useHashRoute.js';
 import Login from './pages/Login.jsx';
+import TicketList from './pages/TicketList.jsx';
 
 export default function App() {
   const [user, setUser] = useState(() => (session.getToken() ? session.getUser() : null));
@@ -28,7 +29,11 @@ export default function App() {
 
   return (
     <Layout user={user} path={path} onLogout={logout}>
-      <EmptyState title="Màn hình đang được xây dựng" hint={`Đường dẫn hiện tại: ${path}`} />
+      {path === '/tickets' ? (
+        <TicketList user={user} />
+      ) : (
+        <EmptyState title="Màn hình đang được xây dựng" hint={`Đường dẫn hiện tại: ${path}`} />
+      )}
     </Layout>
   );
 }

@@ -94,5 +94,6 @@ export const api = {
   createDevice: (body) => request('POST', '/api/devices', { body }),
 
   listUsers: () => request('GET', '/api/users'),
+  listCategories: () => request('GET', '/api/categories'),
   createUser: (body) => request('POST', '/api/users', { body }),
 };
