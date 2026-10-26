@@ -12,6 +12,8 @@ const STATUS_BY_CODE = {
   DEVICE_NOT_FOUND: 404,
   SERIAL_EXISTS: 409,
   DEVICE_IN_USE: 409,
+  TICKET_NOT_FOUND: 404,
+  INVALID_TRANSITION: 409,
 };
 
 function errorBody(code, message, fields = {}) {
