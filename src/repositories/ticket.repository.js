@@ -3,8 +3,8 @@ const SELECT_TICKET = `
   SELECT t.ticket_id, t.ticket_code, t.status, t.priority, t.issue_desc,
          t.received_at, t.due_date, t.center_id, sc.center_name,
          t.category_id, ic.category_name,
-         t.customer_id, c.full_name AS customer_name, c.phone AS customer_phone,
-         t.device_id, d.serial_no, d.product_name
+         t.customer_id, c.full_name AS customer_name, c.phone AS customer_phone, c.address AS customer_address,
+         t.device_id, d.serial_no, d.imei, d.product_name
   FROM ticket t
   JOIN customer c ON c.customer_id = t.customer_id
   JOIN device d ON d.device_id = t.device_id
