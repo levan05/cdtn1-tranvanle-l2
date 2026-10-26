@@ -11,6 +11,7 @@ const createAuthService = require('./services/auth.service');
 const createCustomerService = require('./services/customer.service');
 const createDeviceService = require('./services/device.service');
 const createTicketService = require('./services/ticket.service');
+const createUserService = require('./services/user.service');
 
 if (!process.env.JWT_SECRET) {
   logger.error('Thieu bien moi truong JWT_SECRET, xem .env.example');
@@ -34,6 +35,8 @@ const ticketService = createTicketService({
   deviceRepo: createDeviceRepository(db),
 });
 
-const app = createApp({ db, authService, customerService, deviceService, ticketService });
+const userService = createUserService({ userRepo: createUserRepository(db) });
+
+const app = createApp({ db, authService, customerService, deviceService, ticketService, userService });
 const port = Number(process.env.PORT) || 8000;
 app.listen(port, () => logger.info('May chu da chay', { port }));
