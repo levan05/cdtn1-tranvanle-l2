@@ -37,3 +37,10 @@ Mỗi thay đổi gồm ba dòng: thay đổi gì, vì sao, ảnh hưởng tới
 - Thay đổi gì: câu mô tả "den man hinh, khong len nguon" được phân loại ưu tiên `CAO` theo bảng từ khóa trong `src/services/classifier.js`, không còn là `TRUNG_BINH` như ví dụ ở API contract.
 - Vì sao: ví dụ trong contract chỉ là minh họa, quy tắc từ khóa mới là nguồn chuẩn; hạn cam kết của phiếu này vì vậy là 24 giờ.
 - Ảnh hưởng tới: `docs/api-contract.md` (ví dụ phản hồi tạo phiếu), `tests/ticket.valid.test.js`.
+
+
+## TĐ7. Bổ sung endpoint phục vụ giao diện và mã lỗi mất kết nối cơ sở dữ liệu
+
+- Thay đổi gì: thêm `GET /api/categories`, `POST /api/tickets/preview`, các bộ lọc `phone` và `category` cho `GET /api/tickets`, hai cờ `is_overdue` và `is_near_due` trong danh sách phiếu, `customer_address` và `imei` trong chi tiết phiếu, và mã lỗi 503 `DATABASE_UNAVAILABLE`.
+- Vì sao: wireframe M1, M2, M3 cần ô lọc theo số điện thoại và nhóm sự cố, danh sách nhóm lấy từ cơ sở dữ liệu thay vì ghi cứng, gợi ý phân loại và hạn cam kết trước khi lưu phiếu, địa chỉ và IMEI ở chi tiết phiếu, cảnh báo sắp quá hạn (US5). Đề BT2 yêu cầu khi một thành phần phụ trợ ngừng thì hệ thống báo lỗi rõ ràng thay vì lỗi chung.
+- Ảnh hưởng tới: `docs/api-contract.md` (mục 6), `src/routes/ticket.routes.js`, `src/routes/category.routes.js`, `src/routes/http-errors.js`, `src/repositories/ticket.repository.js`, `frontend/src/pages/`, `tests/http-errors.test.js`.
