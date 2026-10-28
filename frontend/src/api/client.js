@@ -56,9 +56,15 @@ async function request(method, path, { query, body } = {}) {
     throw new ApiError('NETWORK_ERROR', 'Không kết nối được máy chủ. Vui lòng kiểm tra mạng rồi thử lại.');
   }
 
-  // Backend tat thi proxy cua Vite hoac may chu trung gian tra 502/503/504, coi nhu mat ket noi
+  // Backend tat thi proxy cua Vite hoac may chu trung gian tra 502/503/504, coi nhu mat ket noi.
+  // Rieng 503 do backend tra khi mat CSDL (DATABASE_UNAVAILABLE) thi giu thong bao cu the hon.
   if ([502, 503, 504].includes(response.status)) {
-    throw new ApiError('NETWORK_ERROR', 'Không kết nối được máy chủ. Vui lòng kiểm tra mạng rồi thử lại.', response.status);
+    const body = await response.json().catch(() => null);
+    const message =
+      body?.error?.code === 'DATABASE_UNAVAILABLE'
+        ? 'Hệ thống chưa kết nối được cơ sở dữ liệu. Vui lòng thử lại sau ít phút.'
+        : 'Không kết nối được máy chủ. Vui lòng kiểm tra mạng rồi thử lại.';
+    throw new ApiError('NETWORK_ERROR', message, response.status);
   }
 
   if (response.status === 204) return null;
