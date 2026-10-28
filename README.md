@@ -9,18 +9,19 @@ Hệ thống giúp nhân viên tiếp nhận của Mekong Mobile ghi nhận yêu
 ## 2. Yêu cầu môi trường
 
 - Node.js 20 trở lên (đã chạy trên Node 24)
-- PostgreSQL 16 trở lên, đã tạo sẵn một cơ sở dữ liệu trống tên `baohanh_l2`
+- PostgreSQL 16 trở lên, đang chạy và có tài khoản `postgres` (cơ sở dữ liệu `baohanh_l2` được tạo ở bước 2 bên dưới)
 - Hoặc chỉ cần Docker (xem mục 6)
 
 ## 3. Cài đặt và chạy (mỗi bước một lệnh)
 
 1. Cài thư viện backend: `npm install`
-2. Tạo file cấu hình: `copy .env.example .env` (Linux/macOS: `cp .env.example .env`), rồi mở `.env` sửa `DB_PASSWORD` và `JWT_SECRET`
-3. Tạo bảng: `npm run migrate`
-4. Nạp dữ liệu mẫu: `npm run seed`
-5. Cài thư viện giao diện: `npm install --prefix frontend`
-6. Build giao diện: `npm run build --prefix frontend`
-7. Chạy hệ thống: `npm start`
+2. Tạo cơ sở dữ liệu trống: `psql -U postgres -c "CREATE DATABASE baohanh_l2;"` (bỏ qua nếu đã có; nếu không có `psql`, tạo bằng pgAdmin với tên `baohanh_l2`)
+3. Tạo file cấu hình: `copy .env.example .env` (Linux/macOS: `cp .env.example .env`), rồi mở `.env` sửa `DB_PASSWORD` thành mật khẩu PostgreSQL của bạn và `JWT_SECRET` thành chuỗi bí mật dài từ 32 ký tự
+4. Tạo bảng: `npm run migrate`
+5. Nạp dữ liệu mẫu: `npm run seed`
+6. Cài thư viện giao diện: `npm install --prefix frontend`
+7. Build giao diện: `npm run build --prefix frontend`
+8. Chạy hệ thống: `npm start`
 
 Mở http://localhost:8000 (cổng lấy từ `PORT` trong `.env`).
 
