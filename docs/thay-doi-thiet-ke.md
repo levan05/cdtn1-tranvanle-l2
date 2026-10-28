@@ -42,5 +42,5 @@ Mỗi thay đổi gồm ba dòng: thay đổi gì, vì sao, ảnh hưởng tới
 ## TĐ7. Bổ sung endpoint phục vụ giao diện và mã lỗi mất kết nối cơ sở dữ liệu
 
 - Thay đổi gì: thêm `GET /api/categories`, `POST /api/tickets/preview`, các bộ lọc `phone` và `category` cho `GET /api/tickets`, hai cờ `is_overdue` và `is_near_due` trong danh sách phiếu, `customer_address` và `imei` trong chi tiết phiếu, và mã lỗi 503 `DATABASE_UNAVAILABLE`.
-- Vì sao: wireframe M1, M2, M3 cần ô lọc theo số điện thoại và nhóm sự cố, danh sách nhóm lấy từ cơ sở dữ liệu thay vì ghi cứng, gợi ý phân loại và hạn cam kết trước khi lưu phiếu, địa chỉ và IMEI ở chi tiết phiếu, cảnh báo sắp quá hạn (US5). Đề BT2 yêu cầu khi một thành phần phụ trợ ngừng thì hệ thống báo lỗi rõ ràng thay vì lỗi chung.
+- Vì sao: wireframe M1, M2, M3 cần ô lọc theo số điện thoại và nhóm sự cố, danh sách nhóm lấy từ cơ sở dữ liệu thay vì ghi cứng, gợi ý phân loại và hạn cam kết trước khi lưu phiếu, địa chỉ và IMEI ở chi tiết phiếu, cảnh báo sắp quá hạn (US5). Khi cơ sở dữ liệu ngừng, hệ thống báo lỗi rõ ràng thay vì lỗi 500 chung.
 - Ảnh hưởng tới: `docs/api-contract.md` (mục 6), `src/routes/ticket.routes.js`, `src/routes/category.routes.js`, `src/routes/http-errors.js`, `src/repositories/ticket.repository.js`, `frontend/src/pages/`, `tests/http-errors.test.js`.

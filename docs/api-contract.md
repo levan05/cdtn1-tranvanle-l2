@@ -820,7 +820,7 @@ Trả chi tiết phiếu kèm mảng logs (lịch sử chuyển trạng thái). 
 
 GET /api/categories
 
-Cần đăng nhập. Trả { "data": [ { "category_id": 1, "category_name": "Màn hình" } ] } gồm 6 nhóm sự cố, dùng cho ô lọc ở màn hình danh sách phiếu.
+Cần đăng nhập. Trả { "data": [ { "category_id": 1, "category_name": "Màn hình" } ] } gồm các nhóm sự cố, dùng cho ô lọc ở màn hình danh sách phiếu.
 
 
 POST /api/tickets/preview
