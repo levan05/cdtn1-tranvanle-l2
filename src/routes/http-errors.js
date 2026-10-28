@@ -17,6 +17,14 @@ const STATUS_BY_CODE = {
   USERNAME_EXISTS: 409,
 };
 
+// Loi mat ket noi toi PostgreSQL: ma loi mang cua Node (co the nam trong AggregateError) hoac ma SQLSTATE nhom ket noi
+const DB_DOWN_CODES = ['ECONNREFUSED', 'ECONNRESET', 'ETIMEDOUT', 'ENOTFOUND', 'EAI_AGAIN', '57P01', '57P03', '53300'];
+
+function isDatabaseDown(err) {
+  const codes = [err.code, ...(Array.isArray(err.errors) ? err.errors.map((e) => e.code) : [])];
+  return codes.some((c) => DB_DOWN_CODES.includes(c)) || /^08/.test(String(err.code));
+}
+
 function errorBody(code, message, fields = {}) {
   return { error: { code, message, fields } };
 }
@@ -28,6 +36,10 @@ function errorHandler(err, req, res, next) {
   }
   if (err.type === 'entity.parse.failed') {
     return res.status(400).json(errorBody('VALIDATION_ERROR', 'Noi dung gui len khong phai JSON hop le'));
+  }
+  if (isDatabaseDown(err)) {
+    logger.error('Mat ket noi co so du lieu', { path: req.path, detail: err.code });
+    return res.status(503).json(errorBody('DATABASE_UNAVAILABLE', 'Khong ket noi duoc co so du lieu, vui long thu lai sau'));
   }
   // Loi la: ghi log chi tiet o server, tra ve thong bao chung, khong lo loi thu vien
   logger.error('Loi khong xac dinh', { path: req.path, detail: err.message });
