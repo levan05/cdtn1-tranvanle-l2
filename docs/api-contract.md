@@ -817,3 +817,27 @@ GET /api/tickets/{id}
 
 Trả chi tiết phiếu kèm mảng logs (lịch sử chuyển trạng thái). Phiếu của trung tâm khác: 404 TICKET_NOT_FOUND theo QT-06.
 
+
+GET /api/categories
+
+Cần đăng nhập. Trả { "data": [ { "category_id": 1, "category_name": "Màn hình" } ] } gồm 6 nhóm sự cố, dùng cho ô lọc ở màn hình danh sách phiếu.
+
+
+POST /api/tickets/preview
+
+Xem trước kết quả phân loại, không lưu gì. REQUEST BODY: { "issue_desc": "May bi den man hinh, khong len nguon" }
+
+RESPONSE 200 OK: { "category_id": 1, "category_name": "Màn hình", "priority": "CAO", "due_date": "2026-10-08T02:00:00.000Z" }
+
+Mô tả rỗng: 400 VALIDATION_ERROR kèm fields.issue_desc. Dùng cùng bộ phân loại và hàm tính hạn với POST /api/tickets.
+
+
+GET /api/tickets: tham số lọc bổ sung
+
+Ngoài status, priority, sort, page, size còn có phone (chuẩn hóa theo QT-02, sai định dạng trả 400) và category (mã nhóm sự cố, số nguyên dương). Mọi bộ lọc luôn kết hợp với điều kiện trung tâm của người đăng nhập theo QT-06. Mỗi phiếu trả thêm is_overdue và is_near_due để giao diện cảnh báo.
+
+
+Lỗi mất kết nối cơ sở dữ liệu
+
+Mọi endpoint trả 503 với mã DATABASE_UNAVAILABLE khi PostgreSQL không kết nối được.
+
