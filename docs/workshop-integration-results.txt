@@ -1,0 +1,16 @@
+DATABASE baohanh_l2_thu @ ::1/128
+SERVER http://127.0.0.1:57781
+PASS TC-01 [luồng đúng] Đăng nhập thật bằng tài khoản seed — HTTP 200, role=NHAN_VIEN_TIEP_NHAN, center_id=1
+PASS TC-02 [luồng đúng] Tạo phiếu qua API và xác minh PostgreSQL — POST 201, BH000027/2026, DB status=MOI, log count=1
+PASS TC-03 [luồng đúng] Chuyển trạng thái và xác minh log trong DB — PATCH 200, DB status=DA_PHAN_CONG, logs=2
+PASS TC-04 [giá trị biên] Hạn CAO nhận sát cuối Thứ Bảy — due_date=2026-10-26T16:59:00.000Z
+PASS TC-05 [giá trị biên] Độ dài mô tả 2000/2001 ký tự qua API — 2000 chars HTTP 201; 2001 chars HTTP 400 VALIDATION_ERROR
+PASS TC-06 [dữ liệu sai] Mô tả rỗng không tạo phiếu hay log — HTTP 400 VALIDATION_ERROR; ticket count 0 -> 0
+PASS TC-07 [dữ liệu sai] Khách hàng không tồn tại bị từ chối — HTTP 404 CUSTOMER_NOT_FOUND
+PASS TC-08 [dữ liệu sai] Nhảy cóc trạng thái không sửa phiếu hay ghi log — HTTP 409 INVALID_TRANSITION; status/log count unchanged (MOI/1)
+PASS TC-09 [bảo mật] Endpoint phiếu yêu cầu JWT — HTTP 401 UNAUTHENTICATED
+PASS TC-10 [bảo mật / chất lượng dữ liệu] Nhân viên không truy cập phiếu trung tâm khác — other center ticket hidden: list count=0; detail HTTP 404
+PASS TC-11 [bảo mật / chất lượng dữ liệu] Thiết bị gắn với khách khác không tạo phiếu — HTTP 400 VALIDATION_ERROR; ticket count 0 -> 0
+CLEANUP temporary test records removed
+PASS TC-12 [tái lập] Migration và seed chạy lại không đổi số dòng — row counts unchanged: {"service_center":2,"issue_category":6,"app_user":2,"customer":4,"device":4,"ticket":4,"ticket_status_log":8}
+SUMMARY 12/12 PASS, 0/12 FAIL

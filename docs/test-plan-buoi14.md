@@ -30,15 +30,15 @@ Dự kiến thực hiện 12 test case, gồm đủ năm loại theo checklist B
 
 | Mã | Ưu tiên | Mục tiêu | Kết quả mong đợi chính |
 |---|---|---|---|
-| TC-01 | Cao | Đăng nhập bằng thông tin hợp lệ qua auth service | Trả JWT xác minh được, có đúng vai trò và trung tâm |
+| TC-01 | Cao | Đăng nhập bằng tài khoản seed qua API Express | HTTP 200; JWT chứa đúng vai trò và trung tâm |
 | TC-02 | Cao | Tạo phiếu hợp lệ qua API với PostgreSQL cục bộ | HTTP 201; phiếu và log đầu tồn tại trong DB, test dọn dữ liệu tạm sau khi xác minh |
-| TC-03 | Cao | Chuyển phiếu sang đúng trạng thái kế tiếp | HTTP 200; trạng thái đổi và có log người thực hiện |
+| TC-03 | Cao | Chuyển phiếu sang đúng trạng thái kế tiếp qua API | HTTP 200; trạng thái đổi và log trong DB có đúng người thực hiện |
 | TC-04 | Cao | Tính hạn CAO khi nhận sát cuối ngày Thứ Bảy | Hạn bỏ qua toàn bộ Chủ Nhật, đúng quy tắc QT-03 |
-| TC-05 | Vừa | Mô tả lỗi ở giới hạn 2000 ký tự | Dữ liệu ở biên được chấp nhận |
+| TC-05 | Vừa | Mô tả lỗi có độ dài 2000 và 2001 ký tự qua API | 2000 được nhận; 2001 bị từ chối với lỗi validation |
 | TC-06 | Cao | Tạo phiếu thiếu mô tả lỗi | HTTP 400, chỉ rõ `issue_desc`, không tạo phiếu/log |
 | TC-07 | Cao | Tạo phiếu với khách hàng không tồn tại | HTTP 404 `CUSTOMER_NOT_FOUND`, không tạo phiếu/log |
 | TC-08 | Cao | Nhảy cóc trạng thái từ MOI sang DANG_XU_LY | HTTP 409 `INVALID_TRANSITION`, không đổi trạng thái/ghi log |
-| TC-09 | Cao | Gọi API phiếu không có JWT | HTTP 401, không gọi ticket service và không trả dữ liệu phiếu |
+| TC-09 | Cao | Gọi endpoint phiếu không có JWT | HTTP 401, không trả dữ liệu phiếu |
 | TC-10 | Cao | Nhân viên trung tâm này truy cập phiếu thuộc trung tâm khác | Không đọc được phiếu ngoài trung tâm; truy vấn danh sách nhận center từ JWT |
 | TC-11 | Cao | Tạo phiếu với thiết bị không thuộc khách hàng đã chọn | HTTP 400, không có bản ghi phiếu/log một phần |
 | TC-12 | Vừa | Chạy migration và seed lần thứ hai | Không lỗi; số dòng dữ liệu seed không tăng |
@@ -59,7 +59,7 @@ Các kết quả trong bảng là kết quả mong đợi, không phải kết q
 - Hệ điều hành: Windows; Node.js phiên bản 20 trở lên; PostgreSQL 16 trở lên.
 - Backend: Express tại `http://localhost:8000`; frontend đã build được phục vụ cùng backend.
 - Bộ kiểm thử tự động hiện có: `npm test` (`node --test`).
-- Dùng một cơ sở dữ liệu kiểm thử riêng, khởi tạo bằng `npm run migrate` và `npm run seed`; không dùng dữ liệu thật hoặc cơ sở dữ liệu đang vận hành để thử thao tác ghi/xóa.
+- Dùng một cơ sở dữ liệu kiểm thử riêng, khởi tạo bằng `npm run migrate` và `npm run seed`; không dùng dữ liệu thật hoặc cơ sở dữ liệu đang vận hành để thử thao tác ghi/xóa. Runner tích hợp từ chối DB không có tên chứa `test`, `thu` hoặc `workshop` và chỉ cho phép ghi khi đặt `WORKSHOP_ALLOW_DB_WRITE=1`.
 - Dữ liệu seed gồm hai trung tâm, hai tài khoản mẫu cùng trung tâm Ninh Kiều, ba khách, ba thiết bị và ba phiếu. TC-10 cần tạo dữ liệu thử riêng cho trung tâm khác và dọn theo đúng phạm vi cơ sở dữ liệu kiểm thử.
 - Tài khoản mẫu chỉ dùng trên môi trường kiểm thử: `nv.tiepnhan01` và `ql.ninhkieu`; mật khẩu lấy từ seed demo. Không đưa thông tin bí mật thực tế vào báo cáo hoặc ảnh.
-- Chụp ảnh kết quả ngay sau khi chạy từng test, lưu theo mã test, ví dụ `docs/screenshots/TC-01.png`.
+- Chạy từng test qua `node scripts/run-workshop-integration.js TC-01` … `TC-12`; chụp ảnh kết quả thật ngay sau mỗi lệnh và lưu theo mã test, ví dụ `docs/screenshots/TC-01.png`. Không dùng ảnh kết xuất từ output thay cho ảnh chụp terminal.
