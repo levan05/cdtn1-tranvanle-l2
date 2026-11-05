@@ -28,22 +28,33 @@ Dự kiến thực hiện 12 test case, gồm đủ năm loại theo checklist B
 
 ### Danh sách test case dự kiến
 
-| Mã | Ưu tiên | Mục tiêu | Kết quả mong đợi chính |
-|---|---|---|---|
-| TC-01 | Cao | Đăng nhập bằng tài khoản seed qua API Express | HTTP 200; JWT chứa đúng vai trò và trung tâm |
-| TC-02 | Cao | Tạo phiếu hợp lệ qua API với PostgreSQL cục bộ | HTTP 201; phiếu và log đầu tồn tại trong DB, test dọn dữ liệu tạm sau khi xác minh |
-| TC-03 | Cao | Chuyển phiếu sang đúng trạng thái kế tiếp qua API | HTTP 200; trạng thái đổi và log trong DB có đúng người thực hiện |
-| TC-04 | Cao | Tính hạn CAO khi nhận sát cuối ngày Thứ Bảy | Hạn bỏ qua toàn bộ Chủ Nhật, đúng quy tắc QT-03 |
-| TC-05 | Vừa | Mô tả lỗi có độ dài 2000 và 2001 ký tự qua API | 2000 được nhận; 2001 bị từ chối với lỗi validation |
-| TC-06 | Cao | Tạo phiếu thiếu mô tả lỗi | HTTP 400, chỉ rõ `issue_desc`, không tạo phiếu/log |
-| TC-07 | Cao | Tạo phiếu với khách hàng không tồn tại | HTTP 404 `CUSTOMER_NOT_FOUND`, không tạo phiếu/log |
-| TC-08 | Cao | Nhảy cóc trạng thái từ MOI sang DANG_XU_LY | HTTP 409 `INVALID_TRANSITION`, không đổi trạng thái/ghi log |
-| TC-09 | Cao | Gọi endpoint phiếu không có JWT | HTTP 401, không trả dữ liệu phiếu |
-| TC-10 | Cao | Nhân viên trung tâm này truy cập phiếu thuộc trung tâm khác | Không đọc được phiếu ngoài trung tâm; truy vấn danh sách nhận center từ JWT |
-| TC-11 | Cao | Tạo phiếu với thiết bị không thuộc khách hàng đã chọn | HTTP 400, không có bản ghi phiếu/log một phần |
-| TC-12 | Vừa | Chạy migration và seed lần thứ hai | Không lỗi; số dòng dữ liệu seed không tăng |
+| Mã | Ưu tiên | Mục tiêu | Kết quả mong đợi chính | Độ độc lập của oracle |
+|---|---|---|---|---|
+| TC-01 | Cao | Đăng nhập bằng tài khoản seed qua API Express | HTTP 200; JWT chứa đúng vai trò và trung tâm | API đơn giản |
+| TC-02 | Cao | Tạo phiếu hợp lệ qua API với PostgreSQL cục bộ | HTTP 201; phiếu và log đầu tồn tại trong DB, test dọn dữ liệu tạm sau khi xác minh | Cross-check DB độc lập |
+| TC-03 | Cao | Chuyển phiếu sang đúng trạng thái kế tiếp qua API | HTTP 200; trạng thái đổi và log trong DB có đúng người thực hiện | Cross-check DB độc lập |
+| TC-04 | Cao | Tính hạn CAO khi nhận sát cuối ngày Thứ Bảy | Hạn bỏ qua toàn bộ Chủ Nhật, đúng quy tắc QT-03 | Tính tay theo quy tắc nghiệp vụ |
+| TC-05 | Vừa | Mô tả lỗi có độ dài 2000 và 2001 ký tự qua API | 2000 được nhận; 2001 bị từ chối với lỗi validation | Hợp đồng tự đặt của dự án |
+| TC-06 | Cao | Tạo phiếu thiếu mô tả lỗi | HTTP 400, chỉ rõ `issue_desc`, không tạo phiếu/log | Cross-check DB độc lập |
+| TC-07 | Cao | Tạo phiếu với khách hàng không tồn tại | HTTP 404 `CUSTOMER_NOT_FOUND`, không tạo phiếu/log | API đơn giản |
+| TC-08 | Cao | Nhảy cóc trạng thái từ MOI sang DANG_XU_LY | HTTP 409 `INVALID_TRANSITION`, không đổi trạng thái/ghi log | Cross-check DB độc lập |
+| TC-09 | Cao | Gọi endpoint phiếu không có JWT | HTTP 401, không trả dữ liệu phiếu | API đơn giản |
+| TC-10 | Cao | Nhân viên trung tâm này truy cập phiếu thuộc trung tâm khác | Không đọc được phiếu ngoài trung tâm; truy vấn danh sách nhận center từ JWT | Cross-check DB độc lập |
+| TC-11 | Cao | Tạo phiếu với thiết bị không thuộc khách hàng đã chọn | HTTP 400, không có bản ghi phiếu/log một phần | Cross-check DB độc lập |
+| TC-12 | Vừa | Chạy migration và seed lần thứ hai | Không lỗi; số dòng dữ liệu seed không tăng | Cross-check DB độc lập |
 
 Các kết quả trong bảng là kết quả mong đợi, không phải kết quả đã chạy. Chỉ chuyển từng test sang PASS/FAIL sau khi thực hiện và ghi bằng chứng.
+
+### 2.1. Phân loại độ độc lập của oracle kỳ vọng
+
+Để tránh test chỉ xác nhận "code làm đúng cái code nói nó làm" (circular), mỗi test case được gắn một trong bốn mức độ độc lập của giá trị kỳ vọng:
+
+- **Cross-check DB độc lập** (TC-02, 03, 06, 08, 10, 11, 12): sau khi gọi API, test tự truy vấn PostgreSQL bằng SQL riêng để xác nhận trạng thái/log/số dòng, không chỉ tin vào response JSON của chính API đang kiểm tra.
+- **Tính tay theo quy tắc nghiệp vụ** (TC-04): giá trị kỳ vọng được tính bằng tay theo quy tắc QT-03 (bỏ Chủ Nhật, CAO 24h) trước khi đối chiếu với code, không sao chép từ output của hàm đang kiểm tra. Đã kiểm chứng: nhận Thứ Bảy 23:59 +07:00 → dùng hết 1 phút còn lại của Thứ Bảy → bỏ trọn Chủ Nhật → cộng tiếp 23h59 kể từ Thứ Hai 00:00 → hạn Thứ Hai 23:59 +07:00 = `2026-10-26T16:59:00.000Z`, khớp với `src/services/deadline.js`.
+- **Hợp đồng tự đặt của dự án** (TC-05): giới hạn 2000 ký tự là lựa chọn kỹ thuật của dự án (`src/validators/ticket.validator.js` dòng 8 `MAX_ISSUE_DESC = 2000`), không phải con số bắt buộc từ đề bài/SRS. Test này xác nhận code tuân thủ đúng hợp đồng dự án tự công bố, không chứng minh con số 2000 là yêu cầu bên ngoài.
+- **API đơn giản** (TC-01, 07, 09): chỉ kiểm tra mã HTTP và mã lỗi trả về, không cross-check thêm nguồn dữ liệu độc lập khác.
+
+**Bằng chứng test không "ba phải":** đã thử kiểm tra âm tính bằng cách cố tình truyền sai mật khẩu vào TC-01 (`WORKSHOP_TEST_PASSWORD` sai). Kết quả: test báo `FAIL TC-01 ... 401 !== 200` thay vì PASS; chạy lại với mật khẩu đúng thì trở lại PASS. Điều này xác nhận cơ chế assert thực sự phân biệt được đúng/sai, không tự động trả PASS bất kể input.
 
 ## 3. Tiêu chí thành công
 

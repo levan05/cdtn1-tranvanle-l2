@@ -1,7 +1,7 @@
 DATABASE baohanh_l2_thu @ ::1/128
-SERVER http://127.0.0.1:57781
+SERVER http://127.0.0.1:57146
 PASS TC-01 [luồng đúng] Đăng nhập thật bằng tài khoản seed — HTTP 200, role=NHAN_VIEN_TIEP_NHAN, center_id=1
-PASS TC-02 [luồng đúng] Tạo phiếu qua API và xác minh PostgreSQL — POST 201, BH000027/2026, DB status=MOI, log count=1
+PASS TC-02 [luồng đúng] Tạo phiếu qua API và xác minh PostgreSQL — POST 201, BH000039/2026, DB status=MOI, log count=1
 PASS TC-03 [luồng đúng] Chuyển trạng thái và xác minh log trong DB — PATCH 200, DB status=DA_PHAN_CONG, logs=2
 PASS TC-04 [giá trị biên] Hạn CAO nhận sát cuối Thứ Bảy — due_date=2026-10-26T16:59:00.000Z
 PASS TC-05 [giá trị biên] Độ dài mô tả 2000/2001 ký tự qua API — 2000 chars HTTP 201; 2001 chars HTTP 400 VALIDATION_ERROR
