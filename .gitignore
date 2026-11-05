@@ -6,3 +6,4 @@ build/
 coverage/
 .idea/
 .vscode/settings.json
+docs/*.pdf
