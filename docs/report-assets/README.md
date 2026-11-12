@@ -2,7 +2,7 @@
 
 `bt2-cover-background.png` giữ phần khung và logo của trang bìa PDF BT2 do sinh viên cung cấp. Nội dung chữ và số trang gốc được loại khỏi lớp nền; các dòng chữ trên trang bìa được dựng lại dưới dạng văn bản chỉnh sửa được trong Word.
 
-Báo cáo Word/PDF được chỉnh sửa và nộp riêng; các bản Word cũ đã được gỡ khỏi repo. Thư mục này giữ tài nguyên và nội dung đầu vào cho script tạo báo cáo.
+Bản Word được chỉnh sửa riêng; các bản Word cũ đã được gỡ khỏi repo. [Báo cáo BT3 PDF](../BT3_2374802010270_TranVanLe.pdf) được lưu trong `docs/`. Thư mục này giữ tài nguyên và nội dung đầu vào cho script tạo báo cáo.
 
 Script tạo bản nháp khổ A4 dọc (21 × 29,7 cm), lề 2 cm, số trang tự động nằm giữa chân trang. Bảng và ảnh được giới hạn trong chiều rộng vùng nội dung. Bìa và mục lục được hoàn thiện trong bản báo cáo riêng.
 

@@ -134,6 +134,8 @@ docs/              SRS, API contract, thay đổi thiết kế, khai báo AI, ki
 Thay đổi so với thiết kế Bài tập 1 nằm ở `docs/thay-doi-thiet-ke.md`.
 # Bài tập 3 — tài liệu bàn giao
 
+[Báo cáo BT3 PDF](docs/BT3_2374802010270_TranVanLe.pdf).
+
 [Test Plan](docs/test-plan.md) · [Test Report 8 cột](docs/test-report.md) · [Bug Log](docs/bug-log.md) · [Deployment Guide (English)](docs/deployment-guide.md) · [Checklist bảo mật](docs/checklist-bao-mat.md) · [API docs (English)](docs/api-docs.md) · [Khai báo AI](docs/ai-disclosure.md).
 
 Minh chứng ngày 12/11/2026: unit 15/15, integration PostgreSQL 12/12, 21 exchange API thật, audit backend 0 advisory. Đã dựng bản xuất Git sạch `ca4ce2a` bằng Docker; xem [minh chứng](docs/packaging-evidence/README.md). Sau đó đã clone tag công khai `v1.0` (commit `553aa65`) vào thư mục mới, dùng project/volume riêng: app/db healthy, web và JS/CSS trả HTTP 200, unit 15/15, integration 12/12 và chạy riêng TC-02 đều PASS; migration/seed chạy lại không tăng số dòng. Lượt này sử dụng cache Docker trên máy, chưa kiểm trên máy khác. Các kết quả này thuộc lần kiểm đã lưu, không thay cho kết quả chạy trên máy người nhận.

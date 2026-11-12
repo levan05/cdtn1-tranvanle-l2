@@ -28,7 +28,7 @@ App và PostgreSQL đều ở trạng thái `healthy`; `/health` trả `{"status
 - [Bug Log](bug-log.md).
 - [Deployment Guide](deployment-guide.md) và [API Documentation](api-docs.md), viết bằng tiếng Anh.
 - [Checklist bảo mật](checklist-bao-mat.md), [khai báo AI](ai-disclosure.md) và [thay đổi thiết kế](thay-doi-thiet-ke.md).
-- Báo cáo Word/PDF được quản lý và nộp riêng; các bản Word và HTML cũ đã được gỡ khỏi repo.
+- [Báo cáo BT3 PDF](BT3_2374802010270_TranVanLe.pdf). Bản Word được quản lý riêng; các bản Word và HTML cũ đã được gỡ khỏi repo.
 
 ## Những việc còn lại trước khi nộp
 
