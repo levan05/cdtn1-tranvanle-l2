@@ -1,0 +1,386 @@
+{
+  "capturedAt": "2026-11-12T06:01:09.855Z",
+  "database": "baohanh_l2_thu",
+  "node": "v24.19.0",
+  "samples": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "request": null,
+      "status": 200,
+      "response": {
+        "status": "ok",
+        "db": "ok"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "request": {
+        "username": "ql.ninhkieu",
+        "password": "<demo password redacted>"
+      },
+      "status": 200,
+      "response": {
+        "token": "<JWT redacted>",
+        "user": {
+          "user_id": 2,
+          "username": "ql.ninhkieu",
+          "full_name": "Nguyen Thi Hoa",
+          "role": "QUAN_LY",
+          "center_id": 1
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/categories",
+      "request": null,
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "category_id": 1,
+            "category_name": "Màn hình"
+          },
+          {
+            "category_id": 2,
+            "category_name": "Pin"
+          },
+          {
+            "category_id": 3,
+            "category_name": "Sạc"
+          },
+          {
+            "category_id": 4,
+            "category_name": "Phần mềm"
+          },
+          {
+            "category_id": 5,
+            "category_name": "Nước vào"
+          },
+          {
+            "category_id": 6,
+            "category_name": "Khác"
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/users",
+      "request": null,
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "user_id": 1,
+            "username": "nv.tiepnhan01",
+            "full_name": "Tran Van Le",
+            "role": "NHAN_VIEN_TIEP_NHAN",
+            "center_id": 1
+          },
+          {
+            "user_id": 2,
+            "username": "ql.ninhkieu",
+            "full_name": "Nguyen Thi Hoa",
+            "role": "QUAN_LY",
+            "center_id": 1
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/users",
+      "request": {
+        "username": "bt3_1794463269570",
+        "password": "<demo password redacted>",
+        "full_name": "API capture fixture"
+      },
+      "status": 201,
+      "response": {
+        "user_id": 38,
+        "username": "bt3_1794463269570",
+        "full_name": "API capture fixture",
+        "role": "NHAN_VIEN_TIEP_NHAN",
+        "center_id": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/customers",
+      "request": {
+        "full_name": "API capture fixture",
+        "phone": "0863269570",
+        "address": "Synthetic fixture"
+      },
+      "status": 201,
+      "response": {
+        "customer_id": 103,
+        "full_name": "API capture fixture",
+        "phone": "0863269570",
+        "address": "Synthetic fixture",
+        "created_at": "2026-11-12T06:01:09.603Z"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/customers?page=1&size=1",
+      "request": null,
+      "status": 200,
+      "response": {
+        "page": 1,
+        "size": 1,
+        "customers": [
+          {
+            "customer_id": 1,
+            "full_name": "Nguyen Van An",
+            "phone": "0909123456",
+            "address": "12 Nguyen Trai, Can Tho",
+            "created_at": "2026-10-28T17:20:36.686Z"
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/customers?phone=0863269570",
+      "request": null,
+      "status": 200,
+      "response": {
+        "customer_id": 103,
+        "full_name": "API capture fixture",
+        "phone": "0863269570",
+        "address": "Synthetic fixture",
+        "created_at": "2026-11-12T06:01:09.603Z"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/customers/103",
+      "request": null,
+      "status": 200,
+      "response": {
+        "customer_id": 103,
+        "full_name": "API capture fixture",
+        "phone": "0863269570",
+        "address": "Synthetic fixture",
+        "created_at": "2026-11-12T06:01:09.603Z"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/customers/103",
+      "request": {
+        "full_name": "API capture fixture",
+        "phone": "0863269570",
+        "address": "Synthetic fixture"
+      },
+      "status": 200,
+      "response": {
+        "customer_id": 103,
+        "full_name": "API capture fixture",
+        "phone": "0863269570",
+        "address": "Synthetic fixture",
+        "created_at": "2026-11-12T06:01:09.603Z"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/devices",
+      "request": {
+        "customer_id": 103,
+        "serial_no": "BT3-1794463269570",
+        "product_name": "Demo device"
+      },
+      "status": 201,
+      "response": {
+        "device_id": 97,
+        "customer_id": 103,
+        "serial_no": "BT3-1794463269570",
+        "imei": null,
+        "product_name": "Demo device"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/customers/103/devices",
+      "request": null,
+      "status": 200,
+      "response": {
+        "customer_id": 103,
+        "devices": [
+          {
+            "device_id": 97,
+            "customer_id": 103,
+            "serial_no": "BT3-1794463269570",
+            "imei": null,
+            "product_name": "Demo device"
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/devices/97",
+      "request": null,
+      "status": 200,
+      "response": {
+        "device_id": 97,
+        "customer_id": 103,
+        "serial_no": "BT3-1794463269570",
+        "imei": null,
+        "product_name": "Demo device"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/devices/97",
+      "request": {
+        "customer_id": 103,
+        "serial_no": "BT3-1794463269570",
+        "product_name": "Demo device"
+      },
+      "status": 200,
+      "response": {
+        "device_id": 97,
+        "customer_id": 103,
+        "serial_no": "BT3-1794463269570",
+        "imei": null,
+        "product_name": "Demo device"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tickets/preview",
+      "request": {
+        "issue_desc": "Mat nguon"
+      },
+      "status": 200,
+      "response": {
+        "category_id": 6,
+        "category_name": "Khác",
+        "priority": "THAP",
+        "due_date": "2026-11-18T06:01:09.743Z"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tickets",
+      "request": {
+        "customer_id": 103,
+        "device_id": 97,
+        "issue_desc": "Mat nguon"
+      },
+      "status": 201,
+      "response": {
+        "ticket_id": 92,
+        "ticket_code": "BH000092/2026",
+        "status": "MOI",
+        "category": "KHAC",
+        "priority": "THAP",
+        "received_at": "2026-11-12T06:01:09.761Z",
+        "due_date": "2026-11-18T06:01:09.761Z"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tickets?phone=0863269570",
+      "request": null,
+      "status": 200,
+      "response": {
+        "total": 1,
+        "page": 1,
+        "size": 20,
+        "tickets": [
+          {
+            "ticket_id": 92,
+            "ticket_code": "BH000092/2026",
+            "status": "MOI",
+            "priority": "THAP",
+            "issue_desc": "Mat nguon",
+            "received_at": "2026-11-12T06:01:09.761Z",
+            "due_date": "2026-11-18T06:01:09.761Z",
+            "center_id": 1,
+            "center_name": "Trung tam Ninh Kieu",
+            "category_id": 6,
+            "category_name": "Khác",
+            "customer_id": 103,
+            "customer_name": "API capture fixture",
+            "customer_phone": "0863269570",
+            "customer_address": "Synthetic fixture",
+            "device_id": 97,
+            "serial_no": "BT3-1794463269570",
+            "imei": null,
+            "product_name": "Demo device",
+            "is_overdue": false,
+            "is_near_due": false
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tickets/92",
+      "request": null,
+      "status": 200,
+      "response": {
+        "ticket_id": 92,
+        "ticket_code": "BH000092/2026",
+        "status": "MOI",
+        "priority": "THAP",
+        "issue_desc": "Mat nguon",
+        "received_at": "2026-11-12T06:01:09.761Z",
+        "due_date": "2026-11-18T06:01:09.761Z",
+        "center_id": 1,
+        "center_name": "Trung tam Ninh Kieu",
+        "category_id": 6,
+        "category_name": "Khác",
+        "customer_id": 103,
+        "customer_name": "API capture fixture",
+        "customer_phone": "0863269570",
+        "customer_address": "Synthetic fixture",
+        "device_id": 97,
+        "serial_no": "BT3-1794463269570",
+        "imei": null,
+        "product_name": "Demo device",
+        "logs": [
+          {
+            "log_id": 63,
+            "from_status": null,
+            "to_status": "MOI",
+            "changed_at": "2026-11-12T06:01:09.762Z",
+            "changed_by": "ql.ninhkieu"
+          }
+        ]
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/tickets/92/status",
+      "request": {
+        "to_status": "DA_PHAN_CONG"
+      },
+      "status": 200,
+      "response": {
+        "ticket_id": 92,
+        "status": "DA_PHAN_CONG"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/devices/97",
+      "request": null,
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/customers/103",
+      "request": null,
+      "status": 204,
+      "response": null
+    }
+  ]
+}
