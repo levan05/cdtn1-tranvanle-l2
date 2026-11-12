@@ -27,11 +27,13 @@ public static class EvidenceConsole {
     SetCurrentConsoleFontEx(GetStdHandle(-11), false, ref font);
   }
   [DllImport("kernel32.dll")] public static extern IntPtr GetConsoleWindow();
+  [DllImport("user32.dll")] public static extern bool SetProcessDPIAware();
   [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, int command);
   [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr hWnd);
 }
 '@
 $consoleWindow = [EvidenceConsole]::GetConsoleWindow()
+[EvidenceConsole]::SetProcessDPIAware() | Out-Null
 [EvidenceConsole]::UseConsolas()
 [EvidenceConsole]::ShowWindow($consoleWindow, 3) | Out-Null
 [EvidenceConsole]::SetForegroundWindow($consoleWindow) | Out-Null
