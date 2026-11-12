@@ -84,7 +84,7 @@ async function createCustomerAndDevice(token, options = {}) {
     token,
     body: {
       full_name: options.fullName || 'Workshop Integration Test',
-      phone,
+      phone: options.internationalPhone ? '+84' + phone.slice(1) : phone,
       address: 'Temporary test record',
     },
   });
@@ -212,7 +212,7 @@ async function main() {
 
     if (!await testCase('TC-02', 'luồng đúng', 'Tạo phiếu qua API và xác minh PostgreSQL', async () => {
       const auth = await login();
-      const fixture = await createCustomerAndDevice(auth.token);
+      const fixture = await createCustomerAndDevice(auth.token, { internationalPhone: true });
       // QT-01/02/05/07: validate the customer/device steps of the intake flow.
       const manager = await login('ql.ninhkieu');
       const internationalPhone = '+84' + fixture.phone.slice(1);
@@ -243,6 +243,8 @@ async function main() {
       assert.equal(deviceCount.rows[0].count, 1);
       const ticket = await createTicket(auth.token, fixture.customerId, fixture.deviceId);
       assertStatus(ticket, 201, 'create ticket');
+      assert.equal(ticket.data.category, 'MAN_HINH');
+      assert.equal(ticket.data.priority, 'TRUNG_BINH');
       const saved = await db.query(
         `SELECT t.ticket_code, t.status, t.center_id, count(l.log_id)::int AS logs
          FROM ticket t LEFT JOIN ticket_status_log l ON l.ticket_id = t.ticket_id
@@ -385,7 +387,14 @@ async function main() {
       const detail = await request(`/api/tickets/${ticket.data.ticket_id}`, { token: auth.token });
       assertStatus(detail, 404, 'other-center detail');
       assert.equal(detail.data.error.code, 'TICKET_NOT_FOUND');
-      return `other center ticket hidden: list count=0; detail HTTP 404`;
+      const manager = await login('ql.ninhkieu');
+      const managerList = await request(`/api/tickets?phone=${fixture.phone}`, { token: manager.token });
+      assertStatus(managerList, 200, 'manager list tickets');
+      assert.equal(managerList.data.tickets.length, 0);
+      const managerDetail = await request(`/api/tickets/${ticket.data.ticket_id}`, { token: manager.token });
+      assertStatus(managerDetail, 404, 'manager other-center detail');
+      assert.equal(managerDetail.data.error.code, 'TICKET_NOT_FOUND');
+      return `staff and manager: other center ticket hidden, list count=0; detail HTTP 404`;
     })) failures += 1;
 
     if (!await testCase('TC-11', 'bảo mật / chất lượng dữ liệu', 'Thiết bị gắn với khách khác không tạo phiếu', async () => {
