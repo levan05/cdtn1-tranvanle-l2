@@ -17,6 +17,7 @@ COPY scripts ./scripts
 COPY migrations ./migrations
 COPY seeds ./seeds
 COPY tests ./tests
+RUN mkdir -p docs
 COPY --from=web /web/dist ./frontend/dist
 EXPOSE 8000
 # Dung migration va seed (chay lai nhieu lan khong loi, khong nhan doi) roi moi mo may chu

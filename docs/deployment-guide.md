@@ -78,6 +78,6 @@ docker compose exec -e DB_NAME=baohanh_l2_test app npm run seed
 docker compose exec -e DB_NAME=baohanh_l2_test -e WORKSHOP_ALLOW_DB_WRITE=1 app node scripts/run-workshop-integration.js
 ```
 
-Expected `SUMMARY 12/12 PASS, 0/12 FAIL`. These are verification commands after setup, not additional startup requirements. The runner writes a report to `docs/`; mount or create that directory before full runs in an image that omits docs (see packaging follow-up).
+Expected `SUMMARY 12/12 PASS, 0/12 FAIL`. These are verification commands after setup, not additional startup requirements. The image includes an empty `docs/` directory for the runner's output. Copy the report out with `docker compose cp app:/app/docs/workshop-integration-results.txt ./docs/docker-integration-results.txt` if needed.
 
 If startup fails, inspect `docker compose logs app db`. Port conflict: free port 8000. Authentication failure after changing `.env`: the existing database volume retains the original password; use that password or reset only the disposable project volume. A 503 health response means PostgreSQL cannot be reached. Do not record PASS until the commands have actually succeeded.
