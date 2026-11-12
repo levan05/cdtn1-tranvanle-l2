@@ -6,7 +6,8 @@ if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
 }
 function Invoke-Checked {
     param([string]$Program, [string[]]$Arguments)
-    & $Program @Arguments
+    # Out-Host makes native stdout visible to Windows PowerShell 5 transcripts.
+    & $Program @Arguments | Out-Host
     if ($LASTEXITCODE -ne 0) { throw "$Program exited with $LASTEXITCODE" }
 }
 Invoke-Checked docker @('info', '--format', '{{.ServerVersion}}')
