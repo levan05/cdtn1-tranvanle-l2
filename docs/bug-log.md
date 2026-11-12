@@ -9,7 +9,7 @@ Các lỗi lịch sử được ghi rõ thời điểm, không dựng lại kế
 4. Nguyên nhân: error handler chưa phân biệt mã lỗi kết nối và SQLSTATE nhóm 08 với lỗi không xác định.
 5. Cách sửa: nhận diện mã kết nối, trả 503 `DATABASE_UNAVAILABLE`, giữ thông báo chung với lỗi lạ.
 6. Commit: [50c4b7d](https://github.com/levan05/cdtn1-tranvanle-l2/commit/50c4b7d9092a6ba5e7060bff1eeeb551f665ed73).
-7. Xác nhận: lượt `npm test` BT3 có cả ba regression error-handler PASS; không tuyên bố đã tái hiện lỗi cũ bằng cách dừng DB trong phiên BT3.
+7. Xác nhận: `node scripts/verify-bug-regressions.js` thực thi handler tại `50c4b7d^` và `50c4b7d` với lỗi ECONNREFUSED mô phỏng: trước 500 (FAIL kỳ vọng 503), sau 503/DATABASE_UNAVAILABLE (PASS). Unit hiện tại 3 regression error-handler PASS. [Output](bug-evidence/regressions.txt). Đây là mô phỏng runtime handler, không phải dừng DB thật.
 
 ## BUG-02 — MAJOR — lệnh test quét mã tham khảo
 1. Phát hiện bởi: kiểm tra phạm vi lệnh `npm test` khi thư mục mẫu nằm trong `docs/` (ngoài bộ 12 case).
@@ -18,7 +18,7 @@ Các lỗi lịch sử được ghi rõ thời điểm, không dựng lại kế
 4. Nguyên nhân: script dùng cơ chế tự khám phá trên toàn repo thay vì chỉ bộ test của module.
 5. Cách sửa: `node --test tests/*.test.js`.
 6. Commit: [d61d902](https://github.com/levan05/cdtn1-tranvanle-l2/commit/d61d902) (local, chờ push).
-7. Xác nhận: lệnh mới chạy đúng 15 test, 15 PASS/0 FAIL trên Node 24.19.0. Chưa đo lại số case lệnh cũ trong phiên này.
+7. Xác nhận: `node scripts/verify-bug-regressions.js`: lệnh cũ khám phá test mẫu và có FAIL, lệnh mới chỉ chạy 15 test dự án, 15 PASS/0 FAIL. [Trước](bug-evidence/test-scope-before.txt), [sau](bug-evidence/test-scope-after.txt). Lỗi của test mẫu không phải bug nghiệp vụ của dự án; bug được sửa ở đây là phạm vi lệnh chạy test.
 
 ## BUG-03 — MAJOR — thiếu kiểm tra sức khỏe app và test trong image
 1. Phát hiện bởi: review đóng gói theo tiêu chí BT3 (kiểm tra cấu hình, ngoài bộ 12 case).
@@ -38,4 +38,13 @@ Các lỗi lịch sử được ghi rõ thời điểm, không dựng lại kế
 6. Commit: [cfdf354](https://github.com/levan05/cdtn1-tranvanle-l2/commit/cfdf354) (local, chờ push).
 7. Xác nhận: phiên BT3 ngày 12/11/2026 chạy lại `npm audit --omit=dev` → 0 vulnerabilities, `npm test` → 15/15 PASS. Mức HIGH của advisory không tự đồng nghĩa phân loại CRITICAL của bài tập.
 
-**Điều kiện còn thiếu:** giảng viên cần ít nhất 3 bug đã sửa, truy vết về test và có link mở được. BUG-03 còn chờ runtime, BUG-02 cần tái hiện đầu cũ nếu muốn bằng chứng trước/sau; không coi bảng này tự động đạt rubric.
+## BUG-05 — MAJOR — ID BIGINT không khớp hợp đồng số của API (lịch sử BT2)
+1. Phát hiện bởi: kiểm hợp đồng kiểu ID; regression `scripts/verify-bug-regressions.js`, đối chiếu TC-01 (`center_id` phải là number) và TC-02/11 (so sánh chủ sở hữu thiết bị).
+2. Triệu chứng: driver trả ID dạng chuỗi trong JSON; so sánh nghiêm ngặt với ID số từ request cho kết quả khác nhau dù cùng giá trị.
+3. Tái lập: dùng `pg.types.getTypeParser(20)('42')` ở tiến trình Node mới; đối chiếu với `42` bằng `===`; sau đó chạy tiến trình mới nạp cấu hình `src/db.js` rồi đo lại.
+4. Nguyên nhân: pg mặc định đọc PostgreSQL BIGINT thành string; ứng dụng và validator dùng number, chưa đăng ký parser thống nhất.
+5. Cách sửa: đăng ký parser OID 20 sang Number cho miền ID của prototype nhỏ hơn 2^53. Nếu mở rộng vượt miền số nguyên an toàn phải đổi hợp đồng ID sang string.
+6. Commit: [af99f3b](https://github.com/levan05/cdtn1-tranvanle-l2/commit/af99f3b457b750af7ebefd9bd0da32fddaf9ff6e).
+7. Xác nhận: regression cho kết quả trước `string/false` (FAIL), sau `number/true` (PASS); script đọc bản trước commit để xác nhận chưa có parser, không checkout hoặc ghi DB. [Output](bug-evidence/regressions.txt); bộ integration hiện tại 12/12 PASS.
+
+**Ba lỗi có regression trước/sau:** BUG-01, BUG-02 và BUG-05. BUG-03 vẫn chờ Docker runtime; BUG-04 có audit hậu kiểm. Các commit local phải được push theo yêu cầu người dùng thì link mới mở được trên GitHub; sinh viên cần tự chạy và giải thích nguyên nhân trước khi nộp.
