@@ -81,3 +81,11 @@ docker compose exec -e DB_NAME=baohanh_l2_test -e WORKSHOP_ALLOW_DB_WRITE=1 app 
 Expected `SUMMARY 12/12 PASS, 0/12 FAIL`. These are verification commands after setup, not additional startup requirements. The image includes an empty `docs/` directory for the runner's output. Copy the report out with `docker compose cp app:/app/docs/workshop-integration-results.txt ./docs/docker-integration-results.txt` if needed.
 
 If startup fails, inspect `docker compose logs app db`. Port conflict: free port 8000. Authentication failure after changing `.env`: the existing database volume retains the original password; use that password or reset only the disposable project volume. A 503 health response means PostgreSQL cannot be reached. Do not record PASS until the commands have actually succeeded.
+
+On Windows, after Docker Desktop's Linux engine is running, the author can rehearse from a clean Git export with:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-clean-package.ps1
+```
+
+This checks a committed local revision in a new temporary directory and a unique Compose project, leaving the working `.env` and existing database untouched. It records output under `docs/packaging-evidence/`, retains containers for real screenshots, and prints an explicit project-only cleanup command. This rehearsal requires Git, tar and PowerShell on the host. It does not prove the public `v1.0` tag can be cloned; repeat the assignment's public-tag clone test after the release is authorized. The script has been syntax-checked only because Docker is currently unavailable.

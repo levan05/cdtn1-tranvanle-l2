@@ -7,6 +7,8 @@
 | Claude (phiên trước, theo lịch sử trao đổi) | Đọc đề BT3, phân tích tài liệu mẫu, cập nhật dependency | `package-lock.json`, commit `cfdf354` | Phiên trước báo 15 test PASS và audit 0; Codex chạy lại unit và audit ở phiên BT3. |
 | Codex | Rà đề, chuẩn hóa báo cáo và truy vết bằng chứng | `docs/test-plan.md`, `test-report.md`, `bug-log.md` | Đối chiếu 12 case với runner, ảnh và output; chạy lại PostgreSQL thật đạt 12/12. Không dựng kết quả FAIL lịch sử. |
 | Codex | Kiểm thêm nội dung thông báo lỗi | `scripts/run-workshop-integration.js` TC-06/07 | Chạy đủ 12 case trên DB kiểm thử; 12/12 PASS. |
+| Codex | Bổ sung phủ quy tắc và regression lịch sử | `scripts/run-workshop-integration.js` TC-02/10; `scripts/verify-bug-regressions.js` | Bộ 12 case PASS với QT-01/02/05/07 và hai vai trò ở QT-06; ba kiểm tra trước/sau PASS, lưu output. Handler mất DB dùng lỗi mô phỏng, không dừng DB thật. |
+| Codex | Chuẩn bị phép thử đóng gói từ Git sạch | `scripts/verify-clean-package.ps1` | PowerShell parser không báo lỗi cú pháp; chưa chạy Docker vì máy thiếu CLI/Engine. |
 | Codex | Viết API docs tiếng Anh và thu exchange thật | `scripts/capture-api-examples.js`, `docs/api-docs.md`, `api-examples.json` | 21 request/response thật, assert mã HTTP; che JWT/password; dọn fixture theo ID. |
 | Codex | Bổ sung đóng gói, hướng dẫn và checklist | `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `docs/deployment-guide.md`, `checklist-bao-mat.md` | Đọc cấu hình và code; unit 15/15, audit backend 0. Máy thiếu Docker nên chưa xác nhận build, healthcheck và phép thử máy trắng. |
 
