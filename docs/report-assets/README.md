@@ -2,12 +2,9 @@
 
 `bt2-cover-background.png` giữ phần khung và logo của trang bìa PDF BT2 do sinh viên cung cấp. Nội dung chữ và số trang gốc được loại khỏi lớp nền; các dòng chữ trên trang bìa được dựng lại dưới dạng văn bản chỉnh sửa được trong Word.
 
-Hai bản bàn giao:
+Báo cáo Word/PDF được chỉnh sửa và nộp riêng; các bản Word cũ đã được gỡ khỏi repo. Thư mục này giữ tài nguyên và nội dung đầu vào cho script tạo báo cáo.
 
-- `docs/BT3_2374802010270_TranVanLe.docx`: bản Word hiện đại, dùng để chỉnh sửa chính.
-- `docs/BT3_2374802010270_TranVanLe.doc`: bản Word 97–2003 theo định dạng được yêu cầu.
-
-Không tạo mục lục. Bìa giữ nguyên nội dung BT2 để sinh viên tự sửa; nội dung từ trang 2 là báo cáo BT3. Toàn bộ báo cáo dùng một khổ A4 dọc (21 × 29,7 cm), lề 2 cm, số trang tự động nằm giữa chân trang. Bảng và ảnh được giới hạn trong chiều rộng vùng nội dung.
+Script tạo bản nháp khổ A4 dọc (21 × 29,7 cm), lề 2 cm, số trang tự động nằm giữa chân trang. Bảng và ảnh được giới hạn trong chiều rộng vùng nội dung. Bìa và mục lục được hoàn thiện trong bản báo cáo riêng.
 
 Nội dung báo cáo trình bày bằng tiếng Việt theo yêu cầu của sinh viên; tên API, trường JSON, mã lỗi, lệnh và chữ trong ảnh thật được giữ nguyên để đối chiếu. Bản Deployment Guide và API docs tiếng Anh theo yêu cầu đề BT3 vẫn có trong repo.
 

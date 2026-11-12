@@ -28,8 +28,7 @@ App và PostgreSQL đều ở trạng thái `healthy`; `/health` trả `{"status
 - [Bug Log](bug-log.md).
 - [Deployment Guide](deployment-guide.md) và [API Documentation](api-docs.md), viết bằng tiếng Anh.
 - [Checklist bảo mật](checklist-bao-mat.md), [khai báo AI](ai-disclosure.md) và [thay đổi thiết kế](thay-doi-thiet-ke.md).
-- Báo cáo theo mẫu BT2: [Word .docx](BT3_2374802010270_TranVanLe.docx) và [Word .doc](BT3_2374802010270_TranVanLe.doc), có số trang, chưa tạo mục lục; bìa giữ nguyên để tự sửa.
-- [Bản HTML rà soát trước đó](BT3_2374802010270_TranVanLe-review.html); PDF cùng tên nằm trong thư mục `docs/`.
+- Báo cáo Word/PDF được quản lý và nộp riêng; các bản Word và HTML cũ đã được gỡ khỏi repo.
 
 ## Những việc còn lại trước khi nộp
 
