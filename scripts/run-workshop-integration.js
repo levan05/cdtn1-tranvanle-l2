@@ -213,6 +213,34 @@ async function main() {
     if (!await testCase('TC-02', 'luồng đúng', 'Tạo phiếu qua API và xác minh PostgreSQL', async () => {
       const auth = await login();
       const fixture = await createCustomerAndDevice(auth.token);
+      // QT-01/02/05/07: validate the customer/device steps of the intake flow.
+      const manager = await login('ql.ninhkieu');
+      const internationalPhone = '+84' + fixture.phone.slice(1);
+      const lookup = await request(`/api/customers?phone=${encodeURIComponent(internationalPhone)}`, { token: manager.token });
+      assertStatus(lookup, 200, 'normalized phone lookup');
+      assert.equal(lookup.data.customer_id, fixture.customerId);
+      assert.equal(lookup.data.phone, fixture.phone);
+      const staffView = await request(`/api/customers/${fixture.customerId}`, { token: auth.token });
+      assertStatus(staffView, 200, 'staff customer view');
+      assert.equal(staffView.data.phone, '******' + fixture.phone.slice(-4));
+      const duplicate = await request('/api/customers', {
+        method: 'POST', token: auth.token,
+        body: { full_name: 'Duplicate fixture', phone: internationalPhone },
+      });
+      assertStatus(duplicate, 409, 'normalized duplicate phone');
+      assert.equal(duplicate.data.error.code, 'PHONE_EXISTS');
+      assert.equal(duplicate.data.error.message, 'So dien thoai da ton tai, hay dung ho so co san');
+      const customerCount = await db.query('SELECT count(*)::int AS count FROM customer WHERE phone=$1', [fixture.phone]);
+      assert.equal(customerCount.rows[0].count, 1);
+      const invalidDevice = await request('/api/devices', {
+        method: 'POST', token: auth.token,
+        body: { customer_id: fixture.customerId, product_name: 'Missing serial fixture' },
+      });
+      assertStatus(invalidDevice, 400, 'missing serial');
+      assert.equal(invalidDevice.data.error.code, 'VALIDATION_ERROR');
+      assert.equal(invalidDevice.data.error.fields.serial_no, 'Serial/IMEI la bat buoc');
+      const deviceCount = await db.query('SELECT count(*)::int AS count FROM device WHERE customer_id=$1', [fixture.customerId]);
+      assert.equal(deviceCount.rows[0].count, 1);
       const ticket = await createTicket(auth.token, fixture.customerId, fixture.deviceId);
       assertStatus(ticket, 201, 'create ticket');
       const saved = await db.query(
@@ -225,7 +253,7 @@ async function main() {
       assert.equal(saved.rows[0].status, 'MOI');
       assert.equal(saved.rows[0].center_id, auth.user.center_id);
       assert.equal(saved.rows[0].logs, 1);
-      return `POST 201, ${saved.rows[0].ticket_code}, DB status=${saved.rows[0].status}, log count=${saved.rows[0].logs}`;
+      return `POST 201, ${saved.rows[0].ticket_code}, DB status=${saved.rows[0].status}, log count=${saved.rows[0].logs}; QT-01 duplicate=409/count=1; QT-02 +84 normalized; QT-05 staff masked/manager full; QT-07 missing serial=400/device count=1`;
     })) failures += 1;
 
     if (!await testCase('TC-03', 'luồng đúng', 'Chuyển trạng thái và xác minh log trong DB', async () => {
@@ -276,9 +304,9 @@ async function main() {
       const before = await countTicketsForCustomer(fixture.customerId);
       const rejected = await createTicket(auth.token, fixture.customerId, fixture.deviceId, '   ');
       assertStatus(rejected, 400, 'blank description');
-        assert.equal(rejected.data.error.code, 'VALIDATION_ERROR');
-        assert.equal(rejected.data.error.message, 'Du lieu phieu bao hanh khong hop le');
-        assert.equal(rejected.data.error.fields.issue_desc, 'Mo ta loi la bat buoc');
+      assert.equal(rejected.data.error.code, 'VALIDATION_ERROR');
+      assert.equal(rejected.data.error.message, 'Du lieu phieu bao hanh khong hop le');
+      assert.equal(rejected.data.error.fields.issue_desc, 'Mo ta loi la bat buoc');
       assert.ok(rejected.data.error.fields.issue_desc);
       const after = await countTicketsForCustomer(fixture.customerId);
       assert.equal(after, before);
@@ -295,7 +323,7 @@ async function main() {
       const rejected = await createTicket(auth.token, missingCustomer, device.rows[0].device_id, 'Mat nguon');
       assertStatus(rejected, 404, 'missing customer');
       assert.equal(rejected.data.error.code, 'CUSTOMER_NOT_FOUND');
-        assert.equal(rejected.data.error.message, 'Khong tim thay khach hang');
+      assert.equal(rejected.data.error.message, 'Khong tim thay khach hang');
       return `HTTP 404 ${rejected.data.error.code}`;
     })) failures += 1;
 
