@@ -9,3 +9,4 @@ coverage/
 docs/*.pdf
 docs/report-preview/
 docs/bt2-cover-reference.png
+__pycache__/

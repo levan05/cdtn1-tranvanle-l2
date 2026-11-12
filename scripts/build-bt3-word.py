@@ -10,7 +10,7 @@ import tempfile
 sys.path.insert(0, str(Path(tempfile.gettempdir()) / 'bt3-doc-tools'))
 import pymupdf
 from docx import Document
-from docx.shared import Inches, Pt
+from docx.shared import Inches, Pt, Cm
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.section import WD_SECTION_START, WD_ORIENT
 from docx.oxml import OxmlElement
@@ -46,11 +46,12 @@ for st in doc.styles:
         if fonts is not None: fonts.set(qn('w:eastAsia'),'Times New Roman')
 
 def setup(section, landscape=False):
-    section.orientation = WD_ORIENT.LANDSCAPE if landscape else WD_ORIENT.PORTRAIT
-    section.page_width = Inches(11 if landscape else 8.5)
-    section.page_height = Inches(8.5 if landscape else 11)
+    # One physical paper size and orientation throughout the entire report.
+    section.orientation = WD_ORIENT.PORTRAIT
+    section.page_width = Cm(21)
+    section.page_height = Cm(29.7)
     for side in ['top_margin','bottom_margin','left_margin','right_margin']:
-        setattr(section,side, Inches(.65 if landscape else 1))
+        setattr(section,side, Cm(2))
     section.footer_distance = Inches(.55)
     section.header_distance = Inches(.4)
 
@@ -97,6 +98,11 @@ def section(title, landscape=False):
     return sec
 
 def table(headers, rows, widths=None, size=11):
+    current=doc.sections[-1]
+    usable_width=(current.page_width-current.left_margin-current.right_margin)/914400-.01
+    widths=widths or [usable_width/len(headers)]*len(headers)
+    if sum(widths)>usable_width:
+        widths=[w*usable_width/sum(widths) for w in widths]
     t=doc.add_table(rows=1,cols=len(headers)); t.style='Table Grid'; t.autofit=False
     for i,h in enumerate(headers): text(t.rows[0].cells[i].paragraphs[0],h)
     repeat=OxmlElement('w:tblHeader'); t.rows[0]._tr.get_or_add_trPr().append(repeat)
@@ -107,6 +113,10 @@ def table(headers, rows, widths=None, size=11):
         # Avoid splitting a test case or endpoint over pages.
         no_split=OxmlElement('w:cantSplit'); row._tr.get_or_add_trPr().append(no_split)
         for i,c in enumerate(row.cells):
+            margins=OxmlElement('w:tcMar')
+            for side in ['left','right']:
+                item=OxmlElement('w:'+side); item.set(qn('w:w'),'45'); item.set(qn('w:type'),'dxa'); margins.append(item)
+            c._tc.get_or_add_tcPr().append(margins)
             if widths: c.width=Inches(widths[i])
             for p in c.paragraphs:
                 p.paragraph_format.first_line_indent=Pt(0)
@@ -146,6 +156,7 @@ def markdown(s, skip_title=True, base_heading=2):
         i+=1
 
 def picture(file, caption, width=6.4, crop_bottom=0):
+    width=min(width,6.65)
     p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.first_line_indent=Pt(0); p.paragraph_format.space_after=Pt(3)
     shape=p.add_run().add_picture(str(file),width=Inches(width))
@@ -179,7 +190,7 @@ first_footer=doc.sections[0].first_page_footer.paragraphs[0]
 first_footer.alignment=WD_ALIGN_PARAGRAPH.CENTER
 first_footer.paragraph_format.first_line_indent=Pt(0)
 first_field=OxmlElement('w:fldSimple'); first_field.set(qn('w:instr'),'PAGE'); first_footer._p.append(first_field)
-shape=base.add_run().add_picture(str(background),width=Inches(8.5),height=Inches(11))
+shape=base.add_run().add_picture(str(background),width=Cm(21),height=Cm(29.7))
 inline=shape._inline
 anchor=OxmlElement('wp:anchor')
 for k,v in {'distT':'0','distB':'0','distL':'0','distR':'0','simplePos':'0','relativeHeight':'0','behindDoc':'1','locked':'0','layoutInCell':'1','allowOverlap':'1'}.items(): anchor.set(k,v)
@@ -202,7 +213,9 @@ def cover_line(value,x,y,width,size=17,bold=True,italic=False,align=WD_ALIGN_PAR
     fmt=p.paragraph_format; fmt.first_line_indent=Pt(0); fmt.line_spacing=Pt(size*1.18)
     fmt.space_before=Pt(0); fmt.space_after=Pt(0)
     frame=OxmlElement('w:framePr')
-    for k,v in {'w':round(width*20),'x':round(x*20),'y':round(y*20),'hAnchor':'page','vAnchor':'page','wrap':'none','hSpace':0,'vSpace':0}.items(): frame.set(qn('w:'+k),str(v))
+    sx=(21/2.54*72)/612
+    sy=(29.7/2.54*72)/792
+    for k,v in {'w':round(width*sx*20),'x':round(x*sx*20),'y':round(y*sy*20),'hAnchor':'page','vAnchor':'page','wrap':'none','hSpace':0,'vSpace':0}.items(): frame.set(qn('w:'+k),str(v))
     p._p.get_or_add_pPr().append(frame)
     r=p.add_run(value); r.font.name='Times New Roman'; r.font.size=Pt(size); r.bold=bold; r.italic=italic
     return p
@@ -221,9 +234,9 @@ plan_start=len(doc.paragraphs)
 para('Hệ thống Mekong Mobile được phát triển theo luồng L2: tiếp nhận và phân loại yêu cầu bảo hành. Bài tập 3 kế thừa mã nguồn của Bài tập 2, tập trung kiểm thử các quy tắc nghiệp vụ, ghi nhận lỗi đã sửa và đóng gói để có thể dựng lại trên môi trường khác.')
 table(['Thông tin','Giá trị'],[
     ['Sinh viên / MSSV','Trần Văn Lễ / 2374802010270'],
-    ['Lớp / Track','261_71ITGR40203_06 / SE'],
+    ['Lớp / Chuyên ngành','261_71ITGR40203_06 / SE'],
     ['Ngày kiểm thử','12/11/2026'],
-    ['Repository','https://github.com/levan05/cdtn1-tranvanle-l2'],
+    ['Kho mã nguồn','https://github.com/levan05/cdtn1-tranvanle-l2'],
     ['Bản kiểm đóng gói','Git export ca4ce2a; tag v1.0 chưa phát hành'],
 ], [1.65,4.85],11)
 heading('1.1. Phạm vi kiểm thử',2)
@@ -238,24 +251,39 @@ for p in doc.paragraphs[plan_start:]:
     p.paragraph_format.line_spacing=1.12
     p.paragraph_format.space_after=Pt(4)
 
-# Test report: 8 columns, four cases per landscape page.
+# Keep the eight report columns on portrait A4; use three cases per table.
 heads,case_rows=md_table((DOCS/'test-report.md').read_text(encoding='utf8'))
-for index in range(0,12,4):
+for index in range(0,12,3):
     section('MỤC 2. BÁO CÁO KẾT QUẢ KIỂM THỬ' if index==0 else 'MỤC 2. BÁO CÁO KẾT QUẢ KIỂM THỬ (TIẾP)',True)
     if index==0:
         para('Kết quả ngày 12/11/2026: 12/12 PASS trong Docker. Các case chạy bằng node scripts/run-workshop-integration.js; có thể thêm mã TC để chạy riêng. Hai case TC-06/07 kiểm cả nội dung thông báo lỗi.',11,False)
     selected=[]
-    for source_row in case_rows[index:index+4]:
+    for source_row in case_rows[index:index+3]:
         row=list(source_row)
-        row[2]=f'Chạy runner với {row[0]}; kiểm response và DB theo bước mô tả.'
+        row[2]=f'Chạy bộ kiểm thử với {row[0]}; kiểm phản hồi và CSDL.'
         row[7]='PASS'
         if row[0]=='TC-12':
             row[1]='DB baohanh_l2_test đã seed; không có tiến trình ghi đồng thời.'
             row[6]='Hai lượt migrate/seed không lỗi. Trước/sau: center 2, category 6, user 2, customer/device/ticket/log đều 3.'
         row=[re.sub(r'`([^`]+)`',r'\1',v) for v in row]
+        phrases={
+            'Login API thật trả':'API đăng nhập trả',
+            'Customer B + device of A':'Khách B và thiết bị thuộc khách A',
+            'No Authorization':'Không gửi Authorization',
+            'migrations + seeds, twice':'Chạy migration và seed hai lượt',
+            'issue_desc: spaces':'issue_desc chỉ gồm dấu cách',
+            'tạo fixture qua API':'tạo dữ liệu thử qua API',
+            'DB status':'Trạng thái CSDL',
+            'ticket count':'Số phiếu',
+            'DB kiểm thử':'CSDL kiểm thử',
+        }
+        for old,new in phrases.items():
+            row=[value.replace(old,new) for value in row]
+        if row[0]=='TC-02':
+            row[6]='Tạo hồ sơ/thiết bị/phiếu: 201; tra cứu +84: 200; che số đúng vai trò; trùng số: 409 PHONE_EXISTS, CSDL có 1 khách; thiếu serial: 400, CSDL có 1 thiết bị; phiếu MOI, 1 dòng nhật ký.'
         selected.append(row)
-    table(heads,selected,[.65,1.18,1.2,1.1,2.05,.45,2.47,.6],10)
-    if index==8:
+    table(heads,selected,[.50,.79,.77,.76,1.22,.42,1.78,.45],9.5)
+    if index==9:
         para('Tổng hợp: 12 PASS, 0 FAIL. TC-05 kiểm hai phía ranh giới 2000/2001 ký tự; TC-10 kiểm quyền trung tâm; TC-12 kiểm tính tái lập. 15 unit test được thống kê riêng, không cộng vào 12 case trên.',11,False)
 
 section('MỤC 3. NHẬT KÝ LỖI VÀ XÁC NHẬN SỬA LỖI')
@@ -270,51 +298,8 @@ for n,bug_id in enumerate(['BUG-01','BUG-02','BUG-05'],1):
 heading('3.4. Các bản sửa bổ sung',2)
 para('Đóng gói Docker được bổ sung app healthcheck và bộ test trong image (84dfbf5), xác nhận app/db healthy và test PASS. Lockfile cập nhật body-parser (cfdf354); audit backend sau sửa báo 0 vulnerabilities. Các commit BT3 đang lưu local nên link GitHub chỉ truy cập được sau khi push.',size=11.5)
 
-section('MỤC 4. DEPLOYMENT GUIDE')
-guide='''## 1. Requirements
-Use Linux containers on Docker Desktop with WSL2 (Windows), Docker Desktop (macOS), or Docker Engine (Linux). Target minimum: Engine 24+, Compose v2.20+, 4 GB RAM, 5 GB free disk and port 8000. Internet is required for the initial image download. Node and PostgreSQL are provided in containers.
-Verified on 12 November 2026: Windows 11, WSL 3.0.5, Engine 29.9.3, Compose 5.7.0, Node 20.20.2 and PostgreSQL 16.15. The minimum versions are targets, not a tested compatibility matrix.
-## 2. Setup
-Clone the repository and enter its root. Run these two setup commands:
-```sh
-cp .env.example .env
-docker compose up -d --build
-```
-The image builds the React frontend; startup runs migrations and seeds automatically before starting Express. Wait for both services to become healthy, then open http://localhost:8000. No separate frontend process is needed.
-## 3. Environment variables
-| Variable | Purpose and example | Required |
-|---|---|---|
-| DB_HOST | PostgreSQL host: localhost; Compose supplies db | Native: yes; Compose: supplied |
-| DB_PORT | PostgreSQL port: 5432 | Native: yes; Compose: supplied |
-| DB_NAME | Database: baohanh_l2 | Native: yes; Compose: supplied |
-| DB_USER | Database user: postgres | Native: yes; Compose: supplied |
-| DB_PASSWORD | Database password from .env; example doi_mat_khau_cua_ban | Set in .env; demo fallback exists |
-| JWT_SECRET | JWT signing key; public demo value in .env.example | Yes; replace outside demo use |
-| PORT | App port: 8000 | Optional; Compose fixes 8000 |
-| NODE_ENV | Runtime mode: production, set in image | Optional |
-| WORKSHOP_ALLOW_DB_WRITE | Set 1 to allow integration fixtures | Integration only |
-| WORKSHOP_TEST_PASSWORD | Runner password override, default Demo@123 | Optional |
-The example values and seed credentials are public demo configuration. The prototype has no TLS, rate limiting or JWT revocation.
-## 4. Sample data
-On an empty database, seed creates 2 service centers, 6 issue categories, 2 users, 3 customers, 3 devices, 3 tickets and 3 initial logs. Seeds preserve existing data when rerun. Ticket dates are fixed in October 2026, so overdue flags depend on the clock.
-Demo accounts: nv.tiepnhan01 (intake staff) and ql.ninhkieu (manager), password Demo@123; both are in center 1.
-## 5. Verify and troubleshoot
-```sh
-docker compose ps
-curl http://localhost:8000/health
-docker compose exec app npm test
-```
-Expected: app and db both healthy; health returns HTTP 200 with {"status":"ok","db":"ok"}; unit tests report 15 pass, 0 fail. Use curl.exe in PowerShell if curl is aliased.
-To run the 12 integration cases, use a separate disposable test database:
-```sh
-docker compose exec db createdb -U postgres baohanh_l2_test
-docker compose exec -e DB_NAME=baohanh_l2_test app npm run migrate
-docker compose exec -e DB_NAME=baohanh_l2_test app npm run seed
-docker compose exec -e DB_NAME=baohanh_l2_test -e WORKSHOP_ALLOW_DB_WRITE=1 app node scripts/run-workshop-integration.js
-```
-Expected SUMMARY 12/12 PASS, 0/12 FAIL. The verification commands above are separate from the two setup commands. Run createdb only once for a new test database; subsequent runs can reuse it after cleanup.
-Inspect failures with docker compose logs app db. Free port 8000 if occupied. If a changed .env password differs from an existing volume, restore its original password or reset only the disposable project's volume. Stop with docker compose down; docker compose down -v also deletes this project's database data.
-'''
+section('MỤC 4. HƯỚNG DẪN TRIỂN KHAI')
+guide=(DOCS/'report-assets/huong-dan-trien-khai-vi.md').read_text(encoding='utf8')
 guide_start=len(doc.paragraphs)
 markdown(guide)
 for p in doc.paragraphs[guide_start:]:
@@ -323,7 +308,7 @@ for p in doc.paragraphs[guide_start:]:
         for r in p.runs:
             if r.font.name!='Consolas': r.font.size=Pt(11.5)
 
-section('MỤC 5. CHECKLIST BẢO MẬT',True)
+section('MỤC 5. BẢNG TỰ ĐÁNH GIÁ BẢO MẬT')
 para('Phạm vi đánh giá là prototype cục bộ tại ngày 12/11/2026. Mỗi mục ghi trạng thái theo mức đã hoàn thành và bằng chứng tương ứng; các phần còn thiếu được nêu rõ thay vì đánh dấu đã làm toàn bộ.',11,False)
 headers,rows=md_table((DOCS/'checklist-bao-mat.md').read_text(encoding='utf8'))
 table(headers,rows,[2.2,1.05,6.45],11)
@@ -342,36 +327,8 @@ for block in blocks:
     er=re.search(r'\| Endpoint-specific \| (.+?) \|',block)
     vals['errors']=er.group(1) if er else ''
     metadata.append((name,vals))
-for start in range(0,len(metadata),7):
-    section('MỤC 6. API DOCUMENTATION' if start==0 else 'MỤC 6. API DOCUMENTATION (CONTINUED)',True)
-    if start==0:
-        para('Base URL: http://localhost:8000. Protected endpoints require Authorization: Bearer <token>. Common errors: 401 UNAUTHENTICATED, 503 DATABASE_UNAVAILABLE and 500 INTERNAL_ERROR. Error body: {error:{code,message,fields}}. The table covers all 20 method/path pairs currently implemented.',11,False)
-    rows=[]
-    for name,m in metadata[start:start+7]:
-        rows.append([name,m['purpose'],m['auth'],m['params'],m['success'],m['errors'],m['limits']])
-    table(['Method/path','Business purpose','Authentication','Parameters / JSON body','Success body','Endpoint errors','Limitations'],rows,[1.25,1.3,.65,1.65,1.25,1.55,2.05],9.5)
-
-samples=json.loads((DOCS/'api-examples.json').read_text(encoding='utf8'))['samples']
-def excerpt(value):
-    if isinstance(value,list): return [excerpt(value[0])] if value else []
-    if isinstance(value,dict):
-        preferred=['status','db','token','user','ticket_id','ticket_code','priority','category','category_id','due_date','customer_id','device_id','user_id','username','role','center_id','full_name','phone','serial_no','product_name','total','page','size','customers','devices','tickets','users','categories','logs']
-        keys=[k for k in preferred if k in value][:5]
-        if not keys: keys=list(value)[:4]
-        return {k:excerpt(value[k]) for k in keys}
-    return value
-def compact(value): return json.dumps(value,ensure_ascii=False,separators=(',',':'))
-for start in range(0,len(metadata),5):
-    section('6.1. ACTUAL REQUEST / RESPONSE EXAMPLES' if start==0 else '6.1. ACTUAL REQUEST / RESPONSE EXAMPLES (CONTINUED)',True)
-    if start==0:
-        para('Captured from Express/PostgreSQL on 12 November 2026. Response bodies below are selected-field excerpts of real exchanges; list examples show the first item only. JWTs and passwords are redacted. IDs/timestamps belong to that run. Full, unabridged exchanges and all schema details are in docs/api-examples.json and docs/api-docs.md in the repository.',10.5,False)
-    rows=[]
-    for name,m in metadata[start:start+5]:
-        method,url=name.split(' ',1)
-        pattern=re.compile('^'+url.replace(':id',r'\d+')+'$')
-        actual=next(s for s in samples if s['method']==method and pattern.match(s['path'].split('?')[0]))
-        rows.append([method+' '+actual['path'],compact(actual['request']) if actual['request'] else '(no body)',str(actual['status']),compact(excerpt(actual['response'])) if actual['response'] is not None else '(empty body)'])
-    table(['Actual request','Request JSON','HTTP','Actual response excerpt'],rows,[2.1,2.8,.5,4.3],10)
+from report_api_vi import render_api
+render_api(DOCS,metadata,section,heading,para,table)
 
 shots=DOCS/'packaging-evidence/screenshots'
 section('MỤC 7. ẢNH CHỤP MINH CHỨNG',True)
