@@ -1,21 +1,21 @@
 # Khai báo sử dụng công cụ AI
 
+Sinh viên: Trần Văn Lễ · MSSV: 2374802010270 · Track: SE · Luồng: L2.
+
 ## Bài tập 3: Kiểm thử và đóng gói
 
-| Công cụ | Dùng vào việc gì | Áp dụng ở tệp / hàm nào | Đã kiểm chứng thế nào |
+Em tiếp tục sử dụng AI để hỗ trợ bổ sung test, tìm nguyên nhân lỗi, rà soát cấu hình Docker và biên soạn tài liệu. Em giữ phạm vi luồng L2 của Bài tập 2, yêu cầu chia commit nhỏ và kiểm tra kết quả chạy thực tế trước khi đưa vào báo cáo. Phần cài Docker Desktop và WSL trên máy do em thực hiện.
+
+| Công cụ | Dùng vào việc gì | Áp dụng ở tệp / hàm nào | Cách kiểm chứng |
 |---|---|---|---|
-| Claude (phiên trước, theo lịch sử trao đổi) | Đọc đề BT3, phân tích tài liệu mẫu, cập nhật dependency | `package-lock.json`, commit `cfdf354` | Phiên trước báo 15 test PASS và audit 0; Codex chạy lại unit và audit ở phiên BT3. |
-| Codex | Rà đề, chuẩn hóa báo cáo và truy vết bằng chứng | `docs/test-plan.md`, `test-report.md`, `bug-log.md` | Đối chiếu 12 case với runner, ảnh và output; chạy lại PostgreSQL thật đạt 12/12. Không dựng kết quả FAIL lịch sử. |
-| Codex | Kiểm thêm nội dung thông báo lỗi | `scripts/run-workshop-integration.js` TC-06/07 | Chạy đủ 12 case trên DB kiểm thử; 12/12 PASS. |
-| Codex | Bổ sung phủ quy tắc và regression lịch sử | `scripts/run-workshop-integration.js` TC-02/10; `scripts/verify-bug-regressions.js` | Bộ 12 case PASS với QT-01/02/05/07 và hai vai trò ở QT-06; ba kiểm tra trước/sau PASS, lưu output. Handler mất DB dùng lỗi mô phỏng, không dừng DB thật. |
-| Codex | Chuẩn bị và chạy phép thử đóng gói từ Git sạch | `scripts/verify-clean-package.ps1` | Ban đầu chỉ kiểm cú pháp; sau khi sinh viên cài Docker/WSL, chạy source ca4ce2a thành công: hai dịch vụ healthy, unit 15/15 và integration 12/12 PASS, lưu output tại `docs/packaging-evidence/`. |
-| Codex | Viết API docs tiếng Anh và thu exchange thật | `scripts/capture-api-examples.js`, `docs/api-docs.md`, `api-examples.json` | 21 request/response thật, assert mã HTTP; che JWT/password; dọn fixture theo ID. |
-| Codex | Bổ sung đóng gói, hướng dẫn và checklist | `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `docs/deployment-guide.md`, `checklist-bao-mat.md` | Đã xác nhận build, healthcheck và test trong Docker sau khi cài WSL; audit backend 0. Chưa kiểm clone public tag v1.0 và chưa có ảnh Docker do sinh viên chụp. |
+| Claude | Phân tích đề BT3 và cập nhật phụ thuộc | `package-lock.json`, commit `cfdf354` | Đối chiếu thay đổi lockfile; audit backend sau cập nhật báo 0 vulnerabilities, bộ unit 15/15 PASS. |
+| Codex | Bổ sung test nghiệp vụ và nội dung lỗi | `scripts/run-workshop-integration.js`, TC-02/06/07/10 | Chạy Express và PostgreSQL thật; 12/12 PASS. Kiểm trùng/chuẩn hóa số, che số, serial, quyền trung tâm và thông báo lỗi. |
+| Codex | Kiểm tra lại lỗi lịch sử | `scripts/verify-bug-regressions.js`, `docs/bug-log.md` | 3 phép kiểm tra trước/sau PASS. Lỗi mất DB được mô phỏng ở handler; lỗi khám phá test dùng fixture đối chứng; kiểm ID chạy ở tiến trình Node tách biệt. |
+| Codex | Đóng gói và chạy kiểm thử bằng Docker | `Dockerfile`, `docker-compose.yml`, `scripts/verify-clean-package.ps1` | Sau khi em cài Docker/WSL, các lệnh được Codex chạy qua công cụ trên máy: app/db healthy, unit 15/15 và integration 12/12 PASS. Output được lưu trong `docs/packaging-evidence/`. |
+| Codex | Chụp minh chứng và soạn tài liệu | `scripts/capture-docker-evidence.ps1`, `docs/packaging-evidence/screenshots/`, tài liệu BT3 | Ảnh terminal được chụp khi chạy lệnh trực tiếp; ảnh giao diện lấy từ ứng dụng ở localhost. Tài liệu dùng số liệu và chức năng hiện có. |
+| Codex | Soạn API docs tiếng Anh | `scripts/capture-api-examples.js`, `docs/api-docs.md`, `docs/api-examples.json` | Thu 21 exchange API thật; kiểm mã HTTP, che JWT/mật khẩu và dọn fixture theo ID. |
 
-Các lượt chạy trên do trợ lý thực hiện qua công cụ ở máy làm việc; sinh viên cần tự chạy lại, đọc và giải thích trước khi nộp. Không coi bảng này là xác nhận sinh viên đã tự kiểm chứng mọi phần. Docker đã chạy qua công cụ trợ lý; ảnh và việc tự xác nhận của sinh viên còn cần bổ sung.
-
-Sinh viên: Trần Văn Lễ · MSSV: 2374802010270 · Track: SE · Luồng: L2 (Tiếp nhận và phân loại yêu cầu bảo hành)
-
+Các kết quả tự động trên có AI trực tiếp chạy lệnh qua công cụ. Em chưa xác nhận đã tự chạy lại toàn bộ test hoặc tự gỡ lại toàn bộ bug; phần này cần hoàn tất trước khi nộp. Việc kiểm clone public tag `v1.0` cũng chưa thực hiện. Em không dùng ảnh chụp hoặc kết quả tự động để thay cho việc hiểu và giải thích bài làm.
 ## Bài tập 2: Hiện thực hoá module cốt lõi
 
 Em dùng trợ lý lập trình AI (Claude, qua GitHub Copilot CLI) để viết phần lớn mã nguồn và tài liệu của Bài tập 2. Em chọn yêu cầu, đọc kết quả, tự chạy và thao tác thử trên hệ thống, rồi quyết định giữ hay sửa. Em tự quyết các điểm sau: phiếu nhận vào Chủ Nhật thì tính hạn từ 00:00 Thứ Hai; chỉ Quản lý được tạo tài khoản nhân viên cho trung tâm của mình; làm từng commit nhỏ, mỗi commit một việc.

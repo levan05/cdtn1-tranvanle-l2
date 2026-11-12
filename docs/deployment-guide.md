@@ -82,10 +82,10 @@ Expected `SUMMARY 12/12 PASS, 0/12 FAIL`. These are verification commands after 
 
 If startup fails, inspect `docker compose logs app db`. Port conflict: free port 8000. Authentication failure after changing `.env`: the existing database volume retains the original password; use that password or reset only the disposable project volume. A 503 health response means PostgreSQL cannot be reached. Do not record PASS until the commands have actually succeeded.
 
-On Windows, after Docker Desktop's Linux engine is running, the author can rehearse from a clean Git export with:
+To repeat the clean-source deployment check on Windows, start Docker Desktop's Linux engine and run:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-clean-package.ps1
 ```
 
-This checks a committed local revision in a new temporary directory and a unique Compose project, leaving the working `.env` and existing database untouched. It records output under `docs/packaging-evidence/`, retains containers for real screenshots, and prints an explicit project-only cleanup command. This rehearsal requires Git, tar and PowerShell on the host. It does not prove the public `v1.0` tag can be cloned; repeat the assignment's public-tag clone test after the release is authorized. The script completed successfully on 12 November 2026.
+The script exports a committed revision into a new temporary directory and starts a separate Compose project. It leaves the working `.env` and existing database untouched, records results under `docs/packaging-evidence/` and prints the cleanup command for that project. Git, tar and PowerShell are required on the host. The script completed successfully on 12 November 2026. Repeat the check from the public `v1.0` tag once it is published.

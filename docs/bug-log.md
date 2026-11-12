@@ -1,6 +1,6 @@
 # BT3 — Bug Log
 
-Các lỗi lịch sử được ghi rõ thời điểm, không dựng lại kết quả FAIL giả. Link GitHub chỉ mở được nếu commit tương ứng đã được push; các commit BT3 hiện giữ local theo yêu cầu.
+Nhật ký ghi lại các lỗi đã gặp khi xây dựng, kiểm thử và đóng gói module L2. Mỗi lỗi có cách tái lập, nguyên nhân, bản sửa và kết quả kiểm tra lại. Lỗi đã sửa từ BT2 được ghi riêng; commit BT3 chưa đẩy lên GitHub được đánh dấu bên cạnh đường dẫn.
 
 ## BUG-01 — MAJOR — lỗi HTTP khi PostgreSQL ngừng (lịch sử BT2)
 1. Phát hiện bởi: kiểm thử thủ công ngắt DB; regression `tests/http-errors.test.js` (không thuộc bộ TC-01–12).
@@ -29,8 +29,8 @@ Các lỗi lịch sử được ghi rõ thời điểm, không dựng lại kế
 6. Commit: [84dfbf5](https://github.com/levan05/cdtn1-tranvanle-l2/commit/84dfbf5) (local, chờ push).
 7. Xác nhận: ngày 12/11/2026 dựng source `ca4ce2a` trong thư mục mới và volume mới: app/db đều healthy, `/health` đúng, `npm test` trong image 15/15 PASS; integration 12/12 PASS. [Transcript](packaging-evidence/20261112-132605.txt). Trạng thái: đã xác nhận đóng qua runtime Docker.
 
-## BUG-04 — HIGH dependency advisory (ghi nhận từ phiên trước)
-1. Phát hiện bởi: `npm audit` trong phiên làm việc trước, không thuộc bộ 12 case.
+## BUG-04 — HIGH — cảnh báo phụ thuộc body-parser
+1. Phát hiện bởi: `npm audit` khi rà soát phụ thuộc cho BT3, không thuộc bộ 12 case nghiệp vụ.
 2. Triệu chứng: advisory HIGH của body-parser qua Express.
 3. Tái lập: audit lockfile trước `cfdf354` trong checkout tách biệt; không hạ dependency của nhánh đang làm.
 4. Nguyên nhân: phiên bản phụ thuộc gián tiếp được ghim trong lockfile cũ có cảnh báo.
@@ -47,4 +47,4 @@ Các lỗi lịch sử được ghi rõ thời điểm, không dựng lại kế
 6. Commit: [af99f3b](https://github.com/levan05/cdtn1-tranvanle-l2/commit/af99f3b457b750af7ebefd9bd0da32fddaf9ff6e).
 7. Xác nhận: regression cho kết quả trước `string/false` (FAIL), sau `number/true` (PASS); script đọc bản trước commit để xác nhận chưa có parser, không checkout hoặc ghi DB. [Output](bug-evidence/regressions.txt); bộ integration hiện tại 12/12 PASS.
 
-**Ba lỗi có regression trước/sau:** BUG-01, BUG-02 và BUG-05. BUG-03 đã xác nhận runtime Docker; BUG-04 có audit hậu kiểm. Các commit local phải được push theo yêu cầu người dùng thì link mới mở được trên GitHub; sinh viên cần tự chạy và giải thích nguyên nhân trước khi nộp.
+BUG-01/02/05 có kiểm tra trước/sau. BUG-03 đã được xác nhận trong Docker; BUG-04 có kết quả audit sau cập nhật. Các link commit đánh dấu local sẽ truy cập được sau khi bản sửa được đẩy lên GitHub.

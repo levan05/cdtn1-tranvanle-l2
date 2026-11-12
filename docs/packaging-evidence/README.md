@@ -10,4 +10,19 @@ Setup: copy `.env.example` to `.env`; `docker compose up -d --build --wait --wai
 - [Captured runtime checks and unit-test stdout](20261112-132605-verification.txt)
 - [Integration output copied from container](20261112-132605-integration.txt)
 
-This verifies a clean local source export on Docker Desktop/WSL2. It does not verify cloning a public `v1.0` tag, which has not been published. The transcript is text evidence; real terminal/frontend screenshots must still be taken for the PDF's evidence section.
+The clean-source deployment was verified on Docker Desktop/WSL2. The public `v1.0` tag has not yet been published, so the tag-clone check remains pending.
+
+## Screenshots of the running system
+
+The terminal screenshots were taken from a visible PowerShell console while executing Docker commands on 12 November 2026. The frontend screenshot was captured from the application served at `http://localhost:8000`. No terminal output was recreated as an image.
+
+| Evidence | File |
+|---|---|
+| Both services healthy and health response | [docker-health.png](screenshots/docker-health.png) |
+| 15/15 unit tests PASS | [docker-unit-tests.png](screenshots/docker-unit-tests.png) |
+| 12/12 PostgreSQL integration cases PASS | [docker-integration-tests.png](screenshots/docker-integration-tests.png) |
+| Customer/device intake checks | [TC-02-docker.png](screenshots/TC-02-docker.png) |
+| Center-based ticket access | [TC-10-docker.png](screenshots/TC-10-docker.png) |
+| Frontend login page | [frontend-login.png](screenshots/frontend-login.png) |
+
+The screenshot rerun uses the same isolated test database after cleanup. Sequence values may increase between runs even though temporary rows are removed; IDs therefore differ from the first clean deployment's text output.

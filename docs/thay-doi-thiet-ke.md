@@ -4,7 +4,7 @@
 
 - Thay đổi gì: giới hạn test vào `tests/*.test.js`; COPY test vào image, thêm app healthcheck `/health`, tạo thư mục output; bổ sung assert message lỗi, bộ tài liệu BT3 và exchange API thật đã che JWT/password.
 - Vì sao: cần bộ test riêng của dự án, khả năng kiểm sức khỏe và tài liệu mô tả đúng runtime để bàn giao theo đề BT3.
-- Ảnh hưởng tới: đóng gói và tài liệu; không thêm luồng nghiệp vụ. Docker chưa được chạy tại môi trường này, chưa đủ bằng chứng máy trắng. Trạng thái bảo mật chưa hoàn thiện được ghi tại checklist.
+- Ảnh hưởng tới: đóng gói và tài liệu; không thêm luồng nghiệp vụ. Đã dựng source Git sạch bằng Docker, hai dịch vụ healthy, unit 15/15 và integration 12/12 PASS. Ảnh và output nằm ở `docs/packaging-evidence/`; các giới hạn bảo mật được ghi tại checklist.
 
 Mỗi thay đổi gồm ba dòng: thay đổi gì, vì sao, ảnh hưởng tới thành phần nào.
 
