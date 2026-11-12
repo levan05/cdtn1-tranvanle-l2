@@ -6,55 +6,51 @@ Sinh viên: Trần Văn Lễ, MSSV 2374802010270, track SE, lớp 71K29CNTT11. H
 
 Hệ thống giúp nhân viên tiếp nhận của Mekong Mobile ghi nhận yêu cầu bảo hành: tra cứu khách theo số điện thoại, chọn thiết bị, tự phân loại nhóm sự cố, mức ưu tiên và sinh hạn cam kết (CAO 24 giờ, TRUNG_BINH 72 giờ, THAP 120 giờ, không tính Chủ Nhật). Phiếu đi một chiều MOI, DA_PHAN_CONG, DANG_XU_LY, HOAN_TAT, DA_DONG và mỗi lần chuyển đều ghi log. Quản lý chỉ thấy phiếu của trung tâm mình và xem đủ số điện thoại, nhân viên chỉ thấy 4 số cuối. Backend Node.js/Express theo kiến trúc `routes → services → repositories` (kèm `validators`), cơ sở dữ liệu PostgreSQL, giao diện React + Vite.
 
-## 2. Tải mã nguồn và chạy bằng Docker (BT3)
+## 2. Chạy bằng Docker (BT3)
 
-Yêu cầu: cài và bật Docker Desktop (Windows dùng WSL2, chế độ Linux containers; macOS dùng Docker Desktop) hoặc Docker Engine trên Linux, kèm Docker Compose. Cấu hình mục tiêu: Engine 24+, Compose 2.20+, RAM 4 GB, dung lượng trống 5 GB; cổng 8000 còn trống. Lần build đầu cần Internet. Không cần cài Node.js hoặc PostgreSQL trên máy nếu chạy bằng Docker.
+Cần Docker Desktop đang chạy (Windows dùng WSL2 và Linux containers), hoặc Docker Engine kèm Compose trên Linux. Cổng 8000 phải trống; lần build đầu cần Internet. Không cần cài riêng Node.js hoặc PostgreSQL.
 
-Tải mã nguồn bằng **Code → Download ZIP** trên GitHub rồi giải nén, hoặc clone repo:
+### Chạy lần đầu
 
-```sh
-git clone https://github.com/levan05/cdtn1-tranvanle-l2.git
-```
-
-### Lần đầu: dựng hệ thống từ mã nguồn
-
-Trên Windows:
-
-1. Mở Docker Desktop, chờ engine sẵn sàng.
-2. Giải nén source, mở thư mục chứa `docker-compose.yml` trong File Explorer. Nếu đang tìm kiếm tệp, nhấp phải `docker-compose.yml` → **Mở vị trí tệp**.
-3. Bấm thanh địa chỉ thư mục, gõ `powershell` rồi nhấn Enter.
-4. Chạy lần lượt **hai lệnh** dưới đây. Trên Linux/macOS, mở terminal tại cùng thư mục và dùng các lệnh tương tự.
+1. Tải [source v1.0](https://github.com/levan05/cdtn1-tranvanle-l2/archive/refs/tags/v1.0.zip) và giải nén.
+2. Mở thư mục chứa `docker-compose.yml`. Trên Windows, bấm thanh địa chỉ, gõ `powershell`, nhấn Enter.
+3. Chạy hai lệnh:
 
 ```sh
 cp .env.example .env
 docker compose up -d --build
 ```
 
-Trong Windows Command Prompt (cmd), thay lệnh đầu bằng `copy .env.example .env`. Chỉ sao chép cấu hình khi chưa có `.env`; giữ lại cấu hình đang dùng nếu khởi động lại dự án.
+Nếu đã có `.env`, giữ nguyên và bỏ lệnh sao chép. Trong Command Prompt dùng `copy` thay cho `cp`. Cấu hình mẫu dùng cho demo cục bộ.
 
-Docker tự cài thư viện, build giao diện React, khởi động PostgreSQL, chạy migration/seed rồi khởi động Express. Chờ cả `app` và `db` báo `healthy` (xem mục 5), sau đó mở **http://localhost:8000**. Các giá trị trong `.env.example` dùng được cho demo Docker cục bộ; Compose tự đặt địa chỉ DB thành `db`. Thay mật khẩu và khóa JWT trước khi dùng ngoài môi trường demo.
-
-Khi lệnh build hoàn tất và PowerShell hiện lại dấu nhắc `PS ...>`, kiểm tra:
+Docker tự build web, tạo database, bảng và dữ liệu mẫu. Kiểm tra sau khi build xong:
 
 ```sh
 docker compose ps
 ```
 
-Nếu trạng thái còn `health: starting`, chờ vài giây rồi chạy lại lệnh kiểm tra. Cần thấy đủ cả `app` và `db` ở trạng thái `healthy`. Nếu chỉ thấy `db`, xem mục 6 để đọc log app đã dừng. Mở http://localhost:8000 và đăng nhập bằng `nv.tiepnhan01` / `Demo@123`.
+Chờ cả `app` và `db` báo `healthy`, rồi mở http://localhost:8000. Nếu còn `health: starting`, chờ vài giây rồi kiểm tra lại.
 
-Hướng dẫn bàn giao bằng tiếng Anh: [Deployment Guide](docs/deployment-guide.md). Tag `v1.0` đã được đẩy lên GitHub; tải [ZIP source v1.0](https://github.com/levan05/cdtn1-tranvanle-l2/archive/refs/tags/v1.0.zip) để dùng đúng phiên bản đã kiểm. GitHub Release riêng chưa được xuất bản tại thời điểm kiểm ngày 12/11/2026.
+Đăng nhập: `nv.tiepnhan01` / `Demo@123`.
 
-### Những lần sau: bật/tắt trong Docker Desktop
+### Bật và tắt những lần sau
 
-Khi container vẫn còn và mã nguồn không thay đổi, không cần chép lại `.env` hoặc build lại:
+Trong Docker Desktop:
 
-1. Mở Docker Desktop → **Containers** ở thanh bên trái.
-2. Tìm nhóm Compose của dự án. Khi chạy từ thư mục ZIP `cdtn1-tranvanle-l2-1.0`, tên nhóm là `cdtn1-tranvanle-l2-10`; nếu đổi tên thư mục, tên nhóm có thể khác.
-3. Bấm mũi tên bên trái tên nhóm để mở rộng, bấm **Start ▶** ở container `db-1` trước. Chờ DB `healthy` (bấm vào container để xem trạng thái nếu cần).
-4. Bấm **Start ▶** ở `app-1`, chờ app `healthy`, rồi mở http://localhost:8000.
-5. Khi dùng xong, bấm **Stop ■** ở nhóm để dừng cả hai, hoặc dừng app trước rồi DB. Khi app dừng, web không truy cập được; bật lại cả hai thì web hoạt động trở lại.
+1. Chọn **Containers**, mở rộng nhóm dự án (thường là `cdtn1-tranvanle-l2-10` nếu giữ tên thư mục ZIP).
+2. Bấm **Start** ở `db-1`, chờ healthy, rồi bấm **Start** ở `app-1`.
+3. Khi app healthy, mở http://localhost:8000.
+4. Bấm **Stop** ở cả nhóm để dừng. Dữ liệu vẫn được giữ.
 
-Dữ liệu được giữ trong volume PostgreSQL khi Stop/Start. Có thể dùng terminal thay cho giao diện: chạy `docker compose up -d` để bật lại và `docker compose stop` để dừng cả nhóm. Nếu đã dùng `docker compose down`, container không còn trong danh sách; chạy lại `docker compose up -d` để tạo lại từ image có sẵn. Chỉ build lại bằng `docker compose up -d --build` khi cần dựng lại image sau thay đổi mã nguồn.
+Hoặc dùng terminal tại thư mục dự án:
+
+```sh
+docker compose up -d
+```
+
+Dừng bằng `docker compose stop`. Không cần chép lại `.env` hay build lại khi source không đổi.
+
+Hướng dẫn chi tiết bằng tiếng Anh: [Deployment Guide](docs/deployment-guide.md).
 
 ## 3. Chạy trực tiếp bằng Node.js (tùy chọn)
 
@@ -110,16 +106,17 @@ Kết quả mong đợi: `SUMMARY 12/12 PASS, 0/12 FAIL`. Các lần chạy sau 
 - Mở http://localhost:8000, đăng nhập bằng tài khoản mẫu ở mục 3. Trên DB mới có 3 phiếu mẫu; seed chạy lại giữ dữ liệu hiện có.
 - Chạy lại `docker compose exec app npm run migrate` rồi `docker compose exec app npm run seed`: không lỗi và không nhân đôi dữ liệu mẫu.
 
-## 6. Dừng và xử lý sự cố Docker
+## 6. Xử lý sự cố Docker
 
-- Xem nhật ký khi chưa lên được: `docker compose logs app db`.
-- Docker không kết nối được: bật Docker Desktop và chờ engine sẵn sàng; Windows chọn Linux containers.
-- Cổng 8000 bị chiếm: dừng ứng dụng đang dùng cổng đó rồi khởi động lại.
-- Để tìm container đang chiếm cổng 8000: `docker ps --filter publish=8000`. Nếu đó là bản demo cũ không cần chạy đồng thời, dùng `docker stop TEN_CONTAINER` (thay `TEN_CONTAINER` bằng tên trong kết quả). Lệnh stop giữ dữ liệu.
-- Sau lần khởi động lỗi trùng cổng, nếu app thoát với `getaddrinfo EAI_AGAIN db`, xem cả container đã dừng bằng `docker compose ps -a` và log bằng `docker compose logs app`. Khi đã giải phóng cổng, chạy `docker compose up -d --force-recreate app` để tạo lại app và kết nối mạng; dữ liệu DB được giữ nguyên. Sau đó kiểm tra lại `docker compose ps`. Nếu vẫn lỗi, đọc log trước khi tiếp tục.
-- Lỗi mật khẩu DB sau khi sửa `.env`: volume cũ vẫn giữ mật khẩu ban đầu. Dùng lại mật khẩu của DB đã tạo.
-- Dừng hệ thống, giữ dữ liệu: `docker compose down`. Khởi động lại bằng `docker compose up -d --build`, không cần chép lại `.env`.
-- Chỉ khi muốn xóa toàn bộ dữ liệu demo của dự án: `docker compose down -v`, rồi khởi động lại. Tùy chọn `-v` xóa volume PostgreSQL của project, bao gồm dữ liệu đã nhập.
+| Trường hợp | Cách xử lý |
+| --- | --- |
+| Không kết nối được Docker | Bật Docker Desktop, chờ engine sẵn sàng. |
+| Cổng 8000 bị chiếm | Dùng `docker ps --filter publish=8000` để tìm container cũ, rồi `docker stop TEN_CONTAINER` nếu không cần chạy nó. |
+| App không xuất hiện trong danh sách đang chạy | Xem `docker compose ps -a` và `docker compose logs app`. |
+| App báo `EAI_AGAIN db` sau lỗi trùng cổng | Giải phóng cổng, chạy `docker compose up -d --force-recreate app`, rồi kiểm tra lại trạng thái. |
+| DB báo sai mật khẩu sau khi sửa `.env` | Dùng lại mật khẩu ban đầu của DB; volume cũ vẫn giữ mật khẩu đó. |
+
+Dừng và gỡ container nhưng giữ dữ liệu: `docker compose down`. Chạy `docker compose up -d` để tạo lại. Chỉ dùng `docker compose down -v` khi muốn xóa toàn bộ dữ liệu demo trong volume của dự án.
 
 ## 7. Cấu trúc
 
