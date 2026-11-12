@@ -276,6 +276,9 @@ async function main() {
       const before = await countTicketsForCustomer(fixture.customerId);
       const rejected = await createTicket(auth.token, fixture.customerId, fixture.deviceId, '   ');
       assertStatus(rejected, 400, 'blank description');
+        assert.equal(rejected.data.error.code, 'VALIDATION_ERROR');
+        assert.equal(rejected.data.error.message, 'Du lieu phieu bao hanh khong hop le');
+        assert.equal(rejected.data.error.fields.issue_desc, 'Mo ta loi la bat buoc');
       assert.ok(rejected.data.error.fields.issue_desc);
       const after = await countTicketsForCustomer(fixture.customerId);
       assert.equal(after, before);
@@ -292,6 +295,7 @@ async function main() {
       const rejected = await createTicket(auth.token, missingCustomer, device.rows[0].device_id, 'Mat nguon');
       assertStatus(rejected, 404, 'missing customer');
       assert.equal(rejected.data.error.code, 'CUSTOMER_NOT_FOUND');
+        assert.equal(rejected.data.error.message, 'Khong tim thay khach hang');
       return `HTTP 404 ${rejected.data.error.code}`;
     })) failures += 1;
 
