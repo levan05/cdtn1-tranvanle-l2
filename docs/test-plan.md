@@ -4,7 +4,7 @@
 
 Kiểm đăng nhập, tạo phiếu và log nguyên tử, phân loại/hạn cam kết, chuyển trạng thái một chiều, kiểm trung tâm sở hữu, thiết bị thuộc khách và migration/seed chạy lại. Dùng 12 case của buổi 14, giữ nguyên minh chứng gốc; xem [báo cáo BT3](test-report.md).
 
-Chưa kiểm đầy đủ QT-01 (trùng điện thoại), QT-02 (chuẩn hóa), QT-05 (che điện thoại) và QT-07 (serial bắt buộc) bằng case chuyên biệt trong bộ 12 case. Đây là khoảng trống cần bổ sung trước khi kết luận mọi quy tắc được phủ. Không kiểm tải, pentest, gửi thông báo, phân công kỹ thuật viên thực, giao diện đa trình duyệt vì ngoài phạm vi module/prototype. Phép thử Docker máy trắng là kiểm tra đóng gói riêng, chưa PASS.
+TC-02 kiểm trọn luồng tiếp nhận, gồm QT-01 (khách mới và từ chối trùng điện thoại), QT-02 (tra cứu và từ chối trùng bằng dạng +84), QT-05 (nhân viên thấy số che, quản lý thấy đầy đủ), QT-07 (tạo thiết bị có serial và từ chối thiếu serial). Không kiểm tải, pentest, gửi thông báo, phân công kỹ thuật viên thực, giao diện đa trình duyệt vì ngoài phạm vi module/prototype. Phép thử Docker máy trắng là kiểm tra đóng gói riêng, chưa PASS.
 
 ## 2. Loại test và số lượng
 
@@ -16,7 +16,7 @@ Chưa kiểm đầy đủ QT-01 (trùng điện thoại), QT-02 (chuẩn hóa), 
 
 15/15 unit và 12/12 case báo cáo PASS; hai test sai phải kiểm HTTP, mã lỗi, thông báo; mỗi quy tắc đã hiện thực có ít nhất một case đúng và truy vết được; không còn Critical mở; dựng bằng ≤2 lệnh, cả hai dịch vụ healthy, unit test trong container PASS. Chỉ kết luận hoàn tất khi tất cả tiêu chí đều có minh chứng. Kết quả buổi 14 không tự chứng minh Docker chạy được.
 
-Truy vết hiện có: tạo phiếu/log → TC-02; QT-03 → TC-04 và unit deadline; QT-04 → TC-03/08; QT-06 → TC-10; quan hệ thiết bị/khách → TC-11; giới hạn mô tả → TC-05/06. Các khoảng trống ở mục 1 vẫn mở.
+Truy vết: QT-01/02/05/07 và tạo phiếu/log → TC-02; QT-03 → TC-02/04 và unit deadline; QT-04 → TC-03/08; QT-06 → TC-02/10; quan hệ thiết bị/khách → TC-11; giới hạn mô tả → TC-05/06. Mỗi quy tắc QT-01–07 có ít nhất một đường chạy đúng; các biên 2000/2001 ký tự được kiểm riêng trong TC-05. TC-02 có nhiều assert tương ứng các bước của cùng luồng tiếp nhận, không tính chúng thành test case độc lập.
 
 ## 4. Môi trường và dữ liệu
 

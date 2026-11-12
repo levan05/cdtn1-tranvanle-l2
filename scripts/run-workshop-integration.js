@@ -394,7 +394,12 @@ async function main() {
       const managerDetail = await request(`/api/tickets/${ticket.data.ticket_id}`, { token: manager.token });
       assertStatus(managerDetail, 404, 'manager other-center detail');
       assert.equal(managerDetail.data.error.code, 'TICKET_NOT_FOUND');
-      return `staff and manager: other center ticket hidden, list count=0; detail HTTP 404`;
+      const ownTicket = await db.query('SELECT ticket_id FROM ticket WHERE center_id=$1 ORDER BY ticket_id LIMIT 1', [manager.user.center_id]);
+      assert.ok(ownTicket.rows[0], 'seed ticket in manager center required');
+      const ownDetail = await request(`/api/tickets/${ownTicket.rows[0].ticket_id}`, { token: manager.token });
+      assertStatus(ownDetail, 200, 'manager own-center detail');
+      assert.equal(ownDetail.data.center_id, manager.user.center_id);
+      return `staff and manager: other center list=0/detail=404; manager own-center detail=200`;
     })) failures += 1;
 
     if (!await testCase('TC-11', 'bảo mật / chất lượng dữ liệu', 'Thiết bị gắn với khách khác không tạo phiếu', async () => {

@@ -1,5 +1,7 @@
 # Test Report — Checklist Buổi 14, luồng L2
 
+> Đây là minh chứng gốc của buổi 14. Bản nộp BT3 đúng 8 cột và các assert bổ sung nằm ở [test-report.md](test-report.md); không dùng ảnh cũ để khẳng định đã chụp các bước bổ sung. `workshop-integration-results.txt` hiện được cập nhật bởi lượt chạy BT3 mới nhất.
+
 **Phạm vi:** 12 test case chạy bằng `node scripts/run-workshop-integration.js`; output của lượt chạy đủ 12 case được lưu trong [`workshop-integration-results.txt`](workshop-integration-results.txt). TC-01–TC-03, TC-05–TC-11 gọi API Express thật và/hoặc truy vấn PostgreSQL thật; TC-04 chạy hàm tính hạn thật với đầu vào biên xác định; TC-12 chạy migration/seed hai lượt trên PostgreSQL. Không dùng repository giả trong lượt kiểm thử này. Dữ liệu tạm được dọn trước khi TC-12 đo baseline và sau từng lượt có ghi dữ liệu.
 
 **Môi trường:** Windows, Node.js v24.18.0, PostgreSQL 18; backend Express, PostgreSQL cục bộ. Không ghi giá trị bí mật từ `.env` vào tài liệu.
