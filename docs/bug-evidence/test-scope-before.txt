@@ -1,67 +1,21 @@
-✔ TC-01 tiep nhan thiet bi con han bao hanh thi tao duoc phieu (1.9454ms)
-✔ TC-02 SLA muc CAO la 24 gio, TRUNG_BINH 72 gio, THAP 120 gio (0.1478ms)
-✔ TC-03 phan cong ky thuat vien cung trung tam thi thanh cong (0.6449ms)
-✔ TC-04 quan tri chuyen duoc trang thai phieu cua trung tam khac (0.1858ms)
-✖ TC-05 bien bao hanh: dung ngay het han thi VAN con bao hanh (0.6923ms)
-✔ TC-05b bien bao hanh: DUNG mili giay cuoi cung cua ngay het han thi VAN con bao hanh (0.1373ms)
-✔ TC-06b bien bao hanh: sau bien DUNG mot mili giay thi HET bao hanh (0.1022ms)
-✔ TC-06 bien bao hanh: sau ngay het han mot ngay thi HET bao hanh (0.0899ms)
-✔ TC-07 bien tai KTV: dung MAX-1 phieu dang mo thi VAN phan cong duoc (0.1447ms)
-✔ TC-08 bien tai KTV: dung MAX phieu dang mo thi BI TU CHOI (0.5192ms)
-✔ TC-09 QT-09 serial da co phieu dang mo thi bi tu choi voi ma PHIEU_DANG_MO (0.1807ms)
-✔ TC-10 serial co phieu DA HOAN TAT thi VAN tiep nhan duoc phieu moi (0.107ms)
-✔ TC-11 khach hang khong ton tai thi bi tu choi (0.126ms)
-✔ TC-12 muc uu tien khong hop le thi bi tu choi (0.1302ms)
-✔ TC-13 KIEM SOAT TRUY CAP: nguoi dung trung tam khac bi tu choi 403 (0.2485ms)
-✔ TC-14 khong hoan tat duoc phieu chua phan cong ky thuat vien (0.1307ms)
-✔ TV-01 du lieu hop le thi tra ve doi tuong da chuan hoa (0.7462ms)
-✔ TV-02 thieu truong bat buoc thi nem loi NEU RO ten truong (0.2857ms)
-✔ TV-03 serial co ky tu la thi bi tu choi (0.5517ms)
-✔ TV-04 ngay ban sai dinh dang thi bi tu choi (0.1165ms)
-✔ TV-05 trang thai ngoai tap cho phep thi bi tu choi (0.4903ms)
-✔ phieu CAO nhan thu hai 09:00 co han thu ba 09:00 (1.2495ms)
-✔ phieu CAO nhan Thu Bay 10:00 bo qua Chu Nhat, han Thu Hai 10:00 (0.1272ms)
-✔ phieu CAO nhan Chu Nhat 10:00 dem tu 00:00 Thu Hai, han Thu Ba 00:00 (0.082ms)
-✔ phieu CAO nhan Thu Bay 23:59 van bo qua tron Chu Nhat (0.083ms)
-✔ ba muc uu tien cho han 24, 72 va 120 gio khi khong gap Chu Nhat (0.1105ms)
-✔ mat ket noi co so du lieu tra 503 voi thong bao ro rang (1.4059ms)
-✔ loi ket noi nam trong AggregateError cung tra 503 (0.1718ms)
-✔ loi la khong lo chi tiet thu vien ra ngoai (0.2636ms)
-✔ tao phieu thieu mo ta loi bi tu choi kem ten truong va khong ghi gi (1.5125ms)
-✔ tao phieu cho khach khong ton tai tra CUSTOMER_NOT_FOUND (0.1637ms)
-✔ chuyen nguoc trang thai bi tu choi va khong ghi log (0.2495ms)
-✔ nhay coc trang thai bi tu choi kem goi y trang thai ke tiep (0.2004ms)
-✔ trang thai khong thuoc vong doi bi tu choi kem ten truong (0.1448ms)
-✔ tao phieu hop le sinh ma BH000101/2026, trang thai MOI, han cam ket va log dau (2.5191ms)
-✔ chuyen trang thai dung thu tu cap nhat phieu va ghi log nguoi thuc hien (0.3434ms)
-ℹ tests 36
+✖ REFERENCE_SENTINEL (0.4562ms)
+✔ PROJECT_SENTINEL (0.4552ms)
+ℹ tests 2
 ℹ suites 0
-ℹ pass 35
+ℹ pass 1
 ℹ fail 1
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 123.3644
+ℹ duration_ms 65.0762
 
 ✖ failing tests:
 
-test at docs\mekong-se-baohanh\tests\ticket.service.test.js:71:1
-✖ TC-05 bien bao hanh: dung ngay het han thi VAN con bao hanh (0.6923ms)
-  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
-  
-  false !== true
-  
-      at TestContext.<anonymous> (D:\TAILIEU\ChuyenDe1\BT2\cdtn1-tranvanle-l2\docs\mekong-se-baohanh\tests\ticket.service.test.js:74:10)
+test at docs\reference\tests\foreign.test.js:1:21
+✖ REFERENCE_SENTINEL (0.4562ms)
+  Error: FOREIGN_REFERENCE_TEST_DISCOVERED
+      at TestContext.<anonymous> (C:\Users\tranv\AppData\Local\Temp\bt3-scope-lyfAKN\docs\reference\tests\foreign.test.js:1:58)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
-      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
-      at Test.postRun (node:internal/test_runner/test:1522:19)
-      at Test.run (node:internal/test_runner/test:1447:12)
-      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
-    generatedMessage: true,
-    code: 'ERR_ASSERTION',
-    actual: false,
-    expected: true,
-    operator: 'strictEqual',
-    diff: 'simple'
-  }
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)

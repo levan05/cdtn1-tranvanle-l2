@@ -1,23 +1,9 @@
-✔ phieu CAO nhan thu hai 09:00 co han thu ba 09:00 (1.3778ms)
-✔ phieu CAO nhan Thu Bay 10:00 bo qua Chu Nhat, han Thu Hai 10:00 (0.1309ms)
-✔ phieu CAO nhan Chu Nhat 10:00 dem tu 00:00 Thu Hai, han Thu Ba 00:00 (0.0838ms)
-✔ phieu CAO nhan Thu Bay 23:59 van bo qua tron Chu Nhat (0.0848ms)
-✔ ba muc uu tien cho han 24, 72 va 120 gio khi khong gap Chu Nhat (0.1086ms)
-✔ mat ket noi co so du lieu tra 503 voi thong bao ro rang (2.0145ms)
-✔ loi ket noi nam trong AggregateError cung tra 503 (0.2707ms)
-✔ loi la khong lo chi tiet thu vien ra ngoai (0.2938ms)
-✔ tao phieu thieu mo ta loi bi tu choi kem ten truong va khong ghi gi (1.4411ms)
-✔ tao phieu cho khach khong ton tai tra CUSTOMER_NOT_FOUND (0.1544ms)
-✔ chuyen nguoc trang thai bi tu choi va khong ghi log (0.2441ms)
-✔ nhay coc trang thai bi tu choi kem goi y trang thai ke tiep (0.1933ms)
-✔ trang thai khong thuoc vong doi bi tu choi kem ten truong (0.1351ms)
-✔ tao phieu hop le sinh ma BH000101/2026, trang thai MOI, han cam ket va log dau (2.4722ms)
-✔ chuyen trang thai dung thu tu cap nhat phieu va ghi log nguoi thuc hien (0.3487ms)
-ℹ tests 15
+✔ PROJECT_SENTINEL (0.4324ms)
+ℹ tests 1
 ℹ suites 0
-ℹ pass 15
+ℹ pass 1
 ℹ fail 0
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 79.833
+ℹ duration_ms 53.1352

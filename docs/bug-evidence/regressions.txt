@@ -1,4 +1,4 @@
 BUG-01 expected 503: before=500 (FAIL), after=503/DATABASE_UNAVAILABLE (PASS); simulated DB error, historical handlers executed.
-BUG-02 expected project-only tests: before=node --test discovers reference project and fails; after=15 project tests PASS. Raw outputs saved.
+BUG-02 controlled discovery fixture: before=foreign sentinel discovered and FAIL (2 tests); after=project sentinel only PASS (1 test). Actual project suite also PASS. No untracked reference files required.
 BUG-05 numeric API ID contract: before=pg default BIGINT string/strict comparison FAIL; after=project type parser number/strict comparison PASS. Child processes isolate pg parser state.
 SUMMARY 3 regression checks PASS; no checkout, DB writes or dependency downgrade.

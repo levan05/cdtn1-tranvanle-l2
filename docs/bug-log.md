@@ -18,7 +18,7 @@ Các lỗi lịch sử được ghi rõ thời điểm, không dựng lại kế
 4. Nguyên nhân: script dùng cơ chế tự khám phá trên toàn repo thay vì chỉ bộ test của module.
 5. Cách sửa: `node --test tests/*.test.js`.
 6. Commit: [d61d902](https://github.com/levan05/cdtn1-tranvanle-l2/commit/d61d902) (local, chờ push).
-7. Xác nhận: `node scripts/verify-bug-regressions.js`: lệnh cũ khám phá test mẫu và có FAIL, lệnh mới chỉ chạy 15 test dự án, 15 PASS/0 FAIL. [Trước](bug-evidence/test-scope-before.txt), [sau](bug-evidence/test-scope-after.txt). Lỗi của test mẫu không phải bug nghiệp vụ của dự án; bug được sửa ở đây là phạm vi lệnh chạy test.
+7. Xác nhận: đã tái hiện với thư mục mẫu ở máy làm việc; regression tự chứa tạo 1 test dự án và 1 test tham khảo cố ý FAIL trong thư mục tạm: lệnh cũ chạy cả 2 (FAIL), lệnh mới chỉ chạy 1 test dự án (PASS). Bộ 15 test thực của dự án cũng PASS. [Trước](bug-evidence/test-scope-before.txt), [sau](bug-evidence/test-scope-after.txt). Sentinel FAIL là đối chứng kiểm phạm vi, không phải bug nghiệp vụ; script không phụ thuộc thư mục tham khảo chưa commit.
 
 ## BUG-03 — MAJOR — thiếu kiểm tra sức khỏe app và test trong image
 1. Phát hiện bởi: review đóng gói theo tiêu chí BT3 (kiểm tra cấu hình, ngoài bộ 12 case).
