@@ -7,3 +7,5 @@ coverage/
 .idea/
 .vscode/settings.json
 docs/*.pdf
+docs/report-preview/
+docs/bt2-cover-reference.png
