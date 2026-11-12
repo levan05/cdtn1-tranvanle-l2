@@ -16,7 +16,14 @@ Tải mã nguồn bằng **Code → Download ZIP** trên GitHub rồi giải né
 git clone https://github.com/levan05/cdtn1-tranvanle-l2.git
 ```
 
-Mở terminal tại thư mục vừa tải, nơi có `docker-compose.yml`. Chạy đúng **hai lệnh** sau trong PowerShell, bash hoặc zsh:
+### Lần đầu: dựng hệ thống từ mã nguồn
+
+Trên Windows:
+
+1. Mở Docker Desktop, chờ engine sẵn sàng.
+2. Giải nén source, mở thư mục chứa `docker-compose.yml` trong File Explorer. Nếu đang tìm kiếm tệp, nhấp phải `docker-compose.yml` → **Mở vị trí tệp**.
+3. Bấm thanh địa chỉ thư mục, gõ `powershell` rồi nhấn Enter.
+4. Chạy lần lượt **hai lệnh** dưới đây. Trên Linux/macOS, mở terminal tại cùng thư mục và dùng các lệnh tương tự.
 
 ```sh
 cp .env.example .env
@@ -27,7 +34,27 @@ Trong Windows Command Prompt (cmd), thay lệnh đầu bằng `copy .env.example
 
 Docker tự cài thư viện, build giao diện React, khởi động PostgreSQL, chạy migration/seed rồi khởi động Express. Chờ cả `app` và `db` báo `healthy` (xem mục 5), sau đó mở **http://localhost:8000**. Các giá trị trong `.env.example` dùng được cho demo Docker cục bộ; Compose tự đặt địa chỉ DB thành `db`. Thay mật khẩu và khóa JWT trước khi dùng ngoài môi trường demo.
 
-Hướng dẫn bàn giao bằng tiếng Anh: [Deployment Guide](docs/deployment-guide.md). Khi tag `v1.0` được phát hành, tải source tại [Release v1.0](https://github.com/levan05/cdtn1-tranvanle-l2/releases/tag/v1.0) để dùng đúng phiên bản nộp BT3; hiện chưa phát hành tag này.
+Khi lệnh build hoàn tất và PowerShell hiện lại dấu nhắc `PS ...>`, kiểm tra:
+
+```sh
+docker compose ps
+```
+
+Nếu trạng thái còn `health: starting`, chờ vài giây rồi chạy lại lệnh kiểm tra. Cần thấy đủ cả `app` và `db` ở trạng thái `healthy`. Nếu chỉ thấy `db`, xem mục 6 để đọc log app đã dừng. Mở http://localhost:8000 và đăng nhập bằng `nv.tiepnhan01` / `Demo@123`.
+
+Hướng dẫn bàn giao bằng tiếng Anh: [Deployment Guide](docs/deployment-guide.md). Tag `v1.0` đã được đẩy lên GitHub; tải [ZIP source v1.0](https://github.com/levan05/cdtn1-tranvanle-l2/archive/refs/tags/v1.0.zip) để dùng đúng phiên bản đã kiểm. GitHub Release riêng chưa được xuất bản tại thời điểm kiểm ngày 12/11/2026.
+
+### Những lần sau: bật/tắt trong Docker Desktop
+
+Khi container vẫn còn và mã nguồn không thay đổi, không cần chép lại `.env` hoặc build lại:
+
+1. Mở Docker Desktop → **Containers** ở thanh bên trái.
+2. Tìm nhóm Compose của dự án. Khi chạy từ thư mục ZIP `cdtn1-tranvanle-l2-1.0`, tên nhóm là `cdtn1-tranvanle-l2-10`; nếu đổi tên thư mục, tên nhóm có thể khác.
+3. Bấm mũi tên bên trái tên nhóm để mở rộng, bấm **Start ▶** ở container `db-1` trước. Chờ DB `healthy` (bấm vào container để xem trạng thái nếu cần).
+4. Bấm **Start ▶** ở `app-1`, chờ app `healthy`, rồi mở http://localhost:8000.
+5. Khi dùng xong, bấm **Stop ■** ở nhóm để dừng cả hai, hoặc dừng app trước rồi DB. Khi app dừng, web không truy cập được; bật lại cả hai thì web hoạt động trở lại.
+
+Dữ liệu được giữ trong volume PostgreSQL khi Stop/Start. Có thể dùng terminal thay cho giao diện: chạy `docker compose up -d` để bật lại và `docker compose stop` để dừng cả nhóm. Nếu đã dùng `docker compose down`, container không còn trong danh sách; chạy lại `docker compose up -d` để tạo lại từ image có sẵn. Chỉ build lại bằng `docker compose up -d --build` khi cần dựng lại image sau thay đổi mã nguồn.
 
 ## 3. Chạy trực tiếp bằng Node.js (tùy chọn)
 
@@ -88,6 +115,8 @@ Kết quả mong đợi: `SUMMARY 12/12 PASS, 0/12 FAIL`. Các lần chạy sau 
 - Xem nhật ký khi chưa lên được: `docker compose logs app db`.
 - Docker không kết nối được: bật Docker Desktop và chờ engine sẵn sàng; Windows chọn Linux containers.
 - Cổng 8000 bị chiếm: dừng ứng dụng đang dùng cổng đó rồi khởi động lại.
+- Để tìm container đang chiếm cổng 8000: `docker ps --filter publish=8000`. Nếu đó là bản demo cũ không cần chạy đồng thời, dùng `docker stop TEN_CONTAINER` (thay `TEN_CONTAINER` bằng tên trong kết quả). Lệnh stop giữ dữ liệu.
+- Sau lần khởi động lỗi trùng cổng, nếu app thoát với `getaddrinfo EAI_AGAIN db`, xem cả container đã dừng bằng `docker compose ps -a` và log bằng `docker compose logs app`. Khi đã giải phóng cổng, chạy `docker compose up -d --force-recreate app` để tạo lại app và kết nối mạng; dữ liệu DB được giữ nguyên. Sau đó kiểm tra lại `docker compose ps`. Nếu vẫn lỗi, đọc log trước khi tiếp tục.
 - Lỗi mật khẩu DB sau khi sửa `.env`: volume cũ vẫn giữ mật khẩu ban đầu. Dùng lại mật khẩu của DB đã tạo.
 - Dừng hệ thống, giữ dữ liệu: `docker compose down`. Khởi động lại bằng `docker compose up -d --build`, không cần chép lại `.env`.
 - Chỉ khi muốn xóa toàn bộ dữ liệu demo của dự án: `docker compose down -v`, rồi khởi động lại. Tùy chọn `-v` xóa volume PostgreSQL của project, bao gồm dữ liệu đã nhập.
@@ -110,4 +139,4 @@ Thay đổi so với thiết kế Bài tập 1 nằm ở `docs/thay-doi-thiet-ke
 
 [Test Plan](docs/test-plan.md) · [Test Report 8 cột](docs/test-report.md) · [Bug Log](docs/bug-log.md) · [Deployment Guide (English)](docs/deployment-guide.md) · [Checklist bảo mật](docs/checklist-bao-mat.md) · [API docs (English)](docs/api-docs.md) · [Khai báo AI](docs/ai-disclosure.md).
 
-Minh chứng ngày 12/11/2026: unit 15/15, integration PostgreSQL 12/12, 21 exchange API thật, audit backend 0 advisory. Đã dựng bản xuất Git sạch `ca4ce2a` bằng Docker: app/db healthy, unit 15/15 và integration 12/12 PASS; xem [minh chứng](docs/packaging-evidence/README.md). Các kết quả này thuộc lần kiểm đã lưu, không thay cho kết quả chạy trên máy người nhận. Tag `v1.0` chưa phát hành và chưa có phép thử clone public tag; sẽ kiểm lại đúng tag sau khi phát hành.
+Minh chứng ngày 12/11/2026: unit 15/15, integration PostgreSQL 12/12, 21 exchange API thật, audit backend 0 advisory. Đã dựng bản xuất Git sạch `ca4ce2a` bằng Docker; xem [minh chứng](docs/packaging-evidence/README.md). Sau đó đã clone tag công khai `v1.0` (commit `553aa65`) vào thư mục mới, dùng project/volume riêng: app/db healthy, web và JS/CSS trả HTTP 200, unit 15/15, integration 12/12 và chạy riêng TC-02 đều PASS; migration/seed chạy lại không tăng số dòng. Lượt này sử dụng cache Docker trên máy, chưa kiểm trên máy khác. Các kết quả này thuộc lần kiểm đã lưu, không thay cho kết quả chạy trên máy người nhận.
