@@ -1,0 +1,96 @@
+﻿Runtime verification of clean-export project bt3verify-20261112-132605
+NAMES                             STATUS                   PORTS
+bt3verify-20261112-132605-app-1   Up 2 minutes (healthy)   0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
+bt3verify-20261112-132605-db-1    Up 2 minutes (healthy)   5432/tcp
+{"status":"ok","db":"ok"}
+
+> cdtn1-tranvanle-l2@0.2.0 test
+> node --test tests/*.test.js
+
+TAP version 13
+# Subtest: phieu CAO nhan thu hai 09:00 co han thu ba 09:00
+ok 1 - phieu CAO nhan thu hai 09:00 co han thu ba 09:00
+  ---
+  duration_ms: 1.282365
+  ...
+# Subtest: phieu CAO nhan Thu Bay 10:00 bo qua Chu Nhat, han Thu Hai 10:00
+ok 2 - phieu CAO nhan Thu Bay 10:00 bo qua Chu Nhat, han Thu Hai 10:00
+  ---
+  duration_ms: 0.120933
+  ...
+# Subtest: phieu CAO nhan Chu Nhat 10:00 dem tu 00:00 Thu Hai, han Thu Ba 00:00
+ok 3 - phieu CAO nhan Chu Nhat 10:00 dem tu 00:00 Thu Hai, han Thu Ba 00:00
+  ---
+  duration_ms: 0.125548
+  ...
+# Subtest: phieu CAO nhan Thu Bay 23:59 van bo qua tron Chu Nhat
+ok 4 - phieu CAO nhan Thu Bay 23:59 van bo qua tron Chu Nhat
+  ---
+  duration_ms: 0.126197
+  ...
+# Subtest: ba muc uu tien cho han 24, 72 va 120 gio khi khong gap Chu Nhat
+ok 5 - ba muc uu tien cho han 24, 72 va 120 gio khi khong gap Chu Nhat
+  ---
+  duration_ms: 0.237655
+  ...
+# Subtest: mat ket noi co so du lieu tra 503 voi thong bao ro rang
+ok 6 - mat ket noi co so du lieu tra 503 voi thong bao ro rang
+  ---
+  duration_ms: 2.100962
+  ...
+# Subtest: loi ket noi nam trong AggregateError cung tra 503
+ok 7 - loi ket noi nam trong AggregateError cung tra 503
+  ---
+  duration_ms: 0.217766
+  ...
+# Subtest: loi la khong lo chi tiet thu vien ra ngoai
+ok 8 - loi la khong lo chi tiet thu vien ra ngoai
+  ---
+  duration_ms: 0.28269
+  ...
+# Subtest: tao phieu thieu mo ta loi bi tu choi kem ten truong va khong ghi gi
+ok 9 - tao phieu thieu mo ta loi bi tu choi kem ten truong va khong ghi gi
+  ---
+  duration_ms: 2.108722
+  ...
+# Subtest: tao phieu cho khach khong ton tai tra CUSTOMER_NOT_FOUND
+ok 10 - tao phieu cho khach khong ton tai tra CUSTOMER_NOT_FOUND
+  ---
+  duration_ms: 0.198321
+  ...
+# Subtest: chuyen nguoc trang thai bi tu choi va khong ghi log
+ok 11 - chuyen nguoc trang thai bi tu choi va khong ghi log
+  ---
+  duration_ms: 0.495322
+  ...
+# Subtest: nhay coc trang thai bi tu choi kem goi y trang thai ke tiep
+ok 12 - nhay coc trang thai bi tu choi kem goi y trang thai ke tiep
+  ---
+  duration_ms: 0.525046
+  ...
+# Subtest: trang thai khong thuoc vong doi bi tu choi kem ten truong
+ok 13 - trang thai khong thuoc vong doi bi tu choi kem ten truong
+  ---
+  duration_ms: 0.211672
+  ...
+# Subtest: tao phieu hop le sinh ma BH000101/2026, trang thai MOI, han cam ket va log dau
+ok 14 - tao phieu hop le sinh ma BH000101/2026, trang thai MOI, han cam ket va log dau
+  ---
+  duration_ms: 5.374552
+  ...
+# Subtest: chuyen trang thai dung thu tu cap nhat phieu va ghi log nguoi thuc hien
+ok 15 - chuyen trang thai dung thu tu cap nhat phieu va ghi log nguoi thuc hien
+  ---
+  duration_ms: 0.42761
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 65.670761
+v20.20.2
+PostgreSQL 16.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit

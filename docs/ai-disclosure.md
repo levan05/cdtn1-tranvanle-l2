@@ -8,11 +8,11 @@
 | Codex | Rà đề, chuẩn hóa báo cáo và truy vết bằng chứng | `docs/test-plan.md`, `test-report.md`, `bug-log.md` | Đối chiếu 12 case với runner, ảnh và output; chạy lại PostgreSQL thật đạt 12/12. Không dựng kết quả FAIL lịch sử. |
 | Codex | Kiểm thêm nội dung thông báo lỗi | `scripts/run-workshop-integration.js` TC-06/07 | Chạy đủ 12 case trên DB kiểm thử; 12/12 PASS. |
 | Codex | Bổ sung phủ quy tắc và regression lịch sử | `scripts/run-workshop-integration.js` TC-02/10; `scripts/verify-bug-regressions.js` | Bộ 12 case PASS với QT-01/02/05/07 và hai vai trò ở QT-06; ba kiểm tra trước/sau PASS, lưu output. Handler mất DB dùng lỗi mô phỏng, không dừng DB thật. |
-| Codex | Chuẩn bị phép thử đóng gói từ Git sạch | `scripts/verify-clean-package.ps1` | PowerShell parser không báo lỗi cú pháp; chưa chạy Docker vì máy thiếu CLI/Engine. |
+| Codex | Chuẩn bị và chạy phép thử đóng gói từ Git sạch | `scripts/verify-clean-package.ps1` | Ban đầu chỉ kiểm cú pháp; sau khi sinh viên cài Docker/WSL, chạy source ca4ce2a thành công: hai dịch vụ healthy, unit 15/15 và integration 12/12 PASS, lưu output tại `docs/packaging-evidence/`. |
 | Codex | Viết API docs tiếng Anh và thu exchange thật | `scripts/capture-api-examples.js`, `docs/api-docs.md`, `api-examples.json` | 21 request/response thật, assert mã HTTP; che JWT/password; dọn fixture theo ID. |
-| Codex | Bổ sung đóng gói, hướng dẫn và checklist | `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `docs/deployment-guide.md`, `checklist-bao-mat.md` | Đọc cấu hình và code; unit 15/15, audit backend 0. Máy thiếu Docker nên chưa xác nhận build, healthcheck và phép thử máy trắng. |
+| Codex | Bổ sung đóng gói, hướng dẫn và checklist | `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `docs/deployment-guide.md`, `checklist-bao-mat.md` | Đã xác nhận build, healthcheck và test trong Docker sau khi cài WSL; audit backend 0. Chưa kiểm clone public tag v1.0 và chưa có ảnh Docker do sinh viên chụp. |
 
-Các lượt chạy trên do trợ lý thực hiện qua công cụ ở máy làm việc; sinh viên cần tự chạy lại, đọc và giải thích trước khi nộp. Không coi bảng này là xác nhận sinh viên đã tự kiểm chứng mọi phần hoặc đã chạy Docker.
+Các lượt chạy trên do trợ lý thực hiện qua công cụ ở máy làm việc; sinh viên cần tự chạy lại, đọc và giải thích trước khi nộp. Không coi bảng này là xác nhận sinh viên đã tự kiểm chứng mọi phần. Docker đã chạy qua công cụ trợ lý; ảnh và việc tự xác nhận của sinh viên còn cần bổ sung.
 
 Sinh viên: Trần Văn Lễ · MSSV: 2374802010270 · Track: SE · Luồng: L2 (Tiếp nhận và phân loại yêu cầu bảo hành)
 

@@ -4,7 +4,7 @@
 
 Kiểm đăng nhập, tạo phiếu và log nguyên tử, phân loại/hạn cam kết, chuyển trạng thái một chiều, kiểm trung tâm sở hữu, thiết bị thuộc khách và migration/seed chạy lại. Dùng 12 case của buổi 14, giữ nguyên minh chứng gốc; xem [báo cáo BT3](test-report.md).
 
-TC-02 kiểm trọn luồng tiếp nhận, gồm QT-01 (khách mới và từ chối trùng điện thoại), QT-02 (tra cứu và từ chối trùng bằng dạng +84), QT-05 (nhân viên thấy số che, quản lý thấy đầy đủ), QT-07 (tạo thiết bị có serial và từ chối thiếu serial). Không kiểm tải, pentest, gửi thông báo, phân công kỹ thuật viên thực, giao diện đa trình duyệt vì ngoài phạm vi module/prototype. Phép thử Docker máy trắng là kiểm tra đóng gói riêng, chưa PASS.
+TC-02 kiểm trọn luồng tiếp nhận, gồm QT-01 (khách mới và từ chối trùng điện thoại), QT-02 (tra cứu và từ chối trùng bằng dạng +84), QT-05 (nhân viên thấy số che, quản lý thấy đầy đủ), QT-07 (tạo thiết bị có serial và từ chối thiếu serial). Không kiểm tải, pentest, gửi thông báo, phân công kỹ thuật viên thực, giao diện đa trình duyệt vì ngoài phạm vi module/prototype. Phép thử đóng gói từ source Git sạch đã PASS; phép clone public tag `v1.0` chưa thực hiện vì chưa phát hành tag.
 
 ## 2. Loại test và số lượng
 
@@ -20,6 +20,6 @@ Truy vết: QT-01/02/05/07 và tạo phiếu/log → TC-02; QT-03 → TC-02/04 v
 
 ## 4. Môi trường và dữ liệu
 
-Minh chứng cũ: Windows, Node 24.18.0, PostgreSQL 18, DB `baohanh_l2_thu`. Lượt unit BT3: Node 24.19.0. Docker dự kiến Node 20 Alpine/PostgreSQL 16 Alpine, chưa chạy tại máy này. Seed sạch: 2 trung tâm, 6 nhóm, 2 tài khoản, 3 khách/thiết bị/phiếu/log; DB cũ có thêm dữ liệu nên TC-12 so sánh trước/sau, không coi số dòng cũ là baseline sạch.
+Minh chứng cũ: Windows, Node 24.18.0, PostgreSQL 18, DB `baohanh_l2_thu`. Lượt unit BT3: Node 24.19.0. Docker Node 20 Alpine/PostgreSQL 16 Alpine đã chạy tại máy này ngày 12/11/2026; unit 15/15, integration 12/12 PASS. Seed sạch: 2 trung tâm, 6 nhóm, 2 tài khoản, 3 khách/thiết bị/phiếu/log; DB cũ có thêm dữ liệu nên TC-12 so sánh trước/sau, không coi số dòng cũ là baseline sạch. Xem [minh chứng đóng gói](packaging-evidence/README.md).
 
 Chạy unit bằng `npm test`. Runner yêu cầu DB riêng có tên chứa `test`, `thu` hoặc `workshop` và `WORKSHOP_ALLOW_DB_WRITE=1`; sau migrate/seed chạy `node scripts/run-workshop-integration.js`. Runner tự dựng Express trên cổng ngẫu nhiên, dọn fixture theo ID, không reset dữ liệu thật. Tham khảo [kế hoạch gốc](test-plan-buoi14.md) và [deployment guide](deployment-guide.md).

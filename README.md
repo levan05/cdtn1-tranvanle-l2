@@ -70,4 +70,4 @@ Thay đổi so với thiết kế Bài tập 1 nằm ở `docs/thay-doi-thiet-ke
 
 [Test Plan](docs/test-plan.md) · [Test Report 8 cột](docs/test-report.md) · [Bug Log](docs/bug-log.md) · [Deployment Guide (English)](docs/deployment-guide.md) · [Checklist bảo mật](docs/checklist-bao-mat.md) · [API docs (English)](docs/api-docs.md) · [Khai báo AI](docs/ai-disclosure.md).
 
-Trạng thái BT3: unit 15/15, integration PostgreSQL 12/12, 21 exchange API thật, audit backend 0 advisory. Phép thử máy trắng chưa chạy vì môi trường chưa có Docker. Chưa phát hành tag `v1.0`; commit mới giữ local, chờ người dùng chọn push.
+Trạng thái BT3: unit 15/15, integration PostgreSQL 12/12, 21 exchange API thật, audit backend 0 advisory. Đã dựng source Git sạch bằng Docker: app/db healthy, unit 15/15 và integration 12/12 PASS; xem [minh chứng](docs/packaging-evidence/README.md). Chưa phát hành/kiểm clone public tag `v1.0`; commit mới giữ local, chờ người dùng chọn push.

@@ -27,7 +27,7 @@ Các lỗi lịch sử được ghi rõ thời điểm, không dựng lại kế
 4. Nguyên nhân: cấu hình BT2 chỉ kiểm DB; đóng gói chỉ gồm mã chạy, chưa gồm bộ test phục vụ bàn giao.
 5. Cách sửa: healthcheck HTTP dùng Node fetch, COPY tests và bỏ ignore tests.
 6. Commit: [84dfbf5](https://github.com/levan05/cdtn1-tranvanle-l2/commit/84dfbf5) (local, chờ push).
-7. Xác nhận: đã kiểm tra diff cấu hình; **chưa xác nhận runtime** vì máy không có Docker. Trạng thái: đã sửa mã, chờ kiểm thử Docker; chưa tính là bug đã đóng hoàn toàn.
+7. Xác nhận: ngày 12/11/2026 dựng source `ca4ce2a` trong thư mục mới và volume mới: app/db đều healthy, `/health` đúng, `npm test` trong image 15/15 PASS; integration 12/12 PASS. [Transcript](packaging-evidence/20261112-132605.txt). Trạng thái: đã xác nhận đóng qua runtime Docker.
 
 ## BUG-04 — HIGH dependency advisory (ghi nhận từ phiên trước)
 1. Phát hiện bởi: `npm audit` trong phiên làm việc trước, không thuộc bộ 12 case.
@@ -47,4 +47,4 @@ Các lỗi lịch sử được ghi rõ thời điểm, không dựng lại kế
 6. Commit: [af99f3b](https://github.com/levan05/cdtn1-tranvanle-l2/commit/af99f3b457b750af7ebefd9bd0da32fddaf9ff6e).
 7. Xác nhận: regression cho kết quả trước `string/false` (FAIL), sau `number/true` (PASS); script đọc bản trước commit để xác nhận chưa có parser, không checkout hoặc ghi DB. [Output](bug-evidence/regressions.txt); bộ integration hiện tại 12/12 PASS.
 
-**Ba lỗi có regression trước/sau:** BUG-01, BUG-02 và BUG-05. BUG-03 vẫn chờ Docker runtime; BUG-04 có audit hậu kiểm. Các commit local phải được push theo yêu cầu người dùng thì link mới mở được trên GitHub; sinh viên cần tự chạy và giải thích nguyên nhân trước khi nộp.
+**Ba lỗi có regression trước/sau:** BUG-01, BUG-02 và BUG-05. BUG-03 đã xác nhận runtime Docker; BUG-04 có audit hậu kiểm. Các commit local phải được push theo yêu cầu người dùng thì link mới mở được trên GitHub; sinh viên cần tự chạy và giải thích nguyên nhân trước khi nộp.

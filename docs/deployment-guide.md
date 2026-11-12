@@ -4,7 +4,7 @@
 
 Windows with Docker Desktop/WSL2, macOS with Docker Desktop, or Linux with Docker Engine. Target: Docker Engine 24+ and Compose v2.20+, Linux containers; reserve 4 GB RAM, 5 GB free disk and TCP port 8000. Internet is needed for the first build. PostgreSQL and Node do not need to be installed on the host. These are target requirements, not a tested compatibility matrix.
 
-**Validation status:** Docker is not installed in the authoring environment. The clean-machine test has NOT been run. Do not interpret this guide as evidence of a successful container deployment.
+**Validation status:** On 12 November 2026, a clean Git export of revision `ca4ce2a` was built and started on Docker Desktop/WSL2 (Engine 29.9.3, Compose 5.7.0, WSL 3.0.5). Both services were healthy; `/health` returned the expected JSON; container unit tests passed 15/15 and PostgreSQL integration cases passed 12/12. See [evidence](packaging-evidence/README.md). A public `v1.0` clone test is still pending release authorization. The minimum versions below are targets, not a tested compatibility matrix.
 
 ## 2. Setup
 
@@ -88,4 +88,4 @@ On Windows, after Docker Desktop's Linux engine is running, the author can rehea
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-clean-package.ps1
 ```
 
-This checks a committed local revision in a new temporary directory and a unique Compose project, leaving the working `.env` and existing database untouched. It records output under `docs/packaging-evidence/`, retains containers for real screenshots, and prints an explicit project-only cleanup command. This rehearsal requires Git, tar and PowerShell on the host. It does not prove the public `v1.0` tag can be cloned; repeat the assignment's public-tag clone test after the release is authorized. The script has been syntax-checked only because Docker is currently unavailable.
+This checks a committed local revision in a new temporary directory and a unique Compose project, leaving the working `.env` and existing database untouched. It records output under `docs/packaging-evidence/`, retains containers for real screenshots, and prints an explicit project-only cleanup command. This rehearsal requires Git, tar and PowerShell on the host. It does not prove the public `v1.0` tag can be cloned; repeat the assignment's public-tag clone test after the release is authorized. The script completed successfully on 12 November 2026.

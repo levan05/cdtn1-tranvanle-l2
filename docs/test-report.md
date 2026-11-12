@@ -1,6 +1,6 @@
 # BT3 — Test Report (L2, SE)
 
-Nguồn: [báo cáo buổi 14](test-report-buoi14.md), [output mới](workshop-integration-results.txt), ảnh gốc TC-01–12. Đã chạy lại bộ 12 case trên Node 24.19.0, PostgreSQL cục bộ ngày 12/11/2026 và đạt 12/12 PASS; TC-06/07 kiểm thêm message. Ảnh vẫn thuộc lượt buổi 14, không phải ảnh lượt mới. Chưa kiểm Docker.
+Nguồn: [báo cáo buổi 14](test-report-buoi14.md), [output mới](workshop-integration-results.txt), ảnh gốc TC-01–12. Đã chạy lại bộ 12 case trên Node 24.19.0, PostgreSQL cục bộ ngày 12/11/2026 và đạt 12/12 PASS; TC-06/07 kiểm thêm message. Lượt Docker riêng cũng đạt [12/12 PASS trên DB sạch](packaging-evidence/20261112-132605-integration.txt). Ảnh vẫn thuộc lượt buổi 14, không phải ảnh lượt mới.
 
 | Mã | Tiền điều kiện | Các bước | Dữ liệu thử | Kết quả mong đợi | Ưu tiên | Kết quả thực tế | PASS/FAIL |
 |---|---|---|---|---|---|---|---|

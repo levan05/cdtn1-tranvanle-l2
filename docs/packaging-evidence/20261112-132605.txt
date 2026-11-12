@@ -1,0 +1,40 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261112132605
+Username: VANLE\tranv
+RunAs User: VANLE\tranv
+Configuration Name: 
+Machine: VANLE (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/verify-clean-package.ps1
+Process ID: 10672
+PSVersion: 5.1.26100.8457
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.8457
+BuildVersion: 10.0.26100.8457
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+REVISION ca4ce2aaa8fb9e8e060dd4146bee669783451815
+ISOLATED DIRECTORY C:\Users\tranv\AppData\Local\Temp\bt3verify-20261112-132605
+COMPOSE PROJECT bt3verify-20261112-132605 (new project volume; no global prune)
+
+
+
+
+HEALTH {"status":"ok","db":"ok"}
+
+
+
+
+
+
+PASS clean-source packaging rehearsal. This is a local revision rehearsal, not verification of the public v1.0 tag.
+Capture this terminal and the frontend before cleanup.
+Evidence: D:\TAILIEU\ChuyenDe1\BT2\cdtn1-tranvanle-l2\docs\packaging-evidence\20261112-132605.txt
+Containers retained for screenshots. Cleanup only this disposable project: docker compose -p bt3verify-20261112-132605 -f "C:\Users\tranv\AppData\Local\Temp\bt3verify-20261112-132605/docker-compose.yml" down -v
+**********************
+Windows PowerShell transcript end
+End time: 20261112132650
+**********************
