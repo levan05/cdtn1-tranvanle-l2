@@ -36,6 +36,6 @@ Các lỗi lịch sử được ghi rõ thời điểm, không dựng lại kế
 4. Nguyên nhân: phiên bản phụ thuộc gián tiếp được ghim trong lockfile cũ có cảnh báo.
 5. Cách sửa: cập nhật lockfile bằng npm audit fix.
 6. Commit: [cfdf354](https://github.com/levan05/cdtn1-tranvanle-l2/commit/cfdf354) (local, chờ push).
-7. Xác nhận: phiên trước báo audit 0 và unit 15/15; audit hiện tại phải đo riêng, không suy ra từ lịch sử. Mức HIGH của advisory không tự đồng nghĩa phân loại CRITICAL của bài tập.
+7. Xác nhận: phiên BT3 ngày 12/11/2026 chạy lại `npm audit --omit=dev` → 0 vulnerabilities, `npm test` → 15/15 PASS. Mức HIGH của advisory không tự đồng nghĩa phân loại CRITICAL của bài tập.
 
 **Điều kiện còn thiếu:** giảng viên cần ít nhất 3 bug đã sửa, truy vết về test và có link mở được. BUG-03 còn chờ runtime, BUG-02 cần tái hiện đầu cũ nếu muốn bằng chứng trước/sau; không coi bảng này tự động đạt rubric.

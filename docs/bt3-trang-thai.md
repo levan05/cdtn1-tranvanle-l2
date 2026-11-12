@@ -10,6 +10,8 @@
 
 ## Cần hoàn thành trước khi nộp chính thức
 
+Bản rà soát tổng hợp: [HTML](BT3_2374802010270_TranVanLe-review.html) và PDF cùng tên trong thư mục docs (PDF không đưa vào Git theo `.gitignore`). Tái tạo HTML bằng `node scripts/export-bt3-report.js`, mở trong trình duyệt và Print → Save as PDF; chọn A4 ngang. Đây là bản rà soát, chưa phải bản nộp cuối.
+
 1. Chạy Docker máy trắng theo Deployment Guide, lưu ảnh thật cả hai dịch vụ healthy, health response và test PASS. Máy hiện chưa có Docker nên chưa thể thực hiện.
 2. Bổ sung phủ các quy tắc còn thiếu đã ghi ở Test Plan; kiểm tra 3 bug đủ bằng chứng trước/sau và xác nhận đóng, không tự gán lỗi review cấu hình thành lỗi runtime đã xác minh.
 3. Sinh viên tự chạy lại, hiểu test/bug và cập nhật xác nhận trong bảng AI; bổ sung lớp/ngày nộp.

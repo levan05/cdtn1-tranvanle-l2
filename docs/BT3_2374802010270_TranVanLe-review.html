@@ -1,0 +1,340 @@
+<!doctype html><html lang="vi"><meta charset="utf-8"><title>BT3 - Tran Van Le</title><style>@page{size:A4 landscape;margin:14mm}body{font:11px Arial,sans-serif;line-height:1.4;color:#17212b}section{break-before:page}h1{font-size:24px}h2{font-size:18px}h3{font-size:14px}table{border-collapse:collapse;width:100%;font-size:9px}td{border:1px solid #aaa;padding:5px;vertical-align:top;overflow-wrap:anywhere}tr:first-child{font-weight:bold;background:#eef2f7}tr,pre{break-inside:avoid}pre{white-space:pre-wrap;background:#f4f5f7;padding:8px}a{color:#1659a4}img{max-width:95%;max-height:145mm}.cover{padding:25mm}code{overflow-wrap:anywhere}</style><body><div class="cover"><h1>BÀI TẬP 3: KIỂM THỬ VÀ ĐÓNG GÓI PROTOTYPE</h1><p>Chuyên đề tốt nghiệp 1 — Track SE — Luồng L2</p><p>Trần Văn Lễ — MSSV 2374802010270</p><p>Lớp: cần sinh viên xác nhận — Ngày soạn: 12/11/2026</p><p>Repository: <a href="https://github.com/levan05/cdtn1-tranvanle-l2">levan05/cdtn1-tranvanle-l2</a></p><p>Tag yêu cầu: v1.0 — CHƯA PHÁT HÀNH</p><h2>BẢN RÀ SOÁT — CHƯA PHẢI BẢN NỘP CUỐI</h2><p>Chưa có bằng chứng Docker máy trắng; xem mục 7 về phần còn thiếu.</p><ol><li>1. Test Plan</li><li>2. Test Report</li><li>3. Bug Log</li><li>4. Deployment Guide</li><li>5. Security Checklist</li><li>6. API Documentation</li><li>7. Evidence</li><li>8. AI Disclosure</li></ol></div><section><h1>1. Test Plan</h1><h1>BT3 — Test Plan rút gọn (L2, SE)</h1><h2>1. Phạm vi và giới hạn</h2><p>Kiểm đăng nhập, tạo phiếu và log nguyên tử, phân loại/hạn cam kết, chuyển trạng thái một chiều, kiểm trung tâm sở hữu, thiết bị thuộc khách và migration/seed chạy lại. Dùng 12 case của buổi 14, giữ nguyên minh chứng gốc; xem <a href="test-report.md">báo cáo BT3</a>.</p><p>Chưa kiểm đầy đủ QT-01 (trùng điện thoại), QT-02 (chuẩn hóa), QT-05 (che điện thoại) và QT-07 (serial bắt buộc) bằng case chuyên biệt trong bộ 12 case. Đây là khoảng trống cần bổ sung trước khi kết luận mọi quy tắc được phủ. Không kiểm tải, pentest, gửi thông báo, phân công kỹ thuật viên thực, giao diện đa trình duyệt vì ngoài phạm vi module/prototype. Phép thử Docker máy trắng là kiểm tra đóng gói riêng, chưa PASS.</p><h2>2. Loại test và số lượng</h2><p>- <code>npm test</code>: 15 unit test (5 deadline, 3 error handler, 5 dữ liệu/trạng thái sai, 2 luồng đúng); repository giả, không tính là integration.</p><p>- Bộ báo cáo: 12 case, gồm 10 case gọi API Express/PostgreSQL thật (TC-01–03,05–11), 1 biên hàm nghiệp vụ (TC-04), 1 integration migration/seed (TC-12).</p><p>- TC-05 kiểm cả hai phía cùng ranh giới 2000/2001 ký tự. TC-06–08 kiểm dữ liệu sai; TC-10 kiểm quyền theo trung tâm; TC-12 kiểm tái lập.</p><h2>3. Tiêu chí thành công đo được</h2><p>15/15 unit và 12/12 case báo cáo PASS; hai test sai phải kiểm HTTP, mã lỗi, thông báo; mỗi quy tắc đã hiện thực có ít nhất một case đúng và truy vết được; không còn Critical mở; dựng bằng ≤2 lệnh, cả hai dịch vụ healthy, unit test trong container PASS. Chỉ kết luận hoàn tất khi tất cả tiêu chí đều có minh chứng. Kết quả buổi 14 không tự chứng minh Docker chạy được.</p><p>Truy vết hiện có: tạo phiếu/log → TC-02; QT-03 → TC-04 và unit deadline; QT-04 → TC-03/08; QT-06 → TC-10; quan hệ thiết bị/khách → TC-11; giới hạn mô tả → TC-05/06. Các khoảng trống ở mục 1 vẫn mở.</p><h2>4. Môi trường và dữ liệu</h2><p>Minh chứng cũ: Windows, Node 24.18.0, PostgreSQL 18, DB <code>baohanh_l2_thu</code>. Lượt unit BT3: Node 24.19.0. Docker dự kiến Node 20 Alpine/PostgreSQL 16 Alpine, chưa chạy tại máy này. Seed sạch: 2 trung tâm, 6 nhóm, 2 tài khoản, 3 khách/thiết bị/phiếu/log; DB cũ có thêm dữ liệu nên TC-12 so sánh trước/sau, không coi số dòng cũ là baseline sạch.</p><p>Chạy unit bằng <code>npm test</code>. Runner yêu cầu DB riêng có tên chứa <code>test</code>, <code>thu</code> hoặc <code>workshop</code> và <code>WORKSHOP_ALLOW_DB_WRITE=1</code>; sau migrate/seed chạy <code>node scripts/run-workshop-integration.js</code>. Runner tự dựng Express trên cổng ngẫu nhiên, dọn fixture theo ID, không reset dữ liệu thật. Tham khảo <a href="test-plan-buoi14.md">kế hoạch gốc</a> và <a href="deployment-guide.md">deployment guide</a>.</p></section><section><h1>2. Test Report</h1><h1>BT3 — Test Report (L2, SE)</h1><p>Nguồn: <a href="test-report-buoi14.md">báo cáo buổi 14</a>, <a href="workshop-integration-results.txt">output mới</a>, ảnh gốc TC-01–12. Đã chạy lại bộ 12 case trên Node 24.19.0, PostgreSQL cục bộ ngày 12/11/2026 và đạt 12/12 PASS; TC-06/07 kiểm thêm message. Ảnh vẫn thuộc lượt buổi 14, không phải ảnh lượt mới. Chưa kiểm Docker.</p><table><tr><td>Mã</td><td>Tiền điều kiện</td><td>Các bước</td><td>Dữ liệu thử</td><td>Kết quả mong đợi</td><td>Ưu tiên</td><td>Kết quả thực tế</td><td>PASS/FAIL</td></tr><tr><td>TC-01</td><td>DB kiểm thử có seed, thông tin đăng nhập mẫu đúng.</td><td><code>node scripts/run-workshop-integration.js TC-01</code></td><td>nv.tiepnhan01 / Demo@123</td><td>Login API thật trả JWT có đúng người dùng, vai trò và trung tâm.</td><td>Cao</td><td>HTTP 200; role <code>NHAN_VIEN_TIEP_NHAN</code>, center_id <code>1</code>.</td><td>PASS · <a href="screenshots/TC-01.png">ảnh</a></td></tr><tr><td>TC-02</td><td><code>.env</code> trỏ DB <code>baohanh_l2_thu</code> đã migrate/seed.</td><td><code>node scripts/run-workshop-integration.js TC-02</code></td><td>Fixture customer + device; Man hinh bi soc</td><td>Tạo khách, thiết bị, phiếu qua API; xác minh phiếu và log trong PostgreSQL; dọn dữ liệu.</td><td>Cao</td><td>Login 200; customer/device/ticket 201; DB thấy trạng thái MOI, center 1, 1 log đầu; cleanup thành công.</td><td>PASS · <a href="screenshots/TC-02.png">ảnh</a></td></tr><tr><td>TC-03</td><td>DB kiểm thử có seed; tạo fixture qua API.</td><td><code>node scripts/run-workshop-integration.js TC-03</code></td><td>to_status=DA_PHAN_CONG</td><td>Chuyển trạng thái kế tiếp qua API và kiểm tra ticket/log trong PostgreSQL.</td><td>Cao</td><td>PATCH 200; DB status <code>DA_PHAN_CONG</code>, 2 log, người thực hiện đúng.</td><td>PASS · <a href="screenshots/TC-03.png">ảnh</a></td></tr><tr><td>TC-04</td><td>Dùng thời điểm xác định Thứ Bảy 23:59, ưu tiên CAO.</td><td><code>node scripts/run-workshop-integration.js TC-04</code></td><td>2026-10-24T23:59:00+07:00; CAO</td><td>Bỏ Chủ Nhật, hạn là Thứ Hai 23:59 giờ Việt Nam.</td><td>Cao</td><td>Hạn UTC <code>2026-10-26T16:59:00.000Z</code>.</td><td>PASS · <a href="screenshots/TC-04.png">ảnh</a></td></tr><tr><td>TC-05</td><td>DB kiểm thử và tài khoản mẫu sẵn sàng; tạo khách/thiết bị thật qua API.</td><td><code>node scripts/run-workshop-integration.js TC-05</code></td><td>issue_desc: 2000 / 2001 chars</td><td>2000 ký tự được nhận; 2001 ký tự bị từ chối, chỉ rõ trường.</td><td>Vừa</td><td>API 2000 chars HTTP 201; 2001 chars HTTP 400 <code>VALIDATION_ERROR</code>.</td><td>PASS · <a href="screenshots/TC-05.png">ảnh</a></td></tr><tr><td>TC-06</td><td>DB kiểm thử; khách và thiết bị mới tạo qua API.</td><td><code>node scripts/run-workshop-integration.js TC-06</code></td><td>issue_desc: spaces</td><td>Mô tả rỗng trả validation error; DB không có phiếu phát sinh.</td><td>Cao</td><td>HTTP 400 <code>VALIDATION_ERROR</code>; ticket count <code>0 → 0</code>.</td><td>PASS · <a href="screenshots/TC-06.png">ảnh</a></td></tr><tr><td>TC-07</td><td>DB kiểm thử có thiết bị seed; ID khách kiểm tra là không tồn tại.</td><td><code>node scripts/run-workshop-integration.js TC-07</code></td><td>customer_id=2000000000</td><td>API từ chối khách không tồn tại, không tạo phiếu.</td><td>Cao</td><td>HTTP 404 <code>CUSTOMER_NOT_FOUND</code>.</td><td>PASS · <a href="screenshots/TC-07.png">ảnh</a></td></tr><tr><td>TC-08</td><td>DB kiểm thử; phiếu mới được tạo qua API, JWT hợp lệ.</td><td><code>node scripts/run-workshop-integration.js TC-08</code></td><td>MOI -&gt; DANG_XU_LY</td><td>Nhảy cóc MOI→DANG_XU_LY trả 409; trạng thái/log DB không đổi.</td><td>Cao</td><td>HTTP 409 <code>INVALID_TRANSITION</code>; DB status/log giữ nguyên <code>MOI/1</code>.</td><td>PASS · <a href="screenshots/TC-08.png">ảnh</a></td></tr><tr><td>TC-09</td><td>DB kiểm thử; gọi endpoint phiếu không gửi Authorization.</td><td><code>node scripts/run-workshop-integration.js TC-09</code></td><td>No Authorization</td><td>API thật từ chối request chưa xác thực.</td><td>Cao</td><td>HTTP 401 <code>UNAUTHENTICATED</code>.</td><td>PASS · <a href="screenshots/TC-09.png">ảnh</a></td></tr><tr><td>TC-10</td><td>DB kiểm thử; tạo trung tâm, tài khoản, khách, thiết bị và phiếu tạm.</td><td><code>node scripts/run-workshop-integration.js TC-10</code></td><td>JWT center 1; ticket center 2</td><td>Nhân viên trung tâm 1 không thấy phiếu trung tâm khác trong danh sách/chi tiết.</td><td>Cao</td><td>Danh sách lọc số điện thoại trả 0 phiếu; chi tiết trả HTTP 404.</td><td>PASS · <a href="screenshots/TC-10.png">ảnh</a></td></tr><tr><td>TC-11</td><td>DB kiểm thử; hai khách và thiết bị thuộc khách thứ nhất.</td><td><code>node scripts/run-workshop-integration.js TC-11</code></td><td>Customer B + device of A</td><td>Tạo phiếu gắn thiết bị của khách khác bị từ chối; không có dữ liệu phiếu phát sinh.</td><td>Cao</td><td>HTTP 400 <code>VALIDATION_ERROR</code>; ticket count <code>0 → 0</code>.</td><td>PASS · <a href="screenshots/TC-11.png">ảnh</a></td></tr><tr><td>TC-12</td><td><code>.env</code> trỏ DB kiểm thử <code>baohanh_l2_thu</code>; không có tiến trình khác ghi đồng thời.</td><td><code>node scripts/run-workshop-integration.js TC-12</code></td><td>migrations + seeds, twice</td><td>Chạy migration và seed hai lượt; số dòng bảy bảng không đổi.</td><td>Vừa</td><td>Trước/sau không đổi: center 2, category 6, app_user 2, customer 4, device 4, ticket 4, status_log 8.</td><td>PASS · <a href="screenshots/TC-12.png">ảnh</a></td></tr></table><p>Tổng: 12/12 PASS trong lượt chạy lại. TC-05 kiểm hai phía cùng ranh giới; TC-10 kiểm quyền trung tâm; TC-12 kiểm tái lập. Unit BT3: 15/15 PASS trên Node 24.19.0. Xem <a href="test-plan.md">Test Plan</a> về khoảng trống phủ quy tắc.</p></section><section><h1>3. Bug Log</h1><h1>BT3 — Bug Log</h1><p>Các lỗi lịch sử được ghi rõ thời điểm, không dựng lại kết quả FAIL giả. Link GitHub chỉ mở được nếu commit tương ứng đã được push; các commit BT3 hiện giữ local theo yêu cầu.</p><h2>BUG-01 — MAJOR — lỗi HTTP khi PostgreSQL ngừng (lịch sử BT2)</h2><p>1. Phát hiện bởi: kiểm thử thủ công ngắt DB; regression <code>tests/http-errors.test.js</code> (không thuộc bộ TC-01–12).</p><p>2. Triệu chứng: client nhận lỗi 500 chung thay vì biết DB tạm mất kết nối.</p><p>3. Tái lập: dừng PostgreSQL của môi trường thử, gọi endpoint cần DB; hoặc chạy unit mô phỏng <code>ECONNREFUSED</code>/<code>AggregateError</code>.</p><p>4. Nguyên nhân: error handler chưa phân biệt mã lỗi kết nối và SQLSTATE nhóm 08 với lỗi không xác định.</p><p>5. Cách sửa: nhận diện mã kết nối, trả 503 <code>DATABASE_UNAVAILABLE</code>, giữ thông báo chung với lỗi lạ.</p><p>6. Commit: <a href="https://github.com/levan05/cdtn1-tranvanle-l2/commit/50c4b7d9092a6ba5e7060bff1eeeb551f665ed73">50c4b7d</a>.</p><p>7. Xác nhận: lượt <code>npm test</code> BT3 có cả ba regression error-handler PASS; không tuyên bố đã tái hiện lỗi cũ bằng cách dừng DB trong phiên BT3.</p><h2>BUG-02 — MAJOR — lệnh test quét mã tham khảo</h2><p>1. Phát hiện bởi: kiểm tra phạm vi lệnh <code>npm test</code> khi thư mục mẫu nằm trong <code>docs/</code> (ngoài bộ 12 case).</p><p>2. Triệu chứng: <code>node --test</code> có thể khám phá cả test của dự án mẫu không thuộc hệ thống nộp.</p><p>3. Tái lập: đặt bản mẫu có test dưới docs, dùng lệnh test cũ không giới hạn đường dẫn; quan sát danh sách test được khám phá.</p><p>4. Nguyên nhân: script dùng cơ chế tự khám phá trên toàn repo thay vì chỉ bộ test của module.</p><p>5. Cách sửa: <code>node --test tests/*.test.js</code>.</p><p>6. Commit: <a href="https://github.com/levan05/cdtn1-tranvanle-l2/commit/d61d902">d61d902</a> (local, chờ push).</p><p>7. Xác nhận: lệnh mới chạy đúng 15 test, 15 PASS/0 FAIL trên Node 24.19.0. Chưa đo lại số case lệnh cũ trong phiên này.</p><h2>BUG-03 — MAJOR — thiếu kiểm tra sức khỏe app và test trong image</h2><p>1. Phát hiện bởi: review đóng gói theo tiêu chí BT3 (kiểm tra cấu hình, ngoài bộ 12 case).</p><p>2. Triệu chứng: Compose không thể báo app healthy; image không có <code>tests/</code> để chạy <code>npm test</code>.</p><p>3. Tái lập: đọc Compose cũ không có <code>app.healthcheck</code>; Dockerfile cũ không COPY tests và <code>.dockerignore</code> loại tests.</p><p>4. Nguyên nhân: cấu hình BT2 chỉ kiểm DB; đóng gói chỉ gồm mã chạy, chưa gồm bộ test phục vụ bàn giao.</p><p>5. Cách sửa: healthcheck HTTP dùng Node fetch, COPY tests và bỏ ignore tests.</p><p>6. Commit: <a href="https://github.com/levan05/cdtn1-tranvanle-l2/commit/84dfbf5">84dfbf5</a> (local, chờ push).</p><p>7. Xác nhận: đã kiểm tra diff cấu hình; <strong>chưa xác nhận runtime</strong> vì máy không có Docker. Trạng thái: đã sửa mã, chờ kiểm thử Docker; chưa tính là bug đã đóng hoàn toàn.</p><h2>BUG-04 — HIGH dependency advisory (ghi nhận từ phiên trước)</h2><p>1. Phát hiện bởi: <code>npm audit</code> trong phiên làm việc trước, không thuộc bộ 12 case.</p><p>2. Triệu chứng: advisory HIGH của body-parser qua Express.</p><p>3. Tái lập: audit lockfile trước <code>cfdf354</code> trong checkout tách biệt; không hạ dependency của nhánh đang làm.</p><p>4. Nguyên nhân: phiên bản phụ thuộc gián tiếp được ghim trong lockfile cũ có cảnh báo.</p><p>5. Cách sửa: cập nhật lockfile bằng npm audit fix.</p><p>6. Commit: <a href="https://github.com/levan05/cdtn1-tranvanle-l2/commit/cfdf354">cfdf354</a> (local, chờ push).</p><p>7. Xác nhận: phiên BT3 ngày 12/11/2026 chạy lại <code>npm audit --omit=dev</code> → 0 vulnerabilities, <code>npm test</code> → 15/15 PASS. Mức HIGH của advisory không tự đồng nghĩa phân loại CRITICAL của bài tập.</p><p><strong>Điều kiện còn thiếu:</strong> giảng viên cần ít nhất 3 bug đã sửa, truy vết về test và có link mở được. BUG-03 còn chờ runtime, BUG-02 cần tái hiện đầu cũ nếu muốn bằng chứng trước/sau; không coi bảng này tự động đạt rubric.</p></section><section><h1>4. Deployment Guide</h1><h1>Deployment Guide — L2 warranty intake prototype</h1><h2>1. Requirements</h2><p>Windows with Docker Desktop/WSL2, macOS with Docker Desktop, or Linux with Docker Engine. Target: Docker Engine 24+ and Compose v2.20+, Linux containers; reserve 4 GB RAM, 5 GB free disk and TCP port 8000. Internet is needed for the first build. PostgreSQL and Node do not need to be installed on the host. These are target requirements, not a tested compatibility matrix.</p><p><strong>Validation status:</strong> Docker is not installed in the authoring environment. The clean-machine test has NOT been run. Do not interpret this guide as evidence of a successful container deployment.</p><h2>2. Setup</h2><p>After cloning the repository and entering its root, run these two commands (PowerShell, bash or zsh):</p><p>1. Copy the example configuration:</p><p>   ```sh</p><p>   cp .env.example .env</p><p>   ```</p><p>2. Build and start:</p><p>   ```sh</p><p>   docker compose up -d --build</p><p>   ```</p><p>Compose supplies container database connection settings; <code>DB_PASSWORD</code> and <code>JWT_SECRET</code> come from <code>.env</code>. Startup automatically runs migrations and seeds before starting Express. The frontend is built into the image and served by Express at http://localhost:8000. Wait for both services to become healthy.</p><p>Stop without removing data: <code>docker compose down</code>. To repeat from an empty database in this disposable demo project only: <code>docker compose down -v</code> (deletes the project's database volume), then repeat setup. No global Docker prune is needed.</p><h2>3. Environment variables</h2><table><tr><td>Variable</td><td>Meaning</td><td>Example</td><td>Required</td></tr><tr><td>DB_HOST</td><td>PostgreSQL host</td><td><code>localhost</code> (Compose overrides to <code>db</code>)</td><td>Native: yes; Compose: supplied</td></tr><tr><td>DB_PORT</td><td>PostgreSQL port</td><td><code>5432</code></td><td>Native: yes; Compose: supplied</td></tr><tr><td>DB_NAME</td><td>Database name</td><td><code>baohanh_l2</code></td><td>Native: yes; Compose: supplied</td></tr><tr><td>DB_USER</td><td>Database user</td><td><code>postgres</code></td><td>Native: yes; Compose: supplied</td></tr><tr><td>DB_PASSWORD</td><td>Database password</td><td><code>doi_mat_khau_cua_ban</code></td><td>Set in <code>.env</code>; demo fallback exists in Compose</td></tr><tr><td>JWT_SECRET</td><td>JWT signing key</td><td><code>doi_chuoi_bi_mat_dai_it_nhat_32_ky_tu</code></td><td>Yes; replace for any non-demo use</td></tr><tr><td>PORT</td><td>Express listening port</td><td><code>8000</code></td><td>No; default 8000; Compose forces 8000</td></tr><tr><td>NODE_ENV</td><td>Runtime mode</td><td><code>production</code></td><td>No; set in image</td></tr><tr><td>WORKSHOP_ALLOW_DB_WRITE</td><td>Explicit opt-in for integration fixtures</td><td><code>1</code></td><td>Only for integration runner</td></tr><tr><td>WORKSHOP_TEST_PASSWORD</td><td>Seed login password override in runner</td><td><code>Demo@123</code></td><td>No; runner default shown</td></tr></table><p><code>.env.example</code> and Compose fallback keys/passwords are public demo values. They do not protect a public deployment. This prototype has no TLS termination, rate limiting or JWT revocation.</p><h2>4. Sample data</h2><p><code>seeds/001_demo.sql</code> runs automatically. On an empty database expect <code>service_center=2</code>, <code>issue_category=6</code>, <code>app_user=2</code>, <code>customer=3</code>, <code>device=3</code>, <code>ticket=3</code>, <code>ticket_status_log=3</code>. Subsequent runs preserve existing data rather than reset it. Sample tickets have fixed October 2026 dates, so overdue flags depend on the current clock.</p><p>Login as <code>nv.tiepnhan01</code> (intake staff) or <code>ql.ninhkieu</code> (manager), password <code>Demo@123</code>. Both belong to center 1. Sample phone numbers and addresses are synthetic demo data.</p><h2>5. Verify and troubleshoot</h2><pre><code>docker compose ps
+</code></pre><p>Expected: <code>db</code> and <code>app</code> both <code>healthy</code>.</p><pre><code>curl http://localhost:8000/health
+</code></pre><p>Expected HTTP 200 and <code>{"status":"ok","db":"ok"}</code>. In PowerShell use <code>curl.exe</code> if <code>curl</code> is aliased. Open the frontend and log in with a demo account.</p><pre><code>docker compose exec app npm test
+</code></pre><p>Expected 15 tests, 15 pass, 0 fail. Tests are copied into the runtime image. This command does not run the PostgreSQL integration suite.</p><p>For integration tests create a separate disposable database (never use the demo database containing work you want to retain):</p><pre><code>docker compose exec db createdb -U postgres baohanh_l2_test
+docker compose exec -e DB_NAME=baohanh_l2_test app npm run migrate
+docker compose exec -e DB_NAME=baohanh_l2_test app npm run seed
+docker compose exec -e DB_NAME=baohanh_l2_test -e WORKSHOP_ALLOW_DB_WRITE=1 app node scripts/run-workshop-integration.js
+</code></pre><p>Expected <code>SUMMARY 12/12 PASS, 0/12 FAIL</code>. These are verification commands after setup, not additional startup requirements. The image includes an empty <code>docs/</code> directory for the runner's output. Copy the report out with <code>docker compose cp app:/app/docs/workshop-integration-results.txt ./docs/docker-integration-results.txt</code> if needed.</p><p>If startup fails, inspect <code>docker compose logs app db</code>. Port conflict: free port 8000. Authentication failure after changing <code>.env</code>: the existing database volume retains the original password; use that password or reset only the disposable project volume. A 503 health response means PostgreSQL cannot be reached. Do not record PASS until the commands have actually succeeded.</p></section><section><h1>5. Security Checklist</h1><h1>BT3 — Checklist bảo mật</h1><p>Đánh giá ngày 12/11/2026; phạm vi prototype cục bộ. Không coi cấu hình demo là cấu hình triển khai công khai.</p><table><tr><td>Mục</td><td>Trạng thái</td><td>Minh chứng và giới hạn</td></tr><tr><td>1. Không có secret thật trong repo</td><td>ĐÃ LÀM (phạm vi đã kiểm)</td><td><code>.gitignore</code> loại <code>.env</code>; <code>git log --all -- .env</code> không có kết quả; <code>.env.example</code>, Compose và seed chỉ có giá trị demo công khai. Chưa chạy công cụ quét secret toàn lịch sử, không khẳng định đã quét mọi blob.</td></tr><tr><td>2. Kiểm đầu vào ở ứng dụng</td><td>ĐÃ LÀM</td><td><code>src/validators/</code>; TC-05/06 kiểm 2000/2001 ký tự và mô tả rỗng; TC-06/07 kiểm HTTP, code và message; PostgreSQL bổ sung ràng buộc.</td></tr><tr><td>3. Kiểm quyền theo chủ sở hữu</td><td>CHƯA LÀM đầy đủ</td><td><code>ticket.service.js</code> giới hạn phiếu theo trung tâm; TC-10 PASS cho list/detail. Khách/thiết bị dùng chung toàn hệ thống và cập nhật không kiểm quyền sở hữu theo trung tâm; không đánh đồng với quyền phiếu.</td></tr><tr><td>4. Băm/mã hóa mật khẩu và dữ liệu nhạy cảm</td><td>CHƯA LÀM đầy đủ</td><td><code>user.repository.js</code>, seed dùng pgcrypto <code>crypt</code>/bcrypt; không trả password_hash. Điện thoại/địa chỉ chưa mã hóa ở DB, HTTP demo chưa TLS; che điện thoại không phải mã hóa.</td></tr><tr><td>5. Lỗi không lộ cấu trúc bên trong</td><td>ĐÃ LÀM</td><td><code>src/routes/http-errors.js</code> trả thông báo chung khi lỗi lạ; 3 test <code>http-errors.test.js</code> PASS, gồm lỗi giả có nội dung thư viện.</td></tr><tr><td>6. Nhật ký không ghi secret/PII không cần thiết</td><td>CHƯA LÀM đầy đủ</td><td>Không log header/token/password ở các lệnh log đã đọc; error handler còn ghi <code>err.message</code>, có thể chứa dữ liệu lỗi SQL; chưa có lọc/redaction tập trung.</td></tr><tr><td>7. Ghim phụ thuộc và kiểm advisory</td><td>ĐÃ LÀM (npm)</td><td><code>package-lock.json</code> và <code>frontend/package-lock.json</code>, Docker dùng <code>npm ci</code>; <code>npm audit --omit=dev</code> backend ngày 12/11/2026: 0 vulnerabilities. Chưa audit frontend trong lượt này, chưa ghim digest image Docker.</td></tr></table><p>Giới hạn bổ sung: JWT 8 giờ không thu hồi được; không rate limit; tài khoản demo công khai. Không dùng với dữ liệu khách thật trước khi xử lý các mục còn thiếu.</p></section><section><h1>6. API Documentation</h1><h1>API Documentation - L2 warranty intake</h1><p>Base URL: http://localhost:8000. JSON requests/responses. Protected endpoints use <code>Authorization: Bearer &lt;token&gt;</code>. Common errors: 401 UNAUTHENTICATED for absent/invalid JWT; 503 DATABASE_UNAVAILABLE for database connection failure; 500 INTERNAL_ERROR for unknown failures. Error shape: <code>{ "error": { "code": "...", "message": "...", "fields": {} } }</code>.</p><p>Examples below were captured from Express/PostgreSQL on 2026-11-12T06:01:09.855Z using v24.19.0; see <a href="api-examples.json">raw exchanges</a> and <a href="../scripts/capture-api-examples.js">capture script</a>. Only JWT and passwords are redacted. IDs/timestamps are from that run and must be replaced when repeating. Examples use synthetic data.</p><h2>GET /health</h2><p>1. Business purpose: Check database readiness.</p><p>2. Authentication: None.</p><p>3. Parameters and body: None.</p><p>4. Success: HTTP 200; actual body below.</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>503: database unavailable.</td></tr><tr><td>Common</td><td>503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: Does not check frontend assets.</p><p>7. Actual request/response:</p><pre><code>GET /health
+
+</code></pre><p>HTTP 200</p><pre><code>{
+  "status": "ok",
+  "db": "ok"
+}
+</code></pre><h2>POST /api/auth/login</h2><p>1. Business purpose: Authenticate and obtain an 8-hour JWT.</p><p>2. Authentication: Public.</p><p>3. Parameters and body: JSON: username, password (required strings).</p><p>4. Success: HTTP 200; actual body below.</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>400 VALIDATION_ERROR; 401 INVALID_CREDENTIALS.</td></tr><tr><td>Common</td><td>503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: No refresh, revocation or rate limiting.</p><p>7. Actual request/response:</p><pre><code>POST /api/auth/login
+Content-Type: application/json
+
+{
+  "username": "ql.ninhkieu",
+  "password": "&lt;demo password redacted&gt;"
+}
+</code></pre><p>HTTP 200</p><pre><code>{
+  "token": "&lt;JWT redacted&gt;",
+  "user": {
+    "user_id": 2,
+    "username": "ql.ninhkieu",
+    "full_name": "Nguyen Thi Hoa",
+    "role": "QUAN_LY",
+    "center_id": 1
+  }
+}
+</code></pre><h2>GET /api/categories</h2><p>1. Business purpose: List issue categories.</p><p>2. Authentication: JWT.</p><p>3. Parameters and body: None.</p><p>4. Success: HTTP 200; actual body below.</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>401 UNAUTHENTICATED.</td></tr><tr><td>Common</td><td>401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: Global catalog, not scoped by center.</p><p>7. Actual request/response:</p><pre><code>GET /api/categories
+Authorization: Bearer &lt;token&gt;
+
+</code></pre><p>HTTP 200</p><pre><code>{
+  "data": [
+    {
+      "category_id": 1,
+      "category_name": "Màn hình"
+    },
+    {
+      "category_id": 2,
+      "category_name": "Pin"
+    },
+    {
+      "category_id": 3,
+      "category_name": "Sạc"
+    },
+    {
+      "category_id": 4,
+      "category_name": "Phần mềm"
+    },
+    {
+      "category_id": 5,
+      "category_name": "Nước vào"
+    },
+    {
+      "category_id": 6,
+      "category_name": "Khác"
+    }
+  ]
+}
+</code></pre><h2>GET /api/users</h2><p>1. Business purpose: List accounts of the manager's center.</p><p>2. Authentication: Manager JWT.</p><p>3. Parameters and body: None.</p><p>4. Success: HTTP 200; actual body below.</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>401 UNAUTHENTICATED; 403 FORBIDDEN.</td></tr><tr><td>Common</td><td>401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: No user update/delete API.</p><p>7. Actual request/response:</p><pre><code>GET /api/users
+Authorization: Bearer &lt;token&gt;
+
+</code></pre><p>HTTP 200</p><pre><code>{
+  "data": [
+    {
+      "user_id": 1,
+      "username": "nv.tiepnhan01",
+      "full_name": "Tran Van Le",
+      "role": "NHAN_VIEN_TIEP_NHAN",
+      "center_id": 1
+    },
+    {
+      "user_id": 2,
+      "username": "ql.ninhkieu",
+      "full_name": "Nguyen Thi Hoa",
+      "role": "QUAN_LY",
+      "center_id": 1
+    }
+  ]
+}
+</code></pre><h2>POST /api/users</h2><p>1. Business purpose: Create intake staff in the manager's center.</p><p>2. Authentication: Manager JWT.</p><p>3. Parameters and body: JSON: username (3-50 ASCII letters/digits/._-), password (8+ characters, max 72 bytes), full_name (1-120).</p><p>4. Success: HTTP 201; actual body below.</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>400 VALIDATION_ERROR; 403 FORBIDDEN; 409 USERNAME_EXISTS.</td></tr><tr><td>Common</td><td>401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: Client cannot choose role or center.</p><p>7. Actual request/response:</p><pre><code>POST /api/users
+Authorization: Bearer &lt;token&gt;
+Content-Type: application/json
+
+{
+  "username": "bt3_1794463269570",
+  "password": "&lt;demo password redacted&gt;",
+  "full_name": "API capture fixture"
+}
+</code></pre><p>HTTP 201</p><pre><code>{
+  "user_id": 38,
+  "username": "bt3_1794463269570",
+  "full_name": "API capture fixture",
+  "role": "NHAN_VIEN_TIEP_NHAN",
+  "center_id": 1
+}
+</code></pre><h2>GET /api/customers</h2><p>1. Business purpose: List customers, or look up a normalized phone.</p><p>2. Authentication: JWT.</p><p>3. Parameters and body: Query: phone (lookup); otherwise page&gt;=1 and size=1..100, default 1/20.</p><p>4. Success: HTTP 200; actual body below.</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>400 VALIDATION_ERROR; 404 CUSTOMER_NOT_FOUND for phone lookup.</td></tr><tr><td>Common</td><td>401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: Shared customer directory; staff see masked phones. Lookup returns one object; listing returns page,size,customers.</p><p>7. Actual request/response:</p><pre><code>GET /api/customers?page=1&amp;size=1
+Authorization: Bearer &lt;token&gt;
+
+</code></pre><p>HTTP 200</p><pre><code>{
+  "page": 1,
+  "size": 1,
+  "customers": [
+    {
+      "customer_id": 1,
+      "full_name": "Nguyen Van An",
+      "phone": "0909123456",
+      "address": "12 Nguyen Trai, Can Tho",
+      "created_at": "2026-10-28T17:20:36.686Z"
+    }
+  ]
+}
+</code></pre><pre><code>GET /api/customers?phone=0863269570
+Authorization: Bearer &lt;token&gt;
+
+</code></pre><p>HTTP 200</p><pre><code>{
+  "customer_id": 103,
+  "full_name": "API capture fixture",
+  "phone": "0863269570",
+  "address": "Synthetic fixture",
+  "created_at": "2026-11-12T06:01:09.603Z"
+}
+</code></pre><h2>GET /api/customers/:id</h2><p>1. Business purpose: Read a customer.</p><p>2. Authentication: JWT.</p><p>3. Parameters and body: Path id: positive integer.</p><p>4. Success: HTTP 200; actual body below.</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>400 VALIDATION_ERROR; 404 CUSTOMER_NOT_FOUND.</td></tr><tr><td>Common</td><td>401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: Shared directory; staff see masked phones.</p><p>7. Actual request/response:</p><pre><code>GET /api/customers/103
+Authorization: Bearer &lt;token&gt;
+
+</code></pre><p>HTTP 200</p><pre><code>{
+  "customer_id": 103,
+  "full_name": "API capture fixture",
+  "phone": "0863269570",
+  "address": "Synthetic fixture",
+  "created_at": "2026-11-12T06:01:09.603Z"
+}
+</code></pre><h2>POST /api/customers</h2><p>1. Business purpose: Register a customer.</p><p>2. Authentication: JWT.</p><p>3. Parameters and body: JSON: full_name (1-120), phone (10 digits starting 0; accepts +84/84), optional address (max 255).</p><p>4. Success: HTTP 201; actual body below.</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>400 VALIDATION_ERROR; 409 PHONE_EXISTS.</td></tr><tr><td>Common</td><td>401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: Phone normalized and unique; shared across centers.</p><p>7. Actual request/response:</p><pre><code>POST /api/customers
+Authorization: Bearer &lt;token&gt;
+Content-Type: application/json
+
+{
+  "full_name": "API capture fixture",
+  "phone": "0863269570",
+  "address": "Synthetic fixture"
+}
+</code></pre><p>HTTP 201</p><pre><code>{
+  "customer_id": 103,
+  "full_name": "API capture fixture",
+  "phone": "0863269570",
+  "address": "Synthetic fixture",
+  "created_at": "2026-11-12T06:01:09.603Z"
+}
+</code></pre><h2>PUT /api/customers/:id</h2><p>1. Business purpose: Replace customer fields.</p><p>2. Authentication: JWT.</p><p>3. Parameters and body: Path id; JSON same required fields as POST /api/customers.</p><p>4. Success: HTTP 200; actual body below.</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>400 VALIDATION_ERROR; 404 CUSTOMER_NOT_FOUND; 409 PHONE_EXISTS.</td></tr><tr><td>Common</td><td>401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: Full replacement, not PATCH; shared directory.</p><p>7. Actual request/response:</p><pre><code>PUT /api/customers/103
+Authorization: Bearer &lt;token&gt;
+Content-Type: application/json
+
+{
+  "full_name": "API capture fixture",
+  "phone": "0863269570",
+  "address": "Synthetic fixture"
+}
+</code></pre><p>HTTP 200</p><pre><code>{
+  "customer_id": 103,
+  "full_name": "API capture fixture",
+  "phone": "0863269570",
+  "address": "Synthetic fixture",
+  "created_at": "2026-11-12T06:01:09.603Z"
+}
+</code></pre><h2>DELETE /api/customers/:id</h2><p>1. Business purpose: Delete an unused customer.</p><p>2. Authentication: Manager JWT.</p><p>3. Parameters and body: Path id: positive integer; no body.</p><p>4. Success: HTTP 204; actual body below (empty).</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>400 VALIDATION_ERROR; 403 FORBIDDEN; 404 CUSTOMER_NOT_FOUND; 409 CUSTOMER_IN_USE.</td></tr><tr><td>Common</td><td>401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: Rejected if any device or ticket references the customer.</p><p>7. Actual request/response:</p><pre><code>DELETE /api/customers/103
+Authorization: Bearer &lt;token&gt;
+
+</code></pre><p>HTTP 204</p><pre><code>
+</code></pre><h2>GET /api/customers/:id/devices</h2><p>1. Business purpose: List a customer's devices.</p><p>2. Authentication: JWT.</p><p>3. Parameters and body: Path id: positive customer ID.</p><p>4. Success: HTTP 200; actual body below.</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>400 VALIDATION_ERROR; 404 CUSTOMER_NOT_FOUND.</td></tr><tr><td>Common</td><td>401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: Shared device directory; no pagination.</p><p>7. Actual request/response:</p><pre><code>GET /api/customers/103/devices
+Authorization: Bearer &lt;token&gt;
+
+</code></pre><p>HTTP 200</p><pre><code>{
+  "customer_id": 103,
+  "devices": [
+    {
+      "device_id": 97,
+      "customer_id": 103,
+      "serial_no": "BT3-1794463269570",
+      "imei": null,
+      "product_name": "Demo device"
+    }
+  ]
+}
+</code></pre><h2>GET /api/devices/:id</h2><p>1. Business purpose: Read a device.</p><p>2. Authentication: JWT.</p><p>3. Parameters and body: Path id: positive integer.</p><p>4. Success: HTTP 200; actual body below.</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>400 VALIDATION_ERROR; 404 DEVICE_NOT_FOUND.</td></tr><tr><td>Common</td><td>401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: Devices are not scoped by center.</p><p>7. Actual request/response:</p><pre><code>GET /api/devices/97
+Authorization: Bearer &lt;token&gt;
+
+</code></pre><p>HTTP 200</p><pre><code>{
+  "device_id": 97,
+  "customer_id": 103,
+  "serial_no": "BT3-1794463269570",
+  "imei": null,
+  "product_name": "Demo device"
+}
+</code></pre><h2>POST /api/devices</h2><p>1. Business purpose: Register a device for an existing customer.</p><p>2. Authentication: JWT.</p><p>3. Parameters and body: JSON: customer_id (positive integer), serial_no (1-80), product_name (1-120), optional imei (max 30).</p><p>4. Success: HTTP 201; actual body below.</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>400 VALIDATION_ERROR; 404 CUSTOMER_NOT_FOUND; 409 SERIAL_EXISTS.</td></tr><tr><td>Common</td><td>401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: serial_no is required even if imei is provided.</p><p>7. Actual request/response:</p><pre><code>POST /api/devices
+Authorization: Bearer &lt;token&gt;
+Content-Type: application/json
+
+{
+  "customer_id": 103,
+  "serial_no": "BT3-1794463269570",
+  "product_name": "Demo device"
+}
+</code></pre><p>HTTP 201</p><pre><code>{
+  "device_id": 97,
+  "customer_id": 103,
+  "serial_no": "BT3-1794463269570",
+  "imei": null,
+  "product_name": "Demo device"
+}
+</code></pre><h2>PUT /api/devices/:id</h2><p>1. Business purpose: Replace device fields.</p><p>2. Authentication: JWT.</p><p>3. Parameters and body: Path id; JSON same as POST /api/devices.</p><p>4. Success: HTTP 200; actual body below.</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>400 VALIDATION_ERROR; 404 DEVICE_NOT_FOUND/CUSTOMER_NOT_FOUND; 409 SERIAL_EXISTS.</td></tr><tr><td>Common</td><td>401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: Allows customer reassignment; existing ticket consistency is not enforced here.</p><p>7. Actual request/response:</p><pre><code>PUT /api/devices/97
+Authorization: Bearer &lt;token&gt;
+Content-Type: application/json
+
+{
+  "customer_id": 103,
+  "serial_no": "BT3-1794463269570",
+  "product_name": "Demo device"
+}
+</code></pre><p>HTTP 200</p><pre><code>{
+  "device_id": 97,
+  "customer_id": 103,
+  "serial_no": "BT3-1794463269570",
+  "imei": null,
+  "product_name": "Demo device"
+}
+</code></pre><h2>DELETE /api/devices/:id</h2><p>1. Business purpose: Delete an unused device.</p><p>2. Authentication: Manager JWT.</p><p>3. Parameters and body: Path id: positive integer.</p><p>4. Success: HTTP 204; actual body below (empty).</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>400 VALIDATION_ERROR; 403 FORBIDDEN; 404 DEVICE_NOT_FOUND; 409 DEVICE_IN_USE.</td></tr><tr><td>Common</td><td>401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: Devices referenced by tickets cannot be deleted.</p><p>7. Actual request/response:</p><pre><code>DELETE /api/devices/97
+Authorization: Bearer &lt;token&gt;
+
+</code></pre><p>HTTP 204</p><pre><code>
+</code></pre><h2>GET /api/tickets</h2><p>1. Business purpose: List tickets in the current center.</p><p>2. Authentication: JWT.</p><p>3. Parameters and body: Query: page&gt;=1, size=1..100 (default 20), status, priority, phone, category (positive ID), sort=due_date only.</p><p>4. Success: HTTP 200; actual body below.</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>400 VALIDATION_ERROR.</td></tr><tr><td>Common</td><td>401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: Cannot override center; staff phones masked. Flags overdue/near_due depend on current time.</p><p>7. Actual request/response:</p><pre><code>GET /api/tickets?phone=0863269570
+Authorization: Bearer &lt;token&gt;
+
+</code></pre><p>HTTP 200</p><pre><code>{
+  "total": 1,
+  "page": 1,
+  "size": 20,
+  "tickets": [
+    {
+      "ticket_id": 92,
+      "ticket_code": "BH000092/2026",
+      "status": "MOI",
+      "priority": "THAP",
+      "issue_desc": "Mat nguon",
+      "received_at": "2026-11-12T06:01:09.761Z",
+      "due_date": "2026-11-18T06:01:09.761Z",
+      "center_id": 1,
+      "center_name": "Trung tam Ninh Kieu",
+      "category_id": 6,
+      "category_name": "Khác",
+      "customer_id": 103,
+      "customer_name": "API capture fixture",
+      "customer_phone": "0863269570",
+      "customer_address": "Synthetic fixture",
+      "device_id": 97,
+      "serial_no": "BT3-1794463269570",
+      "imei": null,
+      "product_name": "Demo device",
+      "is_overdue": false,
+      "is_near_due": false
+    }
+  ]
+}
+</code></pre><h2>GET /api/tickets/:id</h2><p>1. Business purpose: Read ticket details and status history.</p><p>2. Authentication: JWT.</p><p>3. Parameters and body: Path id: positive integer.</p><p>4. Success: HTTP 200; actual body below.</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>400 VALIDATION_ERROR; 404 TICKET_NOT_FOUND.</td></tr><tr><td>Common</td><td>401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: Other-center tickets also return 404.</p><p>7. Actual request/response:</p><pre><code>GET /api/tickets/92
+Authorization: Bearer &lt;token&gt;
+
+</code></pre><p>HTTP 200</p><pre><code>{
+  "ticket_id": 92,
+  "ticket_code": "BH000092/2026",
+  "status": "MOI",
+  "priority": "THAP",
+  "issue_desc": "Mat nguon",
+  "received_at": "2026-11-12T06:01:09.761Z",
+  "due_date": "2026-11-18T06:01:09.761Z",
+  "center_id": 1,
+  "center_name": "Trung tam Ninh Kieu",
+  "category_id": 6,
+  "category_name": "Khác",
+  "customer_id": 103,
+  "customer_name": "API capture fixture",
+  "customer_phone": "0863269570",
+  "customer_address": "Synthetic fixture",
+  "device_id": 97,
+  "serial_no": "BT3-1794463269570",
+  "imei": null,
+  "product_name": "Demo device",
+  "logs": [
+    {
+      "log_id": 63,
+      "from_status": null,
+      "to_status": "MOI",
+      "changed_at": "2026-11-12T06:01:09.762Z",
+      "changed_by": "ql.ninhkieu"
+    }
+  ]
+}
+</code></pre><h2>POST /api/tickets/preview</h2><p>1. Business purpose: Preview keyword classification and due date without saving.</p><p>2. Authentication: JWT.</p><p>3. Parameters and body: JSON: issue_desc (trimmed 1-2000 characters).</p><p>4. Success: HTTP 200; actual body below.</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>400 VALIDATION_ERROR.</td></tr><tr><td>Common</td><td>401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: Uses current server time; priority CAO=24, TRUNG_BINH=72, THAP=120 working hours, skips Sundays in UTC+7.</p><p>7. Actual request/response:</p><pre><code>POST /api/tickets/preview
+Authorization: Bearer &lt;token&gt;
+Content-Type: application/json
+
+{
+  "issue_desc": "Mat nguon"
+}
+</code></pre><p>HTTP 200</p><pre><code>{
+  "category_id": 6,
+  "category_name": "Khác",
+  "priority": "THAP",
+  "due_date": "2026-11-18T06:01:09.743Z"
+}
+</code></pre><h2>POST /api/tickets</h2><p>1. Business purpose: Create a ticket and its initial status log atomically.</p><p>2. Authentication: JWT.</p><p>3. Parameters and body: JSON: customer_id, device_id (positive integers), issue_desc (trimmed 1-2000).</p><p>4. Success: HTTP 201; actual body below.</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>400 VALIDATION_ERROR; 404 CUSTOMER_NOT_FOUND/DEVICE_NOT_FOUND.</td></tr><tr><td>Common</td><td>401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: Device must belong to customer. Center taken from JWT; starts MOI.</p><p>7. Actual request/response:</p><pre><code>POST /api/tickets
+Authorization: Bearer &lt;token&gt;
+Content-Type: application/json
+
+{
+  "customer_id": 103,
+  "device_id": 97,
+  "issue_desc": "Mat nguon"
+}
+</code></pre><p>HTTP 201</p><pre><code>{
+  "ticket_id": 92,
+  "ticket_code": "BH000092/2026",
+  "status": "MOI",
+  "category": "KHAC",
+  "priority": "THAP",
+  "received_at": "2026-11-12T06:01:09.761Z",
+  "due_date": "2026-11-18T06:01:09.761Z"
+}
+</code></pre><h2>PATCH /api/tickets/:id/status</h2><p>1. Business purpose: Advance a ticket and append an audit log atomically.</p><p>2. Authentication: JWT.</p><p>3. Parameters and body: Path id; JSON to_status: MOI, DA_PHAN_CONG, DANG_XU_LY, HOAN_TAT or DA_DONG.</p><p>4. Success: HTTP 200; actual body below.</p><p>5. Error codes:</p><table><tr><td>HTTP/code</td><td>Condition</td></tr><tr><td>Endpoint-specific</td><td>400 VALIDATION_ERROR; 404 TICKET_NOT_FOUND; 409 INVALID_TRANSITION.</td></tr><tr><td>Common</td><td>401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR</td></tr></table><p>6. Limitations: Only next state allowed: MOI -&gt; DA_PHAN_CONG -&gt; DANG_XU_LY -&gt; HOAN_TAT -&gt; DA_DONG. Row lock serializes transitions.</p><p>7. Actual request/response:</p><pre><code>PATCH /api/tickets/92/status
+Authorization: Bearer &lt;token&gt;
+Content-Type: application/json
+
+{
+  "to_status": "DA_PHAN_CONG"
+}
+</code></pre><p>HTTP 200</p><pre><code>{
+  "ticket_id": 92,
+  "status": "DA_PHAN_CONG"
+}
+</code></pre><p>The frontend is served at <code>/</code> when built assets exist; it is a static document rather than a JSON API. Unknown routes return 404 NOT_FOUND. No ticket delete, refresh token or assignment-to-technician endpoint exists.</p></section><section><h1>7. Evidence</h1><h1>BT3 — Trạng thái bàn giao</h1><h2>Đã xác minh tại máy này</h2><p>- <code>npm test</code>: 15/15 PASS, Node 24.19.0.</p><p>- Bộ integration PostgreSQL: 12/12 PASS; TC-06/07 kiểm cả message.</p><p>- Capture API: 21 exchange thật, gồm 20 cặp method/path và biến thể tìm khách theo điện thoại; JWT/password đã che.</p><p>- <code>npm audit --omit=dev</code>: 0 vulnerabilities ở backend.</p><p>- <code>npm run build --prefix frontend</code>: build thành công.</p><h2>Cần hoàn thành trước khi nộp chính thức</h2><p>Bản rà soát tổng hợp: <a href="BT3_2374802010270_TranVanLe-review.html">HTML</a> và PDF cùng tên trong thư mục docs (PDF không đưa vào Git theo <code>.gitignore</code>). Tái tạo HTML bằng <code>node scripts/export-bt3-report.js</code>, mở trong trình duyệt và Print → Save as PDF; chọn A4 ngang. Đây là bản rà soát, chưa phải bản nộp cuối.</p><p>1. Chạy Docker máy trắng theo Deployment Guide, lưu ảnh thật cả hai dịch vụ healthy, health response và test PASS. Máy hiện chưa có Docker nên chưa thể thực hiện.</p><p>2. Bổ sung phủ các quy tắc còn thiếu đã ghi ở Test Plan; kiểm tra 3 bug đủ bằng chứng trước/sau và xác nhận đóng, không tự gán lỗi review cấu hình thành lỗi runtime đã xác minh.</p><p>3. Sinh viên tự chạy lại, hiểu test/bug và cập nhật xác nhận trong bảng AI; bổ sung lớp/ngày nộp.</p><p>4. Kiểm bản PDF, thêm ảnh máy trắng sau khi chạy; chọn commit để push. Các link commit local chưa mở được trên GitHub.</p><p>5. Khi kết quả đóng gói đã đạt và người dùng yêu cầu phát hành, tạo/push tag <code>v1.0</code>. Chưa tạo tag để tránh đánh dấu bản chưa xác minh là bản nộp cuối.</p><p>Không push/tag trong phiên này. Không đưa đề, thư mục tham khảo, file giải nén hoặc file khóa Word vào commit.</p><h2>Ảnh terminal thật của buổi 14 (không phải ảnh lượt BT3)</h2><div style="break-before:page"><h3>TC-01</h3><img src="screenshots/TC-01.png" alt="TC-01"></div><div style="break-before:page"><h3>TC-02</h3><img src="screenshots/TC-02.png" alt="TC-02"></div><div style="break-before:page"><h3>TC-03</h3><img src="screenshots/TC-03.png" alt="TC-03"></div><div style="break-before:page"><h3>TC-04</h3><img src="screenshots/TC-04.png" alt="TC-04"></div><div style="break-before:page"><h3>TC-05</h3><img src="screenshots/TC-05.png" alt="TC-05"></div><div style="break-before:page"><h3>TC-06</h3><img src="screenshots/TC-06.png" alt="TC-06"></div><div style="break-before:page"><h3>TC-07</h3><img src="screenshots/TC-07.png" alt="TC-07"></div><div style="break-before:page"><h3>TC-08</h3><img src="screenshots/TC-08.png" alt="TC-08"></div><div style="break-before:page"><h3>TC-09</h3><img src="screenshots/TC-09.png" alt="TC-09"></div><div style="break-before:page"><h3>TC-10</h3><img src="screenshots/TC-10.png" alt="TC-10"></div><div style="break-before:page"><h3>TC-11</h3><img src="screenshots/TC-11.png" alt="TC-11"></div><div style="break-before:page"><h3>TC-12</h3><img src="screenshots/TC-12.png" alt="TC-12"></div></section><section><h1>8. AI Disclosure</h1><h1>Khai báo sử dụng công cụ AI</h1><h2>Bài tập 3: Kiểm thử và đóng gói</h2><table><tr><td>Công cụ</td><td>Dùng vào việc gì</td><td>Áp dụng ở tệp / hàm nào</td><td>Đã kiểm chứng thế nào</td></tr><tr><td>Claude (phiên trước, theo lịch sử trao đổi)</td><td>Đọc đề BT3, phân tích tài liệu mẫu, cập nhật dependency</td><td><code>package-lock.json</code>, commit <code>cfdf354</code></td><td>Phiên trước báo 15 test PASS và audit 0; Codex chạy lại unit và audit ở phiên BT3.</td></tr><tr><td>Codex</td><td>Rà đề, chuẩn hóa báo cáo và truy vết bằng chứng</td><td><code>docs/test-plan.md</code>, <code>test-report.md</code>, <code>bug-log.md</code></td><td>Đối chiếu 12 case với runner, ảnh và output; chạy lại PostgreSQL thật đạt 12/12. Không dựng kết quả FAIL lịch sử.</td></tr><tr><td>Codex</td><td>Kiểm thêm nội dung thông báo lỗi</td><td><code>scripts/run-workshop-integration.js</code> TC-06/07</td><td>Chạy đủ 12 case trên DB kiểm thử; 12/12 PASS.</td></tr><tr><td>Codex</td><td>Viết API docs tiếng Anh và thu exchange thật</td><td><code>scripts/capture-api-examples.js</code>, <code>docs/api-docs.md</code>, <code>api-examples.json</code></td><td>21 request/response thật, assert mã HTTP; che JWT/password; dọn fixture theo ID.</td></tr><tr><td>Codex</td><td>Bổ sung đóng gói, hướng dẫn và checklist</td><td><code>Dockerfile</code>, <code>.dockerignore</code>, <code>docker-compose.yml</code>, <code>docs/deployment-guide.md</code>, <code>checklist-bao-mat.md</code></td><td>Đọc cấu hình và code; unit 15/15, audit backend 0. Máy thiếu Docker nên chưa xác nhận build, healthcheck và phép thử máy trắng.</td></tr></table><p>Các lượt chạy trên do trợ lý thực hiện qua công cụ ở máy làm việc; sinh viên cần tự chạy lại, đọc và giải thích trước khi nộp. Không coi bảng này là xác nhận sinh viên đã tự kiểm chứng mọi phần hoặc đã chạy Docker.</p><p>Sinh viên: Trần Văn Lễ · MSSV: 2374802010270 · Track: SE · Luồng: L2 (Tiếp nhận và phân loại yêu cầu bảo hành)</p><h2>Bài tập 2: Hiện thực hoá module cốt lõi</h2><p>Em dùng trợ lý lập trình AI (Claude, qua GitHub Copilot CLI) để viết phần lớn mã nguồn và tài liệu của Bài tập 2. Em chọn yêu cầu, đọc kết quả, tự chạy và thao tác thử trên hệ thống, rồi quyết định giữ hay sửa. Em tự quyết các điểm sau: phiếu nhận vào Chủ Nhật thì tính hạn từ 00:00 Thứ Hai; chỉ Quản lý được tạo tài khoản nhân viên cho trung tâm của mình; làm từng commit nhỏ, mỗi commit một việc.</p><table><tr><td>Công cụ</td><td>Dùng vào việc gì</td><td>Áp dụng ở tệp / hàm nào</td><td>Em đã kiểm chứng thế nào</td></tr><tr><td>Claude (Copilot CLI)</td><td>Viết hàm tính hạn cam kết (CAO 24 giờ, TRUNG_BINH 72 giờ, THAP 120 giờ, chỉ bỏ Chủ Nhật)</td><td><code>src/services/deadline.js</code>, <code>tests/deadline.test.js</code></td><td>Tự chạy <code>npm test</code>; viết thêm kiểm thử giá trị biên (đúng 24 giờ, qua Chủ Nhật, nhận vào Chủ Nhật) và đối chiếu với quy tắc QT-03 trong SRS</td></tr><tr><td>Claude (Copilot CLI)</td><td>Phân loại nhóm sự cố và mức ưu tiên theo từ khoá</td><td><code>src/services/classifier.js</code></td><td>Chạy thử các câu mô tả thật qua API; thấy câu "den man hinh, khong len nguon" ra mức CAO, khác ví dụ ở API contract nên đã ghi vào <code>docs/thay-doi-thiet-ke.md</code> (TĐ6)</td></tr><tr><td>Claude (Copilot CLI)</td><td>Tạo phiếu, sinh mã phiếu, chuyển trạng thái một chiều kèm log, danh sách và lọc theo trung tâm</td><td><code>src/services/ticket.service.js</code>, <code>src/repositories/ticket.repository.js</code>, <code>src/routes/ticket.routes.js</code></td><td>Chạy backend với PostgreSQL thật, gọi API tạo phiếu và chuyển trạng thái, xem bảng <code>ticket</code> và <code>ticket_status_log</code> trong pgAdmin; thử chuyển sai thứ tự và nhận lỗi 409; khi thử lọc theo nhóm sự cố gặp lỗi 500 do dùng sai cột, đã sửa sang lọc theo <code>category_id</code></td></tr><tr><td>Claude (Copilot CLI)</td><td>CRUD khách hàng và thiết bị, đăng nhập JWT, phân quyền, che số điện thoại</td><td><code>src/services/customer.service.js</code>, <code>src/services/device.service.js</code>, <code>src/services/auth.service.js</code>, <code>src/middleware/auth.js</code></td><td>Đăng nhập bằng hai tài khoản mẫu, kiểm tra nhân viên chỉ thấy 4 số cuối còn Quản lý thấy đủ; gọi API bằng token sai và không có token</td></tr><tr><td>Claude (Copilot CLI)</td><td>Chức năng quản lý tài khoản</td><td><code>src/services/user.service.js</code>, <code>src/repositories/user.repository.js</code>, <code>src/validators/user.validator.js</code></td><td>Tạo tài khoản thử, đăng nhập bằng tài khoản mới, thử trùng tên (409), dữ liệu sai (400), gọi bằng tài khoản nhân viên (403); xoá tài khoản thử sau khi kiểm tra</td></tr><tr><td>Claude (Copilot CLI)</td><td>Migration và dữ liệu mẫu chạy lại được</td><td><code>migrations/</code>, <code>seeds/</code>, <code>scripts/run-sql.js</code></td><td>Chạy <code>npm run migrate</code> và <code>npm run seed</code> nhiều lần, đếm số dòng trong các bảng, không lỗi và không nhân đôi</td></tr><tr><td>Claude (Copilot CLI)</td><td>Bộ kiểm thử ba loại (luồng đúng, giá trị biên, dữ liệu sai)</td><td><code>tests/</code></td><td>Chạy <code>npm test</code>, 15 kiểm thử PASS; kiểm thử dùng đối tượng giả nên không cần PostgreSQL</td></tr><tr><td>Claude (Copilot CLI)</td><td>Giao diện React + Vite: đăng nhập, danh sách phiếu, tạo phiếu, chi tiết phiếu, quản lý tài khoản; lớp gọi API; ba trạng thái</td><td><code>frontend/src/</code></td><td>Chạy backend và giao diện, thao tác trên trình duyệt: lọc ra rỗng, tắt backend để thấy lỗi kết nối kèm nút thử lại, tạo phiếu cho số điện thoại mới rồi đối chiếu dữ liệu trong pgAdmin</td></tr><tr><td>Claude (Copilot CLI)</td><td>Dockerfile và docker-compose.yml</td><td><code>Dockerfile</code>, <code>docker-compose.yml</code></td><td>Chưa kiểm chứng: máy em chưa cài Docker nên chưa chạy thử; em không coi đây là phần đã được xác nhận</td></tr><tr><td>Claude (Copilot CLI)</td><td>Soạn README, sơ đồ kiến trúc thực tế, cập nhật API contract, ghi thay đổi thiết kế</td><td><code>README.md</code>, <code>docs/architecture-thuc-te.md</code>, <code>docs/api-contract.md</code>, <code>docs/thay-doi-thiet-ke.md</code></td><td>Đối chiếu với mã nguồn và kết quả chạy thật; các sai lệch so với Bài tập 1 đã ghi từ TĐ1 đến TĐ6</td></tr></table><p>Em xác nhận đã đọc, hiểu và chịu trách nhiệm về toàn bộ nội dung nộp.</p><h2>Bài tập 1: Phân tích và thiết kế</h2><p>Em dùng Claude để hỗ trợ ở các phần sau:</p><p>1. Chọn luồng nghiệp vụ. Em nhờ Claude giải thích case study và so sánh ba luồng L2, L4, L5 để chọn. Em đọc lại mục 7 của case study và tự trả lời các câu hỏi kiểm tra về luồng L2 để chắc là mình hiểu.</p><p>2. Phạm vi một câu (mục 2 của phiếu phạm vi). Em tự trả lời các câu hỏi dẫn dắt và tự ghép câu, Claude chỉ sửa lỗi chính tả và cách dùng từ.</p><p>3. User Story, tiêu chí Given-When-Then, yêu cầu chức năng, phi chức năng và bảng truy vết trong SRS. Claude soạn bản nháp, em đối chiếu lại với mô tả luồng L2, bảng các bên liên quan ở mục 2.2 và bảng quy tắc nghiệp vụ ở mục 9 của case study. Sau khi đọc, em đã gộp US8 vào US2 để còn 7 story cho đúng yêu cầu 5 đến 7.</p><p>4. Use Case Diagram và đặc tả UC2. Claude viết mã PlantUML và soạn đặc tả. Em dán vào PlantText và draw.io rồi lưu file .drawio vào repo.</p><p>5. Công nghệ dự kiến. Claude gợi ý Node.js, Express, PostgreSQL, Prisma, React. Em đối chiếu với bảng công nghệ gợi ý trong tài liệu tự học buổi 1 của track SE.</p><p>6. API contract, sơ đồ kiến trúc, ERD, SQL DDL và wireframe. Claude soạn bản nháp, em đối chiếu với SRS.</p><p>7. Tạo repo. Claude hướng dẫn các lệnh Git, cấu trúc thư mục, nội dung .gitignore và .env.example. Em tự gõ lệnh, tự kiểm tra bằng git status và xem lại kết quả trên GitHub.</p><p>Phần em tự làm ở Bài tập 1: đọc case study, tự chọn luồng L2, tự ghép câu phạm vi, tự gõ lệnh Git và đưa các file vào repo.</p><p>Ghi chú: commit của em dùng email cá nhân, không phải email trường.</p><p>Trần Văn Lễ, 2374802010270</p></section></body></html>
