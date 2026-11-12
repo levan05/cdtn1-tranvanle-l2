@@ -66,3 +66,8 @@ docs/              SRS, API contract, thay đổi thiết kế, khai báo AI, ki
 ```
 
 Thay đổi so với thiết kế Bài tập 1 nằm ở `docs/thay-doi-thiet-ke.md`.
+# Bài tập 3 — tài liệu bàn giao
+
+[Test Plan](docs/test-plan.md) · [Test Report 8 cột](docs/test-report.md) · [Bug Log](docs/bug-log.md) · [Deployment Guide (English)](docs/deployment-guide.md) · [Checklist bảo mật](docs/checklist-bao-mat.md) · [API docs (English)](docs/api-docs.md) · [Khai báo AI](docs/ai-disclosure.md).
+
+Trạng thái BT3: unit 15/15, integration PostgreSQL 12/12, 21 exchange API thật, audit backend 0 advisory. Phép thử máy trắng chưa chạy vì môi trường chưa có Docker. Chưa phát hành tag `v1.0`; commit mới giữ local, chờ người dùng chọn push.

@@ -1,4 +1,4 @@
-# API Documentation ? L2 warranty intake
+# API Documentation - L2 warranty intake
 
 Base URL: http://localhost:8000. JSON requests/responses. Protected endpoints use `Authorization: Bearer <token>`. Common errors: 401 UNAUTHENTICATED for absent/invalid JWT; 503 DATABASE_UNAVAILABLE for database connection failure; 500 INTERNAL_ERROR for unknown failures. Error shape: `{ "error": { "code": "...", "message": "...", "fields": {} } }`.
 
@@ -135,7 +135,7 @@ HTTP 200
 
 ## GET /api/users
 
-1. Business purpose: List accounts of the manager?s center.
+1. Business purpose: List accounts of the manager's center.
 2. Authentication: Manager JWT.
 3. Parameters and body: None.
 4. Success: HTTP 200; actual body below.
@@ -181,9 +181,9 @@ HTTP 200
 
 ## POST /api/users
 
-1. Business purpose: Create intake staff in the manager?s center.
+1. Business purpose: Create intake staff in the manager's center.
 2. Authentication: Manager JWT.
-3. Parameters and body: JSON: username (3?50 ASCII letters/digits/._-), password (8+ characters, max 72 bytes), full_name (1?120).
+3. Parameters and body: JSON: username (3-50 ASCII letters/digits/._-), password (8+ characters, max 72 bytes), full_name (1-120).
 4. Success: HTTP 201; actual body below.
 5. Error codes:
 
@@ -318,7 +318,7 @@ HTTP 200
 
 1. Business purpose: Register a customer.
 2. Authentication: JWT.
-3. Parameters and body: JSON: full_name (1?120), phone (10 digits starting 0; accepts +84/84), optional address (max 255).
+3. Parameters and body: JSON: full_name (1-120), phone (10 digits starting 0; accepts +84/84), optional address (max 255).
 4. Success: HTTP 201; actual body below.
 5. Error codes:
 
@@ -427,7 +427,7 @@ HTTP 204
 
 ## GET /api/customers/:id/devices
 
-1. Business purpose: List a customer?s devices.
+1. Business purpose: List a customer's devices.
 2. Authentication: JWT.
 3. Parameters and body: Path id: positive customer ID.
 4. Success: HTTP 200; actual body below.
@@ -504,7 +504,7 @@ HTTP 200
 
 1. Business purpose: Register a device for an existing customer.
 2. Authentication: JWT.
-3. Parameters and body: JSON: customer_id (positive integer), serial_no (1?80), product_name (1?120), optional imei (max 30).
+3. Parameters and body: JSON: customer_id (positive integer), serial_no (1-80), product_name (1-120), optional imei (max 30).
 4. Success: HTTP 201; actual body below.
 5. Error codes:
 
@@ -731,7 +731,7 @@ HTTP 200
 
 1. Business purpose: Preview keyword classification and due date without saving.
 2. Authentication: JWT.
-3. Parameters and body: JSON: issue_desc (trimmed 1?2000 characters).
+3. Parameters and body: JSON: issue_desc (trimmed 1-2000 characters).
 4. Success: HTTP 200; actual body below.
 5. Error codes:
 
@@ -769,7 +769,7 @@ HTTP 200
 
 1. Business purpose: Create a ticket and its initial status log atomically.
 2. Authentication: JWT.
-3. Parameters and body: JSON: customer_id, device_id (positive integers), issue_desc (trimmed 1?2000).
+3. Parameters and body: JSON: customer_id, device_id (positive integers), issue_desc (trimmed 1-2000).
 4. Success: HTTP 201; actual body below.
 5. Error codes:
 
@@ -821,7 +821,7 @@ HTTP 201
 | Endpoint-specific | 400 VALIDATION_ERROR; 404 TICKET_NOT_FOUND; 409 INVALID_TRANSITION. |
 | Common | 401 UNAUTHENTICATED; 503 DATABASE_UNAVAILABLE; 500 INTERNAL_ERROR |
 
-6. Limitations: Only next state allowed: MOI ? DA_PHAN_CONG ? DANG_XU_LY ? HOAN_TAT ? DA_DONG. Row lock serializes transitions.
+6. Limitations: Only next state allowed: MOI -> DA_PHAN_CONG -> DANG_XU_LY -> HOAN_TAT -> DA_DONG. Row lock serializes transitions.
 
 7. Actual request/response:
 

@@ -1,8 +1,8 @@
-# BT3 ? Test Report (L2, SE)
+# BT3 — Test Report (L2, SE)
 
-Ngu?n: [b?o c?o bu?i 14](test-report-buoi14.md), [output](workshop-integration-results.txt), ?nh g?c TC-01?12. ??y l? k?t qu? l?ch s?, kh?ng ph?i ph?p th? Docker. M?i tr??ng g?c: Node 24.18.0, PostgreSQL 18, Windows.
+Nguồn: [báo cáo buổi 14](test-report-buoi14.md), [output mới](workshop-integration-results.txt), ảnh gốc TC-01–12. Đã chạy lại bộ 12 case trên Node 24.19.0, PostgreSQL cục bộ ngày 12/11/2026 và đạt 12/12 PASS; TC-06/07 kiểm thêm message. Ảnh vẫn thuộc lượt buổi 14, không phải ảnh lượt mới. Chưa kiểm Docker.
 
-| M? | Ti?n ?i?u ki?n | C?c b??c | D? li?u th? | K?t qu? mong ??i | ?u ti?n | K?t qu? th?c t? | PASS/FAIL |
+| Mã | Tiền điều kiện | Các bước | Dữ liệu thử | Kết quả mong đợi | Ưu tiên | Kết quả thực tế | PASS/FAIL |
 |---|---|---|---|---|---|---|---|
 | TC-01 | DB kiểm thử có seed, thông tin đăng nhập mẫu đúng. | `node scripts/run-workshop-integration.js TC-01` | nv.tiepnhan01 / Demo@123 | Login API thật trả JWT có đúng người dùng, vai trò và trung tâm. | Cao | HTTP 200; role `NHAN_VIEN_TIEP_NHAN`, center_id `1`. | PASS · [ảnh](screenshots/TC-01.png) |
 | TC-02 | `.env` trỏ DB `baohanh_l2_thu` đã migrate/seed. | `node scripts/run-workshop-integration.js TC-02` | Fixture customer + device; Man hinh bi soc | Tạo khách, thiết bị, phiếu qua API; xác minh phiếu và log trong PostgreSQL; dọn dữ liệu. | Cao | Login 200; customer/device/ticket 201; DB thấy trạng thái MOI, center 1, 1 log đầu; cleanup thành công. | PASS · [ảnh](screenshots/TC-02.png) |
@@ -17,4 +17,4 @@ Ngu?n: [b?o c?o bu?i 14](test-report-buoi14.md), [output](workshop-integration-r
 | TC-11 | DB kiểm thử; hai khách và thiết bị thuộc khách thứ nhất. | `node scripts/run-workshop-integration.js TC-11` | Customer B + device of A | Tạo phiếu gắn thiết bị của khách khác bị từ chối; không có dữ liệu phiếu phát sinh. | Cao | HTTP 400 `VALIDATION_ERROR`; ticket count `0 → 0`. | PASS · [ảnh](screenshots/TC-11.png) |
 | TC-12 | `.env` trỏ DB kiểm thử `baohanh_l2_thu`; không có tiến trình khác ghi đồng thời. | `node scripts/run-workshop-integration.js TC-12` | migrations + seeds, twice | Chạy migration và seed hai lượt; số dòng bảy bảng không đổi. | Vừa | Trước/sau không đổi: center 2, category 6, app_user 2, customer 4, device 4, ticket 4, status_log 8. | PASS · [ảnh](screenshots/TC-12.png) |
 
-T?ng: 12/12 PASS theo minh ch?ng g?c. TC-05 ki?m hai ph?a c?ng ranh gi?i; TC-10 ki?m quy?n trung t?m; TC-12 ki?m t?i l?p. Unit BT3: 15/15 PASS tr?n Node 24.19.0. Xem [Test Plan](test-plan.md) v? kho?ng tr?ng ph? quy t?c.
+Tổng: 12/12 PASS trong lượt chạy lại. TC-05 kiểm hai phía cùng ranh giới; TC-10 kiểm quyền trung tâm; TC-12 kiểm tái lập. Unit BT3: 15/15 PASS trên Node 24.19.0. Xem [Test Plan](test-plan.md) về khoảng trống phủ quy tắc.
